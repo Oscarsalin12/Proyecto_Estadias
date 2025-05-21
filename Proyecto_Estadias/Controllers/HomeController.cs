@@ -8,6 +8,7 @@ namespace Proyecto_Estadias.Controllers
 {
     public class HomeController : Controller
     {
+        [Authorize(Roles = "administrador")]
         public ActionResult Index()
         {
             return View();

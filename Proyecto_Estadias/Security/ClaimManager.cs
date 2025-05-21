@@ -1,0 +1,109 @@
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
+using Proyecto_Estadias.Infraestructura;
+using Proyecto_Estadias.Models;
+using Proyecto_Estadias.Services;
+using Proyecto_Estadias.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Web;
+using System.Web.Mvc;
+
+namespace Proyecto_Estadias.Security
+{
+    public class ClaimManager: IClaimManager
+    {
+        private readonly IAuthServices authservices;
+        
+        public ClaimManager()
+        {
+            authservices = new AuthServices();
+        }
+        #region  creacion Usuario
+        public ClaimsIdentity CreateIdentity(UsuariosVM usuariosVM, bool rememberMe)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, usuariosVM.Id.ToString()),
+                new Claim(ClaimTypes.Name, usuariosVM.Usuario),
+
+            };
+            if (usuariosVM.UsuariosRolesVMs != null && usuariosVM.UsuariosRolesVMs.Any())
+            {
+                claims.AddRange(usuariosVM.UsuariosRolesVMs.Select(r => new Claim(ClaimTypes.Role, r.RolesVM.Nombre)));
+            }
+            return new ClaimsIdentity(claims,DefaultAuthenticationTypes.ApplicationCookie);
+        }
+
+        #endregion
+
+
+        #region inicio de sesion 
+
+        public ActionResult SignIn(UsuariosVM usuariosVM, bool rememberMe, Controller ctx, string _returnurl)
+        {
+            ActionResult Result;
+            string returnUrl = _returnurl;
+
+            var identity = CreateIdentity(usuariosVM, rememberMe);
+            var authenticationManager = System.Web.HttpContext.Current.GetOwinContext().Authentication;
+            authenticationManager.SignIn(new AuthenticationProperties()
+            {
+                IsPersistent = rememberMe
+            }, identity);
+            if (string.IsNullOrWhiteSpace(returnUrl))
+            {
+                returnUrl = ctx.Url.Action("Login", "Auth");
+            }
+            return new RedirectResult(returnUrl);
+                  
+        }
+
+        public bool SignIn(UsuariosVM usuariosVM, bool rememberMe, string _returnurl)
+        {
+            Usuarios usuarios = authservices.login(usuariosVM.Usuario, usuariosVM.Contrasenia);
+            if (usuarios != null)
+            {
+                var userRol = usuarios.UsuarioRol.Select(r => new UsuariosRolVM
+                {
+                    IdRol = r.IdRol,
+                    IdUsuario = r.IdUsuario,
+                    IdEmpresa = r.IdEmpresa,
+                    RolesVM = new RolVM
+                    {
+                        Nombre = r.Roles.Nombre,
+                        Id = r.Roles.Id
+                    }
+                }).ToList();
+                if (userRol != null)
+                {
+                    usuariosVM.Usuario = usuarios.Usuario.Trim();
+                    usuariosVM.Contrasenia = usuarios.Contrasenia.Trim();
+                    usuariosVM.UsuariosRolesVMs = userRol;
+                    string returnUrl = _returnurl;
+                    var identity = CreateIdentity(usuariosVM, rememberMe);
+                    var authenticationManager = System.Web.HttpContext.Current.GetOwinContext().Authentication;
+                    authenticationManager.SignIn(new AuthenticationProperties()
+                    {
+                        IsPersistent = rememberMe
+                    }, identity);
+                    return true;
+                }
+            }
+            return false;
+        }
+        #endregion
+
+        #region Cerrar sesion 
+
+        public void SignOut()
+        {
+            var authenticationManager = System.Web.HttpContext.Current.GetOwinContext().Authentication;
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+        }
+        #endregion
+
+    }
+}
