@@ -18,7 +18,8 @@ namespace Proyecto_Estadias.Services
         {
             db = new Vacaciones_ProyectoEntities();
         }
-
+       
+        #region metodo para inicio de sesion
         public Usuarios login(string nombreusuario, string contrasenia)
         {
             if (string.IsNullOrWhiteSpace(nombreusuario) || string.IsNullOrWhiteSpace(contrasenia))
@@ -36,6 +37,9 @@ namespace Proyecto_Estadias.Services
             return usuario;
         }
 
+        #endregion
+
+        #region listas auxiliares
         public List<Roles> GetAllRoles()
         {
             return this.db.Roles.OrderBy(p => p.Nombre).ToList();
@@ -46,6 +50,9 @@ namespace Proyecto_Estadias.Services
             return this.db.Empresas.OrderBy(p => p.Nombre).ToList();
         }
 
+        #endregion
+
+        #region metodos para crear usuarios 
 
         public bool InsertUser(Usuarios usuarios)
         {
@@ -104,6 +111,30 @@ namespace Proyecto_Estadias.Services
             return respuesta;
         }
 
+        #endregion
 
+
+        #region  metodo para perfil 
+
+        public Usuarios GetUsuarioConRelaciones(string nombreusuario)
+        {
+            return db.Usuarios
+                .Include("Empresas")
+                .Include("Roles")
+                .FirstOrDefault(u => u.Usuario == nombreusuario);
+        }
+
+        public List<Empleados> GetEmpleadosPorEmpresa(int idEmpresa)
+        {
+            return db.Empleados
+                .Where(e => e.IdEmpresa == idEmpresa)
+                .ToList();
+        }
+        public string GetEmpresaNombre(int idEmpresa)
+        {
+            return db.Empresas.Where(e => e.Id == idEmpresa).Select(e => e.Nombre).FirstOrDefault();
+        }
+
+        #endregion 
     }
 }

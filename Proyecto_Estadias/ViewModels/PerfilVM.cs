@@ -9,6 +9,7 @@ namespace Proyecto_Estadias.ViewModels
     public class PerfilVM
     {
         public Usuarios Usuario { get;set; }
+        public Empleados Empleado { get;set; }
         public List<Empresas> Empresas { get; set; }
         public Dictionary<int, List<EmpleadosVM>> EmpleadosPorEmpresa {  get; set; }
     }

@@ -21,6 +21,7 @@ namespace Proyecto_Estadias.Controllers
             authServices = new AuthServices();
         }
 
+        #region  inicio de sesion 
         [HttpGet]
         [ExceptionFilterAttribute]
         [AllowAnonymous]
@@ -65,13 +66,25 @@ namespace Proyecto_Estadias.Controllers
 
             if (claimManager.SignIn(usuariosVM, true, returnUrl))
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Perfil", "Auth");
             }
 
             ViewBag.Error = "Error de autenticación.";
             return View(usuariosVM);
         }
 
+        #endregion
+
+        #region cerrar sesion 
+        [HttpGet]
+        public ActionResult LogOut()
+        {
+            claimManager.SignOut();
+            return RedirectToAction("Login", "Auth");
+        }
+        #endregion
+
+        #region Crear usuarios 
         [HttpGet]
         [ExceptionFilter]
         public ActionResult Account()
@@ -112,5 +125,35 @@ namespace Proyecto_Estadias.Controllers
             return View(usuariosVM);
         }
 
+        #endregion
+
+        #region perfil
+
+        [Authorize]
+        public ActionResult Perfil()
+        {
+            var usuarioNombre = User.Identity.Name;
+            var usuario = authServices.GetUsuarioConRelaciones(usuarioNombre); 
+            if (usuario == null)
+            {
+                return RedirectToAction("Login");
+            }
+            var empresas = authServices.GetAllEmpresas();
+            var model = new PerfilVM
+            {
+                Usuario = usuario,
+                
+                Empresas = empresas
+            };
+            return View(model);
+        }
+        #endregion
+
+        public ActionResult EmpleadosPorEmpresa(int id )
+        {
+            var empleados = authServices.GetEmpleadosPorEmpresa(id);
+            ViewBag.EmpresaNombre = authServices.GetEmpresaNombre(id);
+            return View(empleados);
+        }
     }
 }

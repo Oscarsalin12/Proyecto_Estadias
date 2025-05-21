@@ -1,0 +1,18 @@
+﻿@model Proyecto_Estadias.ViewModels.PerfilVM
+
+@{
+    ViewBag.Title = "Perfil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Bienvenido, @Model.Usuario.Usuario</h2>
+
+<h3>Empresas</h3>
+<ul>
+    @foreach (var empresa in Model.Empresas)
+    {
+        <li>
+            @Html.ActionLink(empresa.Nombre, "EmpleadosPorEmpresa", "Auth", new { id = empresa.Id }, null)
+        </li>
+    }
+</ul>

@@ -1,0 +1,32 @@
+﻿@model List<Proyecto_Estadias.Models.Empleados>
+
+@{
+    ViewBag.Title = "Empleados";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Empleados de @ViewBag.EmpresaNombre</h2>
+
+<table class="table">
+    <tr>
+        <th>Numero de empleado</th>
+        <th>Nombre</th>
+        <th>Fecha de ingreso</th>
+        <th>años trabajados</th>
+        <th>meses trabajados</th>
+        <th>dias de vaciones </th>
+        
+        <!-- Agrega aquí los campos que tenga tu entidad Empleados -->
+    </tr>
+    @foreach (var emp in Model)
+    {
+        <tr>
+            <td>@emp.NumEmpleado</td>
+            <td>@emp.Nombre</td>
+            <td>@emp.FechaIDeIngreso</td>
+            <td>@emp.AniosTrabajados</td>
+            <td>@emp.MesesTrabajados</td>
+            <td>@emp.intDiasVacaciones</td>
+        </tr>
+    }
+</table>

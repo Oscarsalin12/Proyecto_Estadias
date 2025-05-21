@@ -168,6 +168,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\EmpleadosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Filters\ExceptionFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -175,46 +176,48 @@
     </Compile>
     <Compile Include="Infraestructura\IAuthServices.cs" />
     <Compile Include="Infraestructura\IClaimManager.cs" />
+    <Compile Include="Infraestructura\IEmpleadoServices.cs" />
     <Compile Include="Mapping\WebProfile.cs" />
     <Compile Include="Models\Empleados.cs">
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
+      <DependentUpon>VacacionesBd.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Empresas.cs">
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
+      <DependentUpon>VacacionesBd.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MotivosAusencia.cs">
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
+      <DependentUpon>VacacionesBd.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Permisos.cs">
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
+      <DependentUpon>VacacionesBd.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Roles.cs">
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
+      <DependentUpon>VacacionesBd.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UsuarioRol.cs">
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
+      <DependentUpon>VacacionesBd.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Usuarios.cs">
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
+      <DependentUpon>VacacionesBd.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\VacacionesBD.Context.cs">
+    <Compile Include="Models\VacacionesBd.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>VacacionesBD.Context.tt</DependentUpon>
+      <DependentUpon>VacacionesBd.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\VacacionesBD.cs">
+    <Compile Include="Models\VacacionesBd.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
+      <DependentUpon>VacacionesBd.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\VacacionesBD.Designer.cs">
+    <Compile Include="Models\VacacionesBd.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>VacacionesBD.edmx</DependentUpon>
+      <DependentUpon>VacacionesBd.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ClaimManager.cs" />
     <Compile Include="Services\AuthServices.cs" />
+    <Compile Include="Services\EmpleadoServices.cs" />
     <Compile Include="ViewModels\EmpleadosVM.cs" />
     <Compile Include="ViewModels\EmpresaVM.cs" />
     <Compile Include="ViewModels\PerfilVM.cs" />
@@ -239,18 +242,19 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\custom-navbar.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\VacacionesBD.Context.tt">
+    <Content Include="Models\VacacionesBd.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>VacacionesBD.edmx</DependentUpon>
-      <LastGenOutput>VacacionesBD.Context.cs</LastGenOutput>
+      <DependentUpon>VacacionesBd.edmx</DependentUpon>
+      <LastGenOutput>VacacionesBd.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\VacacionesBD.tt">
+    <Content Include="Models\VacacionesBd.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>VacacionesBD.edmx</DependentUpon>
-      <LastGenOutput>VacacionesBD.cs</LastGenOutput>
+      <DependentUpon>VacacionesBd.edmx</DependentUpon>
+      <LastGenOutput>VacacionesBd.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -261,12 +265,12 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EntityDeploy Include="Models\VacacionesBD.edmx">
+    <EntityDeploy Include="Models\VacacionesBd.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>VacacionesBD.Designer.cs</LastGenOutput>
+      <LastGenOutput>VacacionesBd.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\VacacionesBD.edmx.diagram">
-      <DependentUpon>VacacionesBD.edmx</DependentUpon>
+    <Content Include="Models\VacacionesBd.edmx.diagram">
+      <DependentUpon>VacacionesBd.edmx</DependentUpon>
     </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
@@ -298,6 +302,9 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Auth\Login.cshtml" />
     <Content Include="Views\Auth\Account.cshtml" />
+    <Content Include="Views\Auth\Perfil.cshtml" />
+    <Content Include="Views\Auth\EmpleadosPorEmpresa.cshtml" />
+    <Content Include="Views\Empleados\InsertarEmpleado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

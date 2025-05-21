@@ -7,7 +7,7 @@ namespace Proyecto_Estadias.ViewModels
 {
     public class EmpresaVM
     {
-        public int Id {  get; set; }
+        public int IdEmpresa {  get; set; }
         public string Nombre {  get; set; }
         public RolVM RolesVM { get; set; }
         public UsuariosVM UsuariosVM { get; set; }

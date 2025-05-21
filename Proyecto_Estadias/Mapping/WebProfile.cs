@@ -16,9 +16,10 @@ namespace Proyecto_Estadias.Mapping
                 .ForMember(dest => dest.Roles, origen => origen.MapFrom(c => c.RolVM))
                 .ForMember(dest => dest.Empresas, origen => origen.MapFrom(c => c.empresaVM))
                 .ForMember(dest => dest.UsuarioRol, origen => origen.MapFrom(c => c.UsuariosRolesVMs)).ReverseMap();
-
+            CreateMap<Proyecto_Estadias.ViewModels.EmpleadosVM, Proyecto_Estadias.Models.Empleados>()
+                .ForMember(dest => dest.Empresas, origen => origen.MapFrom(c => c.empresaVM)).ReverseMap();
             CreateMap<Proyecto_Estadias.ViewModels.EmpresaVM, Empresas>().ReverseMap();
-            CreateMap<Proyecto_Estadias.ViewModels.EmpleadosVM, Empleados>().ReverseMap();
+
             CreateMap<Proyecto_Estadias.ViewModels.UsuariosRolVM, UsuarioRol>().ReverseMap();
         }
             public static void Run()

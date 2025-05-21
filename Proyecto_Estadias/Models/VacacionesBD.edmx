@@ -70,18 +70,6 @@
           <Property Name="IdEmpresa" Type="int" Nullable="false" />
           <Property Name="IdRol" Type="int" Nullable="false" />
         </EntityType>
-        <Association Name="FK__Empleados__IdEmp__3B75D760">
-          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
-          <End Role="Empleados" Type="Self.Empleados" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Empresas">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Empleados">
-              <PropertyRef Name="intDiasVacaciones" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__Permisos__IdEmpr__403A8C7D">
           <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
           <End Role="Permisos" Type="Self.Permisos" Multiplicity="*" />
@@ -166,6 +154,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Empleados_Empresas">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+          <End Role="Empleados" Type="Self.Empleados" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Empleados">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="Vacaciones_BDModelStoreContainer">
           <EntitySet Name="Empleados" EntityType="Self.Empleados" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Empresas" EntityType="Self.Empresas" Schema="dbo" store:Type="Tables" />
@@ -174,10 +174,6 @@
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UsuarioRol" EntityType="Self.UsuarioRol" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Empleados__IdEmp__3B75D760" Association="Self.FK__Empleados__IdEmp__3B75D760">
-            <End Role="Empresas" EntitySet="Empresas" />
-            <End Role="Empleados" EntitySet="Empleados" />
-          </AssociationSet>
           <AssociationSet Name="FK__Permisos__IdEmpr__403A8C7D" Association="Self.FK__Permisos__IdEmpr__403A8C7D">
             <End Role="Empresas" EntitySet="Empresas" />
             <End Role="Permisos" EntitySet="Permisos" />
@@ -206,6 +202,10 @@
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Usuarios" EntitySet="Usuarios" />
           </AssociationSet>
+          <AssociationSet Name="FK_Empleados_Empresas" Association="Self.FK_Empleados_Empresas">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="Empleados" EntitySet="Empleados" />
+          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
@@ -224,7 +224,7 @@
           <Property Name="MesesTrabajados" Type="Int32" Nullable="false" />
           <Property Name="intDiasVacaciones" Type="Int32" Nullable="false" />
           <Property Name="IdEmpresa" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Empresas" Relationship="Self.FK__Empleados__IdEmp__3B75D760" FromRole="Empleados" ToRole="Empresas" />
+          <NavigationProperty Name="Empresas" Relationship="Self.FK_Empleados_Empresas" FromRole="Empleados" ToRole="Empresas" />
         </EntityType>
         <EntityType Name="Empresas">
           <Key>
@@ -233,7 +233,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Rfc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Empleados" Relationship="Self.FK__Empleados__IdEmp__3B75D760" FromRole="Empresas" ToRole="Empleados" />
+          <NavigationProperty Name="Empleados" Relationship="Self.FK_Empleados_Empresas" FromRole="Empresas" ToRole="Empleados" />
           <NavigationProperty Name="Permisos" Relationship="Self.FK__Permisos__IdEmpr__403A8C7D" FromRole="Empresas" ToRole="Permisos" />
           <NavigationProperty Name="UsuarioRol" Relationship="Self.FK__UsuarioRo__IdEmp__4AB81AF0" FromRole="Empresas" ToRole="UsuarioRol" />
           <NavigationProperty Name="Usuarios" Relationship="Self.FK__Usuarios__IdEmpr__44FF419A" FromRole="Empresas" ToRole="Usuarios" />
@@ -293,7 +293,7 @@
           <NavigationProperty Name="Roles" Relationship="Self.FK__Usuarios__IdRol__45F365D3" FromRole="Usuarios" ToRole="Roles" />
           <NavigationProperty Name="UsuarioRol" Relationship="Self.FK__UsuarioRo__IdUsu__48CFD27E" FromRole="Usuarios" ToRole="UsuarioRol" />
         </EntityType>
-        <Association Name="FK__Empleados__IdEmp__3B75D760">
+        <Association Name="FK_Empleados_Empresas">
           <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
           <End Role="Empleados" Type="Self.Empleados" Multiplicity="*" />
           <ReferentialConstraint>
@@ -301,7 +301,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Empleados">
-              <PropertyRef Name="intDiasVacaciones" />
+              <PropertyRef Name="IdEmpresa" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -397,7 +397,7 @@
           <EntitySet Name="Roles" EntityType="Self.Roles" />
           <EntitySet Name="UsuarioRol" EntityType="Self.UsuarioRol" />
           <EntitySet Name="Usuarios" EntityType="Self.Usuarios" />
-          <AssociationSet Name="FK__Empleados__IdEmp__3B75D760" Association="Self.FK__Empleados__IdEmp__3B75D760">
+          <AssociationSet Name="FK_Empleados_Empresas" Association="Self.FK_Empleados_Empresas">
             <End Role="Empresas" EntitySet="Empresas" />
             <End Role="Empleados" EntitySet="Empleados" />
           </AssociationSet>
