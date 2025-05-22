@@ -47,13 +47,12 @@ namespace Proyecto_Estadias.Services
             db.SaveChanges();
         }
 
-
         private int CalcularDiasVacaciones(int anios)
         {
             if (anios <= 0) return 0;
             if (anios == 1) return 12;
-            int dias = 6 + (anios - 1) * 2;
-            return Math.Min(dias, 20);
+            int dias = 12 + (anios - 1) * 2;
+            return Math.Min(dias, 30);
         }
         #endregion
         public void ActualizarEmpleado(Empleados empleado)
