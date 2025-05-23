@@ -52,7 +52,8 @@ namespace Proyecto_Estadias.Controllers
                     IdEmpleado = model.IdEmpleado,
                     IdTipoPermiso = model.IdTipoPermiso,
                     IdEmpresa = model.IdEmpresa,
-               
+                    FechaGeneracion = model.FechaGeneracion
+
                 };
 
                 db.Permisos.Add(permiso);
@@ -128,8 +129,25 @@ namespace Proyecto_Estadias.Controllers
             }
         }
 
-
-
-
+        [HttpGet]
+        public JsonResult ObtenerDatosEmpleado(int id)
+        {
+            var empleado = db.Empleados.Include("Empresas").FirstOrDefault(e => e.Id == id);
+            if (empleado != null)
+            {
+               
+                return Json(new
+                {
+                    empresaId = empleado.IdEmpresa,
+                    empresa = empleado.Empresas.Nombre ?? "No asignada",
+                    vacaciones = empleado.intDiasVacaciones
+                }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new {
+                empresaId = 0,
+                empresa = "No encontrada",
+                vacaciones = 0 },
+                JsonRequestBehavior.AllowGet);
+        }
     }
 }

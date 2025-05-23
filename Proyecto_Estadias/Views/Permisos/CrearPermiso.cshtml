@@ -9,27 +9,55 @@
 
 @using (Html.BeginForm("CrearPermiso", "Permisos", FormMethod.Post))
 {
-    @Html.AntiForgeryToken()
-
     <div class="form-group">
-        @Html.LabelFor(m => m.IdEmpleado, "Empleado")
-        @Html.DropDownListFor(m => m.IdEmpleado, Model.EmpleadosVM, "Seleccione un empleado", new { @class = "form-control" })
+        @Html.LabelFor(m => m.IdEmpleado)
+        @Html.DropDownListFor(m => m.IdEmpleado, Model.EmpleadosVM, "Seleccione un empleado", new { @class = "form-control", onchange = "cargarDatosEmpleado()" })
+    </div>
+
+    <div id="datosEmpleado" style="margin-bottom:15px;">
+        @Html.HiddenFor(m => m.IdEmpresa)
+        <p><strong>Empresa:</strong> <span id="empresa"></span></p>
+        <p><strong>Días de Vacaciones:</strong> <span id="vacaciones"></span></p>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.IdTipoPermiso, "Motivo de Ausencia")
-        @Html.DropDownListFor(m => m.IdTipoPermiso, Model.MotivosAusenciaVM, "Seleccione un motivo", new { @class = "form-control" })
+        @Html.LabelFor(m => m.IdTipoPermiso)
+        @Html.DropDownListFor(m => m.IdTipoPermiso, Model.MotivosAusenciaVM, "Seleccione motivo", new { @class = "form-control" })
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.IdEmpresa, "Empresa")
-        @Html.DropDownListFor(m => m.IdEmpresa, Model.EmpresasVM ?? new List<SelectListItem>(), "Seleccione una empresa", new { @class = "form-control" })
+        @Html.LabelFor(m => m.FechaGeneracion, "Fecha de ausencia")
+        @Html.TextBoxFor(m => m.FechaGeneracion, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
     </div>
 
-    @*<div class="form-group">
-        @Html.LabelFor(m => m.FechaGeneracion, "Fecha de Generación")
-        @Html.TextBoxFor(m => m.FechaGeneracion, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-    </div>*@
+    <button type="submit" class="btn btn-primary">Guardar Permiso</button>
+}
 
-    <button type="submit" class="btn btn-primary">Registrar Permiso</button>
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function cargarDatosEmpleado() {
+            var empleadoId = $('#IdEmpleado').val();
+            if (empleadoId && empleadoId !== "") {
+                $.ajax({
+                    url: '@Url.Action("ObtenerDatosEmpleado","Permisos")',
+                    type: 'GET',
+                    data: { id: empleadoId },
+                    success: function (data) {
+                        $('#empresa').text(data.empresa);
+                        $('#vacaciones').text(data.vacaciones);
+                        console.log("Empresa ID:", data.empresaId);
+                        $('#IdEmpresa').val(data.empresaId);
+                    },
+                    error: function(){
+                    alert('Error al cargar los datos del empleado');
+                    }
+                });
+             
+            } else {
+                $('#empresa').text('');
+                $('#vacaciones').text('');
+            }
+        }
+    </script>
 }

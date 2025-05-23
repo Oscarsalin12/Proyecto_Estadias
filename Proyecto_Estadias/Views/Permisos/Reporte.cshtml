@@ -26,5 +26,7 @@
                 <td>@permiso.FechaGeneracion.ToShortDateString()</td>
             </tr>
         }
+        @Html.ActionLink("generar reporte", "GenerarPDF", "Permisos", null, new { @class = "btn btn-dark btn-group-sm w-25" })
     </tbody>
+
 </table>
