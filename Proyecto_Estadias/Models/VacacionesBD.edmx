@@ -166,6 +166,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Permisos_Empleados">
+          <End Role="Empleados" Type="Self.Empleados" Multiplicity="1" />
+          <End Role="Permisos" Type="Self.Permisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empleados">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Permisos">
+              <PropertyRef Name="IdEmpleado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="Vacaciones_BDModelStoreContainer">
           <EntitySet Name="Empleados" EntityType="Self.Empleados" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Empresas" EntityType="Self.Empresas" Schema="dbo" store:Type="Tables" />
@@ -206,6 +218,10 @@
             <End Role="Empresas" EntitySet="Empresas" />
             <End Role="Empleados" EntitySet="Empleados" />
           </AssociationSet>
+          <AssociationSet Name="FK_Permisos_Empleados" Association="Self.FK_Permisos_Empleados">
+            <End Role="Empleados" EntitySet="Empleados" />
+            <End Role="Permisos" EntitySet="Permisos" />
+          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
@@ -225,6 +241,7 @@
           <Property Name="intDiasVacaciones" Type="Int32" Nullable="false" />
           <Property Name="IdEmpresa" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Empresas" Relationship="Self.FK_Empleados_Empresas" FromRole="Empleados" ToRole="Empresas" />
+          <NavigationProperty Name="Permisos" Relationship="Self.FK_Permisos_Empleados" FromRole="Empleados" ToRole="Permisos" />
         </EntityType>
         <EntityType Name="Empresas">
           <Key>
@@ -255,6 +272,7 @@
           <Property Name="IdTipoPermiso" Type="Int32" Nullable="false" />
           <Property Name="IdEmpresa" Type="Int32" Nullable="false" />
           <Property Name="FechaGeneracion" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Empleados" Relationship="Self.FK_Permisos_Empleados" FromRole="Permisos" ToRole="Empleados" />
           <NavigationProperty Name="Empresas" Relationship="Self.FK__Permisos__IdEmpr__403A8C7D" FromRole="Permisos" ToRole="Empresas" />
           <NavigationProperty Name="MotivosAusencia" Relationship="Self.FK__Permisos__IdTipo__3F466844" FromRole="Permisos" ToRole="MotivosAusencia" />
         </EntityType>
@@ -302,6 +320,18 @@
             </Principal>
             <Dependent Role="Empleados">
               <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Permisos_Empleados">
+          <End Role="Empleados" Type="Self.Empleados" Multiplicity="1" />
+          <End Role="Permisos" Type="Self.Permisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empleados">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Permisos">
+              <PropertyRef Name="IdEmpleado" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -400,6 +430,10 @@
           <AssociationSet Name="FK_Empleados_Empresas" Association="Self.FK_Empleados_Empresas">
             <End Role="Empresas" EntitySet="Empresas" />
             <End Role="Empleados" EntitySet="Empleados" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Permisos_Empleados" Association="Self.FK_Permisos_Empleados">
+            <End Role="Empleados" EntitySet="Empleados" />
+            <End Role="Permisos" EntitySet="Permisos" />
           </AssociationSet>
           <AssociationSet Name="FK__Permisos__IdEmpr__403A8C7D" Association="Self.FK__Permisos__IdEmpr__403A8C7D">
             <End Role="Empresas" EntitySet="Empresas" />

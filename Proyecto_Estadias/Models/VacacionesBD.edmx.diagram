@@ -4,15 +4,16 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="992609ae7d354f379687486c6ccc77f3" Name="Diagram1">
-        <EntityTypeShape EntityType="Vacaciones_BDModel.Empleados" Width="1.5" PointX="3" PointY="7.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Vacaciones_BDModel.Empresas" Width="1.5" PointX="0.75" PointY="7.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="Vacaciones_BDModel.MotivosAusencia" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Vacaciones_BDModel.Permisos" Width="1.5" PointX="6" PointY="7.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="Vacaciones_BDModel.Roles" Width="1.5" PointX="0.75" PointY="3.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="Vacaciones_BDModel.UsuarioRol" Width="1.5" PointX="3" PointY="3.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="Vacaciones_BDModel.Usuarios" Width="1.5" PointX="3" PointY="11.25" IsExpanded="true" />
+      <Diagram DiagramId="e8dfdd3fef75433ab1be9decb49ab47a" Name="Diagram1">
+        <EntityTypeShape EntityType="Vacaciones_BDModel.Empleados" Width="1.5" PointX="3" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.Empresas" Width="1.5" PointX="0.75" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.MotivosAusencia" Width="1.5" PointX="3" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.Permisos" Width="1.5" PointX="5.25" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.Roles" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.UsuarioRol" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.Usuarios" Width="1.5" PointX="3" PointY="8.75" IsExpanded="true" />
         <AssociationConnector Association="Vacaciones_BDModel.FK_Empleados_Empresas" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_Permisos_Empleados" ManuallyRouted="false" />
         <AssociationConnector Association="Vacaciones_BDModel.FK__Permisos__IdEmpr__403A8C7D" ManuallyRouted="false" />
         <AssociationConnector Association="Vacaciones_BDModel.FK__UsuarioRo__IdEmp__4AB81AF0" ManuallyRouted="false" />
         <AssociationConnector Association="Vacaciones_BDModel.FK__Usuarios__IdEmpr__44FF419A" ManuallyRouted="false" />

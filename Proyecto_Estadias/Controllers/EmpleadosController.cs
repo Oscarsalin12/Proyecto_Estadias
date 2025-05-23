@@ -42,5 +42,15 @@ namespace Proyecto_Estadias.Controllers
             return View(empleado);
             
         }
+
+
+        //public ActionResult EmpleadosPorEmpresa(int id)
+        //{
+        //    empleadoServices.ActualizarVacacionesYPermisos();
+        //    var empleados = authServices.GetEmpleadosPorEmpresa(id);
+        //    ViewBag.EmpresaNombre = authServices.GetEmpresaNombre(id);
+        //    return View(empleados);
+        //}
+
     }
 }

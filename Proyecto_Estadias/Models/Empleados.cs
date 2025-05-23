@@ -14,6 +14,12 @@ namespace Proyecto_Estadias.Models
     
     public partial class Empleados
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Empleados()
+        {
+            this.Permisos = new HashSet<Permisos>();
+        }
+    
         public int Id { get; set; }
         public int NumEmpleado { get; set; }
         public string Nombre { get; set; }
@@ -24,5 +30,7 @@ namespace Proyecto_Estadias.Models
         public int IdEmpresa { get; set; }
     
         public virtual Empresas Empresas { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Permisos> Permisos { get; set; }
     }
 }

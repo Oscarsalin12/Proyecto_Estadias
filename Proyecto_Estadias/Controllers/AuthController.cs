@@ -13,12 +13,14 @@ namespace Proyecto_Estadias.Controllers
 {
     public class AuthController : Controller
     {
+        private readonly IEmpleadoServices empleadoServices;
         private IClaimManager claimManager;
         private readonly IAuthServices authServices;
         public AuthController()
         {
             claimManager = new ClaimManager();
             authServices = new AuthServices();
+            empleadoServices = new EmpleadoServices();
         }
 
         #region  inicio de sesion 
@@ -150,9 +152,11 @@ namespace Proyecto_Estadias.Controllers
         }
         #endregion
 
-        public ActionResult EmpleadosPorEmpresa(int id )
+        public ActionResult EmpleadosPorEmpresa(int id)
         {
-            var empleados = authServices.GetEmpleadosPorEmpresa(id);
+            empleadoServices.ActualizarVacacionesYPermisos();
+            var empleados = authServices.GetEmpleadosPorEmpresa(id); 
+             
             ViewBag.EmpresaNombre = authServices.GetEmpresaNombre(id);
             return View(empleados);
         }

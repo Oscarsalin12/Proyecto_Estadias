@@ -20,6 +20,7 @@ namespace Proyecto_Estadias.Models
         public int IdEmpresa { get; set; }
         public System.DateTime FechaGeneracion { get; set; }
     
+        public virtual Empleados Empleados { get; set; }
         public virtual Empresas Empresas { get; set; }
         public virtual MotivosAusencia MotivosAusencia { get; set; }
     }

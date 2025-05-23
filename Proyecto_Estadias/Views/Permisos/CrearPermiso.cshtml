@@ -1,0 +1,35 @@
+﻿@model Proyecto_Estadias.ViewModels.PermisosVM
+
+@{
+    ViewBag.Title = "Registrar Permiso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Registrar Permiso</h2>
+
+@using (Html.BeginForm("CrearPermiso", "Permisos", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.IdEmpleado, "Empleado")
+        @Html.DropDownListFor(m => m.IdEmpleado, Model.EmpleadosVM, "Seleccione un empleado", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.IdTipoPermiso, "Motivo de Ausencia")
+        @Html.DropDownListFor(m => m.IdTipoPermiso, Model.MotivosAusenciaVM, "Seleccione un motivo", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.IdEmpresa, "Empresa")
+        @Html.DropDownListFor(m => m.IdEmpresa, Model.EmpresasVM ?? new List<SelectListItem>(), "Seleccione una empresa", new { @class = "form-control" })
+    </div>
+
+    @*<div class="form-group">
+        @Html.LabelFor(m => m.FechaGeneracion, "Fecha de Generación")
+        @Html.TextBoxFor(m => m.FechaGeneracion, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+    </div>*@
+
+    <button type="submit" class="btn btn-primary">Registrar Permiso</button>
+}

@@ -87,6 +87,39 @@ namespace Proyecto_Estadias.Services
 
             db.SaveChanges();
         }
-      
+      public void ActualizarVacacionesYPermisos()
+        {
+            var empleados = db.Empleados.ToList();
+            var hoy = DateTime.Today;
+            foreach (var emp in empleados)
+            {
+                var fechaIngreso = emp.FechaIDeIngreso;
+
+                int anios = hoy.Year - fechaIngreso.Year;
+                int meses = hoy.Month - fechaIngreso.Month;
+
+                if (hoy.Day < fechaIngreso.Day)
+                    meses--;
+
+                if (meses < 0)
+                {
+                    anios--;
+                    meses += 12;
+                }
+
+                int diasBase = CalcularDiasVacaciones(anios);
+
+                int diasPermiso = db.Permisos
+                    .Where(p => p.IdEmpleado == emp.Id)
+                    .Count();
+                int diasDisponibles = Math.Max(diasBase - diasPermiso, 0);
+
+                emp.AniosTrabajados = anios;
+                emp.MesesTrabajados = meses;
+                emp.intDiasVacaciones = diasDisponibles;
+            }
+            db.SaveChanges();
+        }
+
     }
 }

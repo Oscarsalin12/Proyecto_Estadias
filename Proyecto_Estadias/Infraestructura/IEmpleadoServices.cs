@@ -9,6 +9,7 @@ namespace Proyecto_Estadias.Infraestructura
 {
     public interface IEmpleadoServices
     {
+        void ActualizarVacacionesYPermisos();
         void InsertarEmpleados(Empleados emp);
     }
 }

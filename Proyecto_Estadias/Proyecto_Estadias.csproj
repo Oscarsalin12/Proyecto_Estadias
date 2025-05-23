@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -49,11 +49,17 @@
     <Reference Include="AutoMapper, Version=8.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>packages\AutoMapper.8.0.0\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>packages\BouncyCastle.Cryptography.2.4.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.4, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>packages\iTextSharp.5.5.13.4\lib\net461\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -170,6 +176,7 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\EmpleadosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PermisosController.cs" />
     <Compile Include="Filters\ExceptionFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -179,40 +186,40 @@
     <Compile Include="Infraestructura\IEmpleadoServices.cs" />
     <Compile Include="Mapping\WebProfile.cs" />
     <Compile Include="Models\Empleados.cs">
-      <DependentUpon>VacacionesBd.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Empresas.cs">
-      <DependentUpon>VacacionesBd.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MotivosAusencia.cs">
-      <DependentUpon>VacacionesBd.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Permisos.cs">
-      <DependentUpon>VacacionesBd.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Roles.cs">
-      <DependentUpon>VacacionesBd.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UsuarioRol.cs">
-      <DependentUpon>VacacionesBd.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Usuarios.cs">
-      <DependentUpon>VacacionesBd.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\VacacionesBd.Context.cs">
+    <Compile Include="Models\VacacionesBD.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>VacacionesBd.Context.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\VacacionesBd.cs">
+    <Compile Include="Models\VacacionesBD.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>VacacionesBd.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\VacacionesBd.Designer.cs">
+    <Compile Include="Models\VacacionesBD.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>VacacionesBd.edmx</DependentUpon>
+      <DependentUpon>VacacionesBD.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ClaimManager.cs" />
@@ -220,7 +227,9 @@
     <Compile Include="Services\EmpleadoServices.cs" />
     <Compile Include="ViewModels\EmpleadosVM.cs" />
     <Compile Include="ViewModels\EmpresaVM.cs" />
+    <Compile Include="ViewModels\MotivosAusenciaVM.cs" />
     <Compile Include="ViewModels\PerfilVM.cs" />
+    <Compile Include="ViewModels\PermisosVM.cs" />
     <Compile Include="ViewModels\RolVM.cs" />
     <Compile Include="ViewModels\UsuariosRolVM.cs" />
     <Compile Include="ViewModels\UsuariosVM.cs" />
@@ -246,15 +255,15 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\VacacionesBd.Context.tt">
+    <Content Include="Models\VacacionesBD.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>VacacionesBd.edmx</DependentUpon>
-      <LastGenOutput>VacacionesBd.Context.cs</LastGenOutput>
+      <DependentUpon>VacacionesBD.edmx</DependentUpon>
+      <LastGenOutput>VacacionesBD.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\VacacionesBd.tt">
+    <Content Include="Models\VacacionesBD.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>VacacionesBd.edmx</DependentUpon>
-      <LastGenOutput>VacacionesBd.cs</LastGenOutput>
+      <DependentUpon>VacacionesBD.edmx</DependentUpon>
+      <LastGenOutput>VacacionesBD.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -265,12 +274,12 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EntityDeploy Include="Models\VacacionesBd.edmx">
+    <EntityDeploy Include="Models\VacacionesBD.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>VacacionesBd.Designer.cs</LastGenOutput>
+      <LastGenOutput>VacacionesBD.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\VacacionesBd.edmx.diagram">
-      <DependentUpon>VacacionesBd.edmx</DependentUpon>
+    <Content Include="Models\VacacionesBD.edmx.diagram">
+      <DependentUpon>VacacionesBD.edmx</DependentUpon>
     </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
@@ -305,6 +314,8 @@
     <Content Include="Views\Auth\Perfil.cshtml" />
     <Content Include="Views\Auth\EmpleadosPorEmpresa.cshtml" />
     <Content Include="Views\Empleados\InsertarEmpleado.cshtml" />
+    <Content Include="Views\Permisos\CrearPermiso.cshtml" />
+    <Content Include="Views\Permisos\Reporte.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -372,10 +383,10 @@
       <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
-    <Error Condition="!Exists('packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
-    <Error Condition="!Exists('packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
   </Target>
-  <Import Project="packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
