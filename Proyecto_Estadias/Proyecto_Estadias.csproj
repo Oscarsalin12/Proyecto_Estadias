@@ -316,6 +316,7 @@
     <Content Include="Views\Empleados\InsertarEmpleado.cshtml" />
     <Content Include="Views\Permisos\CrearPermiso.cshtml" />
     <Content Include="Views\Permisos\Reporte.cshtml" />
+    <Content Include="Views\Empleados\EditarEmpleado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

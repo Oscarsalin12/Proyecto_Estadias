@@ -44,6 +44,32 @@ namespace Proyecto_Estadias.Controllers
         }
 
 
+        [HttpGet]
+        public ActionResult EditarEmpleado(int id)
+        {
+            var empleado = empleadoServices.GetEmpleadoPorId(id);
+            if (empleado == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(empleado);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditarEmpleado(Empleados emp)
+        {
+            if (ModelState.IsValid)
+            {
+                empleadoServices.ActualizarEmpleado(emp); // Aquí se hace el cálculo y el update
+                return RedirectToAction("Perfil", "Auth"); // Ajusta el nombre si es necesario
+            }
+
+            return View(emp);
+        }
+
+
         //public ActionResult EmpleadosPorEmpresa(int id)
         //{
         //    empleadoServices.ActualizarVacacionesYPermisos();

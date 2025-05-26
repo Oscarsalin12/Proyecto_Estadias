@@ -57,15 +57,9 @@ namespace Proyecto_Estadias.Services
         #endregion
         public void ActualizarEmpleado(Empleados empleado)
         {
-            var existente = db.Empleados.Find(empleado.Id);
-            if (existente == null) return;
+            var existe = db.Empleados.Find(empleado.Id);
+            if (existe == null) return;
 
-            existente.Nombre = empleado.Nombre;
-            existente.NumEmpleado = empleado.NumEmpleado;
-            existente.FechaIDeIngreso = empleado.FechaIDeIngreso;
-            existente.IdEmpresa = empleado.IdEmpresa;
-
-            // recalcular años, meses y vacaciones
             var hoy = DateTime.Today;
             var fechaIngreso = empleado.FechaIDeIngreso;
 
@@ -80,13 +74,21 @@ namespace Proyecto_Estadias.Services
                 anios--;
                 meses += 12;
             }
+            existe.Nombre = empleado.Nombre;
+            existe.FechaIDeIngreso = empleado.FechaIDeIngreso;
 
-            existente.AniosTrabajados = anios;
-            existente.MesesTrabajados = meses;
-            existente.intDiasVacaciones = CalcularDiasVacaciones(anios);
+            if(empleado.IdEmpresa > 0)
+            {
+                existe.IdEmpresa = empleado.IdEmpresa;
+
+            }
+            existe.AniosTrabajados = anios;
+            existe.MesesTrabajados = meses;
+            existe.intDiasVacaciones = CalcularDiasVacaciones(anios);
 
             db.SaveChanges();
         }
+     
       public void ActualizarVacacionesYPermisos()
         {
             var empleados = db.Empleados.ToList();
@@ -120,6 +122,9 @@ namespace Proyecto_Estadias.Services
             }
             db.SaveChanges();
         }
-
+        public Empleados GetEmpleadoPorId(int id)
+        {
+            return db.Empleados.FirstOrDefault(e => e.Id == id);
+        }
     }
 }

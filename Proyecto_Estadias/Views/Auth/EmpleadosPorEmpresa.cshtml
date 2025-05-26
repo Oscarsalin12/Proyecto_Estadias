@@ -27,6 +27,9 @@
             <td>@emp.AniosTrabajados</td>
             <td>@emp.MesesTrabajados</td>
             <td>@emp.intDiasVacaciones</td>
+            <td>
+                @Html.ActionLink("Editar", "EditarEmpleado", "Empleados", new { id = emp.Id }, new { @class = "btn btn-primary btn-sm" })
+            </td>
         </tr>
     }
 </table>
