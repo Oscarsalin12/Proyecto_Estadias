@@ -8,13 +8,18 @@
 <h2>Bienvenido, @Model.Usuario.Usuario</h2>
 
 <h3>Empresas</h3>
-<ul>
+
+<div class="row">
     @foreach (var empresa in Model.Empresas)
     {
-        <li>
-            @Html.ActionLink(empresa.Nombre, "EmpleadosPorEmpresa", "Auth", new { id = empresa.Id }, null)
-        </li>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="~/Content/imagenes/empresas/@(empresa.Id).jpg" class="card-img-top" alt="Imagen de @empresa.Nombre" style="height:200px; object-fit:cover;" />
+                <div class="card-body text-center">
+                    <h5 class="card-title">@empresa.Nombre</h5>
+                    @Html.ActionLink("Ver empleados", "EmpleadosPorEmpresa", "Auth", new { id = empresa.Id }, new { @class = "btn btn-primary" })
+                </div>
+            </div>
+        </div>
     }
-
-    
-</ul>
+</div>

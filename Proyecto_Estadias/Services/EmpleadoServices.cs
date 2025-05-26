@@ -41,6 +41,7 @@ namespace Proyecto_Estadias.Services
             emp.AniosTrabajados = anios;
             emp.MesesTrabajados = meses;
             emp.intDiasVacaciones = diasVacaciones;
+            emp.DiasDisponibles = diasVacaciones;
 
             // Insertar en la base de datos
             db.Empleados.Add(emp);
@@ -110,15 +111,15 @@ namespace Proyecto_Estadias.Services
                 }
 
                 int diasBase = CalcularDiasVacaciones(anios);
-
-                int diasPermiso = db.Permisos
+                int diasPermisoTomados = db.Permisos
                     .Where(p => p.IdEmpleado == emp.Id)
                     .Count();
-                int diasDisponibles = Math.Max(diasBase - diasPermiso, 0);
+                int diasDisponibles = Math.Max(diasBase - diasPermisoTomados, 0);
 
                 emp.AniosTrabajados = anios;
                 emp.MesesTrabajados = meses;
-                emp.intDiasVacaciones = diasDisponibles;
+                emp.intDiasVacaciones = diasBase;
+                emp.DiasDisponibles = diasDisponibles;
             }
             db.SaveChanges();
         }

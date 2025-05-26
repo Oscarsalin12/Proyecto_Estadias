@@ -24,6 +24,9 @@
                 <td>@permiso.Empresas.Nombre</td>
                 <td>@permiso.MotivosAusencia.NombreMotivo</td>
                 <td>@permiso.FechaGeneracion.ToShortDateString()</td>
+                <td>
+                @Html.ActionLink("GenerarPdf", "GenerarPDFEmpleado", "Permisos", new { id = permiso.Empleados.Id }, new { @class = "btn btn-primary btn-sm" })
+                </td>
             </tr>
         }
         @Html.ActionLink("generar reporte", "GenerarPDF", "Permisos", null, new { @class = "btn btn-dark btn-group-sm w-25" })

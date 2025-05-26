@@ -19,6 +19,8 @@ namespace Proyecto_Estadias.Models
         public int IdTipoPermiso { get; set; }
         public int IdEmpresa { get; set; }
         public System.DateTime FechaGeneracion { get; set; }
+        public System.DateTime FechaInicio { get; set; }
+        public System.DateTime FechaFinal { get; set; }
     
         public virtual Empleados Empleados { get; set; }
         public virtual Empresas Empresas { get; set; }

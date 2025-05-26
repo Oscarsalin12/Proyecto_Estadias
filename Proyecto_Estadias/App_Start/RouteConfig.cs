@@ -16,7 +16,7 @@ namespace Proyecto_Estadias
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Auth", action = "Perfil", id = UrlParameter.Optional }
             );
         }
     }

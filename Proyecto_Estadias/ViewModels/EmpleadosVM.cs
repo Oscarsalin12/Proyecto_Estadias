@@ -3,6 +3,7 @@ using Proyecto_Estadias.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Web;
 
 namespace Proyecto_Estadias.ViewModels
@@ -17,6 +18,7 @@ namespace Proyecto_Estadias.ViewModels
         public int MesesTrabajados { get; set; }
         public int intDiasVacaciones { get; set; }
         public int IdEmpresa { get; set; }
+        public int DiasDisponibles { get; set; }
         public List<EmpresaVM> empresaVM { get; set; }
         public virtual Empresas Empresa { get; set; }
     }

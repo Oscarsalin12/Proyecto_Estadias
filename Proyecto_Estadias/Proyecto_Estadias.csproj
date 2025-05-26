@@ -252,9 +252,13 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\custom-navbar.css" />
+    <Content Include="Content\imagenes\empresas\1.jpg" />
+    <Content Include="Content\imagenes\empresas\2.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Imagenes\1.jpg" />
+    <Content Include="Imagenes\2.jpg" />
     <Content Include="Models\VacacionesBD.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>VacacionesBD.edmx</DependentUpon>

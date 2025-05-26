@@ -26,8 +26,13 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.FechaGeneracion, "Fecha de ausencia")
-        @Html.TextBoxFor(m => m.FechaGeneracion, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
+        @Html.LabelFor(m => m.FechaInicio, "Fecha de inicio")
+        @Html.TextBoxFor(m => m.FechaInicio, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.FechaFinal, "Fecha final")
+        @Html.TextBoxFor(m => m.FechaFinal, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
     </div>
 
     <button type="submit" class="btn btn-primary">Guardar Permiso</button>
@@ -46,14 +51,12 @@
                     success: function (data) {
                         $('#empresa').text(data.empresa);
                         $('#vacaciones').text(data.vacaciones);
-                        console.log("Empresa ID:", data.empresaId);
                         $('#IdEmpresa').val(data.empresaId);
                     },
                     error: function(){
-                    alert('Error al cargar los datos del empleado');
+                        alert('Error al cargar los datos del empleado');
                     }
                 });
-             
             } else {
                 $('#empresa').text('');
                 $('#vacaciones').text('');

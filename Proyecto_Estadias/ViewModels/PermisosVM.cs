@@ -15,6 +15,9 @@ namespace Proyecto_Estadias.ViewModels
         public int IdEmpresa { get; set; }
         public DateTime FechaGeneracion { get; set; }
 
+        public DateTime FechaInicio { get; set; }
+        public DateTime FechaFinal{get; set;}
+
         public List<SelectListItem> EmpresasVM { get; set; }
         public List<SelectListItem> EmpleadosVM { get; set; }
         public List<SelectListItem> MotivosAusenciaVM { get; set; }

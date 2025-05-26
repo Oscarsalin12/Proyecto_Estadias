@@ -28,6 +28,7 @@ namespace Proyecto_Estadias.Models
         public int MesesTrabajados { get; set; }
         public int intDiasVacaciones { get; set; }
         public int IdEmpresa { get; set; }
+        public int DiasDisponibles { get; set; }
     
         public virtual Empresas Empresas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

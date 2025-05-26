@@ -15,6 +15,7 @@
         <th>años trabajados</th>
         <th>meses trabajados</th>
         <th>dias de vaciones </th>
+        <th>Dias disponibles</th>
         
         <!-- Agrega aquí los campos que tenga tu entidad Empleados -->
     </tr>
@@ -27,8 +28,10 @@
             <td>@emp.AniosTrabajados</td>
             <td>@emp.MesesTrabajados</td>
             <td>@emp.intDiasVacaciones</td>
+            <td>@emp.DiasDisponibles</td>
             <td>
                 @Html.ActionLink("Editar", "EditarEmpleado", "Empleados", new { id = emp.Id }, new { @class = "btn btn-primary btn-sm" })
+
             </td>
         </tr>
     }
