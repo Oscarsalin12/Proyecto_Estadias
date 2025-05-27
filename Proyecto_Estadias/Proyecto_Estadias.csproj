@@ -92,6 +92,12 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -184,6 +190,7 @@
     <Compile Include="Infraestructura\IAuthServices.cs" />
     <Compile Include="Infraestructura\IClaimManager.cs" />
     <Compile Include="Infraestructura\IEmpleadoServices.cs" />
+    <Compile Include="Infraestructura\IPermisosServices.cs" />
     <Compile Include="Mapping\WebProfile.cs" />
     <Compile Include="Models\Empleados.cs">
       <DependentUpon>VacacionesBD.tt</DependentUpon>
@@ -225,6 +232,7 @@
     <Compile Include="Security\ClaimManager.cs" />
     <Compile Include="Services\AuthServices.cs" />
     <Compile Include="Services\EmpleadoServices.cs" />
+    <Compile Include="Services\PermisosService.cs" />
     <Compile Include="ViewModels\EmpleadosVM.cs" />
     <Compile Include="ViewModels\EmpresaVM.cs" />
     <Compile Include="ViewModels\MotivosAusenciaVM.cs" />
@@ -254,6 +262,8 @@
     <Content Include="Content\custom-navbar.css" />
     <Content Include="Content\imagenes\empresas\1.jpg" />
     <Content Include="Content\imagenes\empresas\2.jpg" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\paginacion.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -321,6 +331,7 @@
     <Content Include="Views\Permisos\CrearPermiso.cshtml" />
     <Content Include="Views\Permisos\Reporte.cshtml" />
     <Content Include="Views\Empleados\EditarEmpleado.cshtml" />
+    <Content Include="Views\Permisos\Paginacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

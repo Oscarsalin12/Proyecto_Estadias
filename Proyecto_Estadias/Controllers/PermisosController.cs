@@ -1,7 +1,10 @@
-﻿using iTextSharp.text;
+﻿using AutoMapper;
+using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.Ajax.Utilities;
+using Proyecto_Estadias.Infraestructura;
 using Proyecto_Estadias.Models;
+using Proyecto_Estadias.Services;
 using Proyecto_Estadias.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -11,12 +14,18 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
-
+using PagedList;
 namespace Proyecto_Estadias.Controllers
 {
     public class PermisosController : Controller
     {
         private readonly Vacaciones_ProyectoEntities db = new Vacaciones_ProyectoEntities();
+        private readonly IPermisosServices permisosServices = null;
+
+        public PermisosController()
+        {
+            this.permisosServices = new PermisosService();
+        }
 
 
         [HttpGet]
@@ -84,7 +93,7 @@ namespace Proyecto_Estadias.Controllers
                 }
                 
                 db.SaveChanges();
-                return RedirectToAction("Reporte");
+                return RedirectToAction("Paginacion");
             }
 
             model.EmpleadosVM = db.Empleados.Select(e => new SelectListItem
@@ -211,6 +220,33 @@ namespace Proyecto_Estadias.Controllers
                 return File(ms.ToArray(), "application/pdf", $"ReporteEmpleado_{empleado.Nombre}.pdf");
             }
         }
+         
+        [HttpGet]
+        public ActionResult Paginacion(int? page, int pageSize = 7)
+        {
+            int pageNumber = (page ?? 1); //Pagina por defecto 
+            List<Permisos> resultado = permisosServices.PermisosAll()
+                .OrderBy(p => p.FechaGeneracion).ToList(); //Ordenamiento por fecha 
+            //Se aplica paginacon paginacion
+            List<PermisosVM> permisosVM = Mapper.Map<List<PermisosVM>>(resultado);
+
+            return View(permisosVM.ToPagedList(pageNumber, pageSize));
+        }
+
+        public JsonResult BuscarEmpleado(string term)
+        {
+            var empleados = db.Empleados
+                .Where(e => e.Nombre.Contains(term) || e.NumEmpleado.ToString().Contains(term))
+                .Select(e => new
+                {
+                    Id = e.Id,
+                    NombreCompleto = e.Nombre,
+                    NumeroEmpleado = e.NumEmpleado
+                }).ToList();
+
+            return Json(empleados, JsonRequestBehavior.AllowGet);
+        }
+
     } 
 }
 
