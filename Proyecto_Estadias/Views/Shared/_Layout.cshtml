@@ -13,7 +13,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
         <div class="container">
-            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+            <a class="navbar-brand" href="@Url.Action("Perfil", "Auth")">
                 <img src="~/Content/logo.png" alt="Logo" height="40" class="me-2"> <!-- Logo -->
                 Mi Aplicación
             </a>
@@ -22,16 +22,18 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
+                    @*<li class="nav-item">
                         @Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "nav-link" })
-                    </li>
+                    </li>*@
 
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("Mi Perfil", "Perfil", "Auth", null, new { @class = "nav-link" })</li>
+                      
                         <li>@Html.ActionLink("Añadir Usuaurio", "Account", "Auth", null, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Añadir Empleado", "InsertarEmpleado", "Empleados", null, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Crear Permiso", "CrearPermiso", "Permisos", null, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Historial de Reportes", "Reporte", "Permisos", null, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Cerrar Sesión", "Logout", "Auth", null, new { @class = "nav-link" })</li>
                     }
                     else
