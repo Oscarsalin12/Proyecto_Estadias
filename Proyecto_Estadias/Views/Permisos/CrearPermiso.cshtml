@@ -11,7 +11,13 @@
 {
     <div class="form-group">
         @Html.LabelFor(m => m.IdEmpleado)
-        @Html.DropDownListFor(m => m.IdEmpleado, Model.EmpleadosVM, "Seleccione un empleado", new { @class = "form-control", onchange = "cargarDatosEmpleado()" })
+      <select id="IdEmpleado" name="IdEmpleado" class="form-control" onchange="cargarDatosEmpleado()">
+          <option value="">Seleccione un Empleado</option>
+          @foreach (var emp in Model.Empleados)
+                {
+                    <option value="@emp.Id">@emp.Nombre</option>
+                }
+      </select>
     </div>
 
     <div id="datosEmpleado" style="margin-bottom:15px;">
@@ -22,7 +28,13 @@
 
     <div class="form-group">
         @Html.LabelFor(m => m.IdTipoPermiso)
-        @Html.DropDownListFor(m => m.IdTipoPermiso, Model.MotivosAusenciaVM, "Seleccione motivo", new { @class = "form-control" })
+        <select id="IdTipoPermiso" name="IdTipoPermiso" class="form-control">
+            <option value="">Seleccione El Motivo</option>
+            @foreach (var motivo in Model.MotivosAusencia)
+                {
+                    <option value="@motivo.Id">@motivo.NombreMotivo</option>
+                }
+        </select>
     </div>
 
     <div class="form-group">
@@ -44,20 +56,15 @@
     <script>
         function cargarDatosEmpleado() {
             var empleadoId = $('#IdEmpleado').val();
-            if (empleadoId && empleadoId !== "") {
-                $.ajax({
-                    url: '@Url.Action("ObtenerDatosEmpleado","Permisos")',
-                    type: 'GET',
-                    data: { id: empleadoId },
-                    success: function (data) {
+            if (empleadoId) {
+                $.get('@Url.Action("ObtenerDatosEmpleado","Permisos")',
+                    { id: empleadoId },
+                    function (data) {
+
                         $('#empresa').text(data.empresa);
                         $('#vacaciones').text(data.vacaciones);
                         $('#IdEmpresa').val(data.empresaId);
-                    },
-                    error: function(){
-                        alert('Error al cargar los datos del empleado');
-                    }
-                });
+                    });
             } else {
                 $('#empresa').text('');
                 $('#vacaciones').text('');

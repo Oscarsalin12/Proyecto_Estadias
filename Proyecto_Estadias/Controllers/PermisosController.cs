@@ -33,24 +33,11 @@ namespace Proyecto_Estadias.Controllers
         {
             var model = new PermisosVM
             {
-                EmpleadosVM = db.Empleados.Select(e => new SelectListItem
-                {
-                    Value = e.Id.ToString(),
-                    Text = e.Nombre
-                }).ToList(),
-
-                MotivosAusenciaVM = db.MotivosAusencia.Select(m => new SelectListItem
-                {
-                    Value = m.Id.ToString(),
-                    Text = m.NombreMotivo
-                }).ToList(),
+                Empleados = permisosServices.ObtenerEmpleados(),
+                MotivosAusencia = permisosServices.ObtenerMotivos(),
+                Empresas = permisosServices.ObtenerEmpresas(),
                 FechaGeneracion = DateTime.Today
             };
-            model.EmpresasVM = db.Empresas.Select(em => new SelectListItem
-            {
-                Value = em.Id.ToString(),
-                Text = em.Nombre
-            }).ToList();
             return View(model);
         }
 
@@ -69,51 +56,18 @@ namespace Proyecto_Estadias.Controllers
                     FechaFinal = model.FechaFinal
 
                 };
-
-                db.Permisos.Add(permiso);
-                //Descontar un dia de vacaciones 
-                var empleado = db.Empleados.FirstOrDefault(e => e.Id == model.IdEmpleado);
-                if (empleado != null)
+                if (permisosServices.CrearPermiso(permiso, out string error))
                 {
-                    int diasSolicitados = (model.FechaFinal - model.FechaInicio).Days + 1;
-
-                    if (empleado.DiasDisponibles >= diasSolicitados)
-                    {
-                        empleado.DiasDisponibles -= diasSolicitados;
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "El empleado no tiene suficientes dias disponibles.");
-                        return View(model);
-                    }
-                } else
-                {
-                    ModelState.AddModelError("", "La fecha final no puede ser menor que la fecha de inicio");
-                    return View(model);
+                    return RedirectToAction("Paginacion");
                 }
-                
-                db.SaveChanges();
-                return RedirectToAction("Paginacion");
+                else
+                {
+                    ModelState.AddModelError("", error);
+                }
             }
-
-            model.EmpleadosVM = db.Empleados.Select(e => new SelectListItem
-            {
-                Value = e.Id.ToString(),
-                Text = e.Nombre
-            }).ToList();
-
-            model.MotivosAusenciaVM = db.MotivosAusencia.Select(m => new SelectListItem
-            {
-                Value = m.Id.ToString(),
-                Text = m.NombreMotivo
-            }).ToList();
-
-            model.EmpresasVM = db.Empresas.Select(em => new SelectListItem
-            {
-                Value = em.Id.ToString(),
-                Text = em.Nombre
-            }).ToList();
-
+            model.Empleados = permisosServices.ObtenerEmpleados();
+            model.MotivosAusencia = permisosServices.ObtenerMotivos();
+            model.Empresas = permisosServices.ObtenerEmpresas();
             return View(model);
         }
 
@@ -161,7 +115,7 @@ namespace Proyecto_Estadias.Controllers
         [HttpGet]
         public JsonResult ObtenerDatosEmpleado(int id)
         {
-            var empleado = db.Empleados.Include("Empresas").FirstOrDefault(e => e.Id == id);
+            var empleado = permisosServices.ObtenerEmpleadoPorId(id);
             if (empleado != null)
             {
 
@@ -222,7 +176,7 @@ namespace Proyecto_Estadias.Controllers
         }
          
         [HttpGet]
-        public ActionResult Paginacion(int? page, int pageSize = 7)
+        public ActionResult Paginacion(int? page, int pageSize = 5)
         {
             int pageNumber = (page ?? 1); //Pagina por defecto 
             List<Permisos> resultado = permisosServices.PermisosAll()

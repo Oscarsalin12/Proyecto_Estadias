@@ -21,9 +21,9 @@ namespace Proyecto_Estadias.Mapping
                 .ForMember(dest => dest.Empresas, origen => origen.MapFrom(c => c.empresaVM)).ReverseMap();
 
             CreateMap<Proyecto_Estadias.Models.Permisos, Proyecto_Estadias.ViewModels.PermisosVM>()
-       .ForMember(dest => dest.EmpleadosVM, opt => opt.Ignore())
-       .ForMember(dest => dest.EmpresasVM, opt => opt.Ignore())
-       .ForMember(dest => dest.MotivosAusenciaVM, opt => opt.Ignore())
+       .ForMember(dest => dest.Empleados, opt => opt.Ignore())
+       .ForMember(dest => dest.Empresas, opt => opt.Ignore())
+       .ForMember(dest => dest.MotivosAusencia, opt => opt.Ignore())
        .ReverseMap();
 
 

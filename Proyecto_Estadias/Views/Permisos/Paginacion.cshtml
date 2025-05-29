@@ -16,32 +16,36 @@
                             <table class=" table table-striped table-bordered">
                                 <thead class="table-dark">
                                     <tr>
+                                        <th>Numero empleado</th>
                                         <th>Empleado</th>
                                         <th>Empresa</th>
                                         <th>Motivo de Ausencia</th>
                                         <th>Fecha Generacion</th>
                                         <th>Inicio</th>
                                         <th>Final</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tablaPermisos">
                                     @foreach (var p in Model)
                                     {
                                         <tr>
-                                            <td>@p.IdEmpleado</td>
-                                            <td>@p.IdEmpresa</td>
-                                            <td>@p.IdTipoPermiso</td>
+                                            <td>@p.empleados.NumEmpleado</td>
+                                            <td>@p.empleados.Nombre</td>
+                                            <td>@p.empresas.Nombre</td>
+                                            <td>@p.motivosAusencia.NombreMotivo</td>
                                             <td>@p.FechaGeneracion.ToString("dd/MM/yyyy")</td>
                                             <td>@p.FechaInicio.ToString("dd/MM/yyyy")</td>
                                             <td>@p.FechaFinal.ToString("dd/MM/yyyy")</td>
-                                            @Html.ActionLink("GenerarPdf", "GenerarPDFEmpleado", "Permisos", new { id = p.IdEmpleado }, new { @class = "btn btn-primary btn-sm" })
+                                            <td>@Html.ActionLink("GenerarPdf", "GenerarPDFEmpleado", "Permisos", new { id = p.IdEmpleado }, new { @class = "btn btn-primary btn-sm" })</td> 
                                         </tr>
+                                       
                                     }
                                 </tbody>
                             </table>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div id="Paginacion">
+                            <div id="paginacion">
                                 @Html.PagedListPager(Model, page => Url.Action("Paginacion", new { page = page }), new PagedListRenderOptions
                            {
                                DisplayLinkToFirstPage = PagedListDisplayMode.Always,
@@ -49,7 +53,7 @@
                                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
                                DisplayLinkToNextPage = PagedListDisplayMode.Always,
                                DisplayEllipsesWhenNotShowingAllPageNumbers = true,
-                               MaximumPageNumbersToDisplay = 7,
+                               MaximumPageNumbersToDisplay = 5 ,
                                ContainerDivClasses = new[] { "pagination-container" },
                                UlElementClasses = new[] { "pagination" },
                                LiElementClasses = new[] { "page-item" }
