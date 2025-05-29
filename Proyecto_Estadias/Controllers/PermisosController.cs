@@ -27,6 +27,7 @@ namespace Proyecto_Estadias.Controllers
             this.permisosServices = new PermisosService();
         }
 
+        #region metodo para crear permisos
 
         [HttpGet]
         public ActionResult CrearPermiso()
@@ -71,15 +72,20 @@ namespace Proyecto_Estadias.Controllers
             return View(model);
         }
 
-        public ActionResult Reporte()
-        {
-            var permisos = db.Permisos.Include("Empresas").Include("Empleados").Include("MotivosAusencia").ToList();
-            return View(permisos);
-        }
+        #endregion
 
+
+        // no aplica 
+        //public ActionResult Reporte()
+        //{
+        //    var permisos = db.Permisos.Include("Empresas").Include("Empleados").Include("MotivosAusencia").ToList();
+        //    return View(permisos);
+        //}
+
+        #region generar pdf
         public FileResult GenerarPDF()
         {
-            var permisos = db.Permisos.Include("Empresas").Include("Empleados").Include("MotivosAusencia").ToList();
+            var permisos = permisosServices.ObtenerPermisosConDetalles();
 
             using (MemoryStream ms = new MemoryStream())
             {
@@ -135,12 +141,9 @@ namespace Proyecto_Estadias.Controllers
 
         public FileResult  GenerarPDFEmpleado(int id)
         {
-            var empleado = db.Empleados.FirstOrDefault(e => e.Id == id);
-            var permisos = db.Permisos
-                .Where(p => p.IdEmpleado == id)
-                .Include("Empresas")
-                .Include("MotivosAusencia")
-                .ToList();
+            var data = permisosServices.ObtenerPermisosPorEmpleados(id);
+            var empleado = data.Item1;
+            var permisos = data.Item2;
 
             using (MemoryStream ms = new MemoryStream())
             {
@@ -174,7 +177,11 @@ namespace Proyecto_Estadias.Controllers
                 return File(ms.ToArray(), "application/pdf", $"ReporteEmpleado_{empleado.Nombre}.pdf");
             }
         }
-         
+
+        #endregion
+
+
+
         [HttpGet]
         public ActionResult Paginacion(int? page, int pageSize = 5)
         {

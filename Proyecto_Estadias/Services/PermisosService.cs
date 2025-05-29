@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Org.BouncyCastle.Math.EC.Rfc8032;
 using Proyecto_Estadias.Infraestructura;
 using Proyecto_Estadias.Models;
 namespace Proyecto_Estadias.Services
@@ -13,6 +14,7 @@ namespace Proyecto_Estadias.Services
         {
             this.db = new Vacaciones_ProyectoEntities();
         }
+        #region Listas auxiliares 
         public List<Permisos>PermisosAll()
             {
             return db.Permisos.Include("Empresas").Include("Empleados").Include("MotivosAusencia").ToList();
@@ -32,7 +34,11 @@ namespace Proyecto_Estadias.Services
         {
             return db.Empresas.OrderBy(emp => emp.Id).ToList();
         }
-      public Empleados ObtenerEmpleadoPorId(int id)
+
+        #endregion
+
+        #region motodo de permisos
+        public Empleados ObtenerEmpleadoPorId(int id)
         {
           return  db.Empleados.Include("Empresas").FirstOrDefault(e => e.Id == id);
         }
@@ -65,6 +71,9 @@ namespace Proyecto_Estadias.Services
             return true;
         }
 
+        #endregion
+
+        #region  listado de permisos
         public List<Permisos> ObtenerPermisosConDetalles()
         {
             return db.Permisos
@@ -73,11 +82,18 @@ namespace Proyecto_Estadias.Services
                 Include("MotivosAusencia").ToList();
         }
 
-        public List<Permisos> ObtenerPermisosPorEmpleados(int id)
+        public Tuple<Empleados, List<Permisos>> ObtenerPermisosPorEmpleados(int idEmpleado)
         {
-            return db.Permisos
-                .Include("Empresas").Include("MotivosAusencia")
-                .Where(p => p.IdEmpleado == id).ToList();
+            var empleado= db.Empleados.Include("Empresas").FirstOrDefault(e => e.Id == idEmpleado);
+            var permisos= db.Permisos
+                .Include("Empresas")
+                .Include("MotivosAusencia")
+                .Where(p => p.IdEmpleado == idEmpleado)
+                .ToList();
+
+            return Tuple.Create(empleado, permisos);
         }
+
+        #endregion
     }
 }

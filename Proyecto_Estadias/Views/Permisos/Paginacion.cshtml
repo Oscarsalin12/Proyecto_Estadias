@@ -37,10 +37,11 @@
                                             <td>@p.FechaGeneracion.ToString("dd/MM/yyyy")</td>
                                             <td>@p.FechaInicio.ToString("dd/MM/yyyy")</td>
                                             <td>@p.FechaFinal.ToString("dd/MM/yyyy")</td>
-                                            <td>@Html.ActionLink("GenerarPdf", "GenerarPDFEmpleado", "Permisos", new { id = p.IdEmpleado }, new { @class = "btn btn-primary btn-sm" })</td> 
+                                            <td>@Html.ActionLink("GenerarPdf", "GenerarPDFEmpleado", "Permisos", new { id = p.IdEmpleado }, new { @class = "btn btn-primary btn-sm" })</td>
                                         </tr>
-                                       
+
                                     }
+                                    @Html.ActionLink("generar reporte", "GenerarPDF", "Permisos", null, new { @class = "btn btn-dark btn-group-sm w-25" })
                                 </tbody>
                             </table>
                         </div>

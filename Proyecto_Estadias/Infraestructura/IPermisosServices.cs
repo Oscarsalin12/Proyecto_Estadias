@@ -13,8 +13,8 @@ namespace Proyecto_Estadias.Infraestructura
         List<Empleados> ObtenerEmpleados();
         List<MotivosAusencia> ObtenerMotivos();
         List<Permisos> ObtenerPermisosConDetalles();
-        List<Permisos> ObtenerPermisosPorEmpleados(int id);
         List<Empresas> ObtenerEmpresas();
         List<Permisos> PermisosAll();
+        Tuple<Empleados, List<Permisos>> ObtenerPermisosPorEmpleados(int idEmpleado);
     }
 }
