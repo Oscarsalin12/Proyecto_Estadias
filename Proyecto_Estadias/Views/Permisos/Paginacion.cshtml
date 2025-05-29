@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<Proyecto_Estadias.ViewModels.PermisosVM>
+﻿@model PagedList.IPagedList<Proyecto_Estadias.ViewModels.PermisosPdfVM>
     @using PagedList.Mvc
 @{
     ViewBag.Title = "Paginacion";
@@ -30,10 +30,10 @@
                                     @foreach (var p in Model)
                                     {
                                         <tr>
-                                            <td>@p.empleados.NumEmpleado</td>
-                                            <td>@p.empleados.Nombre</td>
-                                            <td>@p.empresas.Nombre</td>
-                                            <td>@p.motivosAusencia.NombreMotivo</td>
+                                            <td>@p.Empleados.NumEmpleado</td>
+                                            <td>@p.Empleados.Nombre</td>
+                                            <td>@p.Empresas.Nombre</td>
+                                            <td>@p.MotivosAusencia.NombreMotivo</td>
                                             <td>@p.FechaGeneracion.ToString("dd/MM/yyyy")</td>
                                             <td>@p.FechaInicio.ToString("dd/MM/yyyy")</td>
                                             <td>@p.FechaFinal.ToString("dd/MM/yyyy")</td>

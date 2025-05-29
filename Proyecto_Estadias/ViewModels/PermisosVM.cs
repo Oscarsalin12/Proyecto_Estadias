@@ -17,9 +17,7 @@ namespace Proyecto_Estadias.ViewModels
 
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFinal{get; set;}
-        public Empleados empleados { get; set; }
-        public Empresas empresas { get; set; }
-        public MotivosAusencia motivosAusencia { get; set; }
+   
         public List<Empresas> Empresas { get; set; }
         public List<Empleados> Empleados { get; set; }
         public List<MotivosAusencia> MotivosAusencia { get; set; }

@@ -189,23 +189,30 @@ namespace Proyecto_Estadias.Controllers
             List<Permisos> resultado = permisosServices.PermisosAll()
                 .OrderBy(p => p.FechaGeneracion).ToList(); //Ordenamiento por fecha 
             //Se aplica paginacon paginacion
-            List<PermisosVM> permisosVM = Mapper.Map<List<PermisosVM>>(resultado);
+            List<PermisosPdfVM> permisosPdfVM = Mapper.Map<List<PermisosPdfVM>>(resultado);
 
-            return View(permisosVM.ToPagedList(pageNumber, pageSize));
+            return View(permisosPdfVM.ToPagedList(pageNumber, pageSize));
         }
 
-        public JsonResult BuscarEmpleado(string term)
-        {
-            var empleados = db.Empleados
-                .Where(e => e.Nombre.Contains(term) || e.NumEmpleado.ToString().Contains(term))
-                .Select(e => new
-                {
-                    Id = e.Id,
-                    NombreCompleto = e.Nombre,
-                    NumeroEmpleado = e.NumEmpleado
-                }).ToList();
 
-            return Json(empleados, JsonRequestBehavior.AllowGet);
+        public JsonResult BuscarEmpleado(string filtro)
+        {
+            if (string.IsNullOrWhiteSpace(filtro))
+                return Json(null, JsonRequestBehavior.AllowGet);
+
+            var empleado = db.Empleados.Include("Empresas")
+                .FirstOrDefault(e => e.Nombre.Contains(filtro) || e.NumEmpleado.ToString() == filtro);
+
+            if (empleado == null)
+                return Json(null, JsonRequestBehavior.AllowGet);
+
+            return Json(new
+            {
+                id = empleado.Id,
+                empresa = empleado.Empresas?.Nombre ?? "",
+                empresaId = empleado.IdEmpresa,
+                vacaciones = empleado.DiasDisponibles
+            }, JsonRequestBehavior.AllowGet);
         }
 
     } 
