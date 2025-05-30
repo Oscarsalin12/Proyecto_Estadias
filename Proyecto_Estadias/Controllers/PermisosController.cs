@@ -209,6 +209,8 @@ namespace Proyecto_Estadias.Controllers
             return Json(new
             {
                 id = empleado.Id,
+                nombre = empleado.Nombre,
+                numEmpleado = empleado.NumEmpleado,
                 empresa = empleado.Empresas?.Nombre ?? "",
                 empresaId = empleado.IdEmpresa,
                 vacaciones = empleado.DiasDisponibles
