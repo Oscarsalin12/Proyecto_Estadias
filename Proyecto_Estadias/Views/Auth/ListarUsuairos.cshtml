@@ -1,0 +1,37 @@
+﻿@model List<Proyecto_Estadias.ViewModels.UsuariosVM>
+
+@{
+    ViewBag.Title = "ListarUsuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Listar Usuarios</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Contraseña</th>
+            <th>Roles y Empresas</th>
+            <th>Acciones</th>   
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Usuario</td>
+                <td>@item.Contrasenia</td>
+                <td>
+                    @foreach (var rol in item.UsuariosRolesVMs)
+                    {
+                        <div><strong>@rol.RolesVM.Nombre</strong> - @rol.EmpresaVM.Nombre</div>
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Asignar Rol", "AsignarRol", "Auth", new { id = item.Id }, new { @class = "btn btn-primary" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

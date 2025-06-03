@@ -1,10 +1,12 @@
 ﻿using Proyecto_Estadias.Filters;
 using Proyecto_Estadias.Infraestructura;
+using Proyecto_Estadias.Models;
 using Proyecto_Estadias.Security;
 using Proyecto_Estadias.Services;
 using Proyecto_Estadias.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -16,6 +18,7 @@ namespace Proyecto_Estadias.Controllers
         private readonly IEmpleadoServices empleadoServices;
         private IClaimManager claimManager;
         private readonly IAuthServices authServices;
+        private readonly Vacaciones_ProyectoEntities db = new Vacaciones_ProyectoEntities();
         public AuthController()
         {
             claimManager = new ClaimManager();
@@ -105,7 +108,7 @@ namespace Proyecto_Estadias.Controllers
         [ExceptionFilter]
         public ActionResult Account(UsuariosVM usuariosVM)
         {
-            System.Diagnostics.Debug.WriteLine("Entró al método POST");
+          
 
             if (ModelState.IsValid)
             {
@@ -159,6 +162,41 @@ namespace Proyecto_Estadias.Controllers
              
             ViewBag.EmpresaNombre = authServices.GetEmpresaNombre(id);
             return View(empleados);
+        }
+        [HttpGet]
+        public ActionResult ListarUsuairos()
+        {
+            var usuariosVM = authServices.UsuariosAll();
+            return View(usuariosVM);
+        }
+
+        [HttpGet]
+        public ActionResult AsignarRol(int id)
+        {
+
+            var roles = authServices.GetAllRoles();
+            var empresas = authServices.GetAllEmpresas();
+
+            var model = new AsignarRolVM
+            {
+                IdUsuario = id,
+                ListaRoles = roles.Select(r => new SelectListItem { Value = r.Id.ToString(), Text = r.Nombre }).ToList(),
+                ListaEmpresas = empresas.Select(e => new SelectListItem { Value = e.Id.ToString(), Text = e.Nombre}).ToList()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AsignarRol(int idUsuario, int idRol , int idEmpresa)
+        {
+            bool resultado = authServices.AsignarRolEmpresa(idUsuario, idRol, idEmpresa);
+
+            if (resultado)
+                TempData["mensaje"] = "Rol asignado correctamente";
+            else
+                TempData["error"] = "el ususario ya tiene ese rol en esa empresa";
+
+            return RedirectToAction("Perfil", "Auth");
         }
     }
 }

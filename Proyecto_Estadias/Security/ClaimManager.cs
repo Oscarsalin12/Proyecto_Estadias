@@ -32,7 +32,18 @@ namespace Proyecto_Estadias.Security
             };
             if (usuariosVM.UsuariosRolesVMs != null && usuariosVM.UsuariosRolesVMs.Any())
             {
-                claims.AddRange(usuariosVM.UsuariosRolesVMs.Select(r => new Claim(ClaimTypes.Role, r.RolesVM.Nombre)));
+                foreach(var item in usuariosVM.UsuariosRolesVMs)
+                {
+                    //Roles 
+                    claims.Add(new Claim(ClaimTypes.Role, item.RolesVM.Nombre));
+
+                    // EMpresa asignada al Rol 
+                    claims.Add(new Claim("EmpresaId", item.IdEmpresa.ToString()));
+
+                    // Rol + Empresa combinados
+
+                    claims.Add(new Claim("RolEmpresa", $"{item.RolesVM.Nombre}:{item.IdEmpresa}"));
+                }
             }
             return new ClaimsIdentity(claims,DefaultAuthenticationTypes.ApplicationCookie);
         }

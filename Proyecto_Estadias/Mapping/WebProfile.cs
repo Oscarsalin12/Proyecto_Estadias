@@ -13,8 +13,8 @@ namespace Proyecto_Estadias.Mapping
         public WebProfile()
         {
             CreateMap<Proyecto_Estadias.ViewModels.UsuariosVM, Proyecto_Estadias.Models.Usuarios>()
-                .ForMember(dest => dest.Roles, origen => origen.MapFrom(c => c.RolVM))
-                .ForMember(dest => dest.Empresas, origen => origen.MapFrom(c => c.empresaVM))
+                //.ForMember(dest => dest.Roles, origen => origen.MapFrom(c => c.RolVM))
+                //.ForMember(dest => dest.Empresas, origen => origen.MapFrom(c => c.empresaVM))
                 .ForMember(dest => dest.UsuarioRol, origen => origen.MapFrom(c => c.UsuariosRolesVMs)).ReverseMap();
 
             CreateMap<Proyecto_Estadias.ViewModels.EmpleadosVM, Proyecto_Estadias.Models.Empleados>()

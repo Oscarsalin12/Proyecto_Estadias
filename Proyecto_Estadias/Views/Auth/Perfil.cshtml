@@ -18,8 +18,14 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">@empresa.Nombre</h5>
                     @Html.ActionLink("Ver empleados", "EmpleadosPorEmpresa", "Auth", new { id = empresa.Id }, new { @class = "btn btn-primary" })
+
                 </div>
             </div>
+
         </div>
+
     }
+
+    @Html.ActionLink("asignar Roles", "AsignarRol", "Auth", new { id = Model.Usuario.Id }, new { @class = "btn btn-primary" })
+    Asignar Rol
 </div>

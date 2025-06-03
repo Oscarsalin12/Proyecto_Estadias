@@ -23,11 +23,7 @@ namespace Proyecto_Estadias.Models
         public int Id { get; set; }
         public string Usuario { get; set; }
         public string Contrasenia { get; set; }
-        public int IdEmpresa { get; set; }
-        public int IdRol { get; set; }
     
-        public virtual Empresas Empresas { get; set; }
-        public virtual Roles Roles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UsuarioRol> UsuarioRol { get; set; }
     }

@@ -4,6 +4,7 @@ using Proyecto_Estadias.Models;
 using Proyecto_Estadias.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -72,7 +73,7 @@ namespace Proyecto_Estadias.Services
             }
         }
 
-        public bool InsertUser(UsuariosVM usuariosVM, int Roles, int Empresas)
+        public bool InsertUser(UsuariosVM usuariosVM, List<int> roles, List<int> empresas)
         {
             bool respuesta = false;
 
@@ -82,20 +83,23 @@ namespace Proyecto_Estadias.Services
                 {
                     Usuario = usuariosVM.Usuario.ToLower(),
                     Contrasenia = usuariosVM.Contrasenia.ToLower(),
-                    IdEmpresa = Empresas,
-                    IdRol = Roles
+                   
                 };
 
-                List<UsuarioRol> usuariosroles = new List<UsuarioRol>();
-                usuariosroles.Add(new UsuarioRol
-                {
-                    IdRol = Roles,
-                    IdEmpresa = Empresas,
-                    FechaRegistro = DateTime.Now,
-                    Usuarios = usuarios
-                });
+                usuarios.UsuarioRol = new List<UsuarioRol>();
 
-                usuarios.UsuarioRol = usuariosroles;
+             foreach (var empresaId in empresas)
+                {
+                    foreach(var rolId in roles)
+                    {
+                        usuarios.UsuarioRol.Add(new UsuarioRol
+                        {
+                            IdEmpresa = empresaId,
+                            IdRol = rolId,
+                            FechaRegistro = DateTime.Now
+                        });
+                    }
+                }
 
                 var transaccion = db.Database.BeginTransaction();
                 db.Usuarios.Add(usuarios);
@@ -113,14 +117,13 @@ namespace Proyecto_Estadias.Services
 
         #endregion
 
-
         #region  metodo para perfil 
 
         public Usuarios GetUsuarioConRelaciones(string nombreusuario)
         {
             return db.Usuarios
-                .Include("Empresas")
-                .Include("Roles")
+                .Include("UsuarioRol.Empresas")
+                .Include("UsuarioRol.Roles")
                 .FirstOrDefault(u => u.Usuario == nombreusuario);
         }
 
@@ -136,5 +139,59 @@ namespace Proyecto_Estadias.Services
         }
 
         #endregion 
+public List<UsuariosVM> UsuariosAll()
+        {
+            var usuarios = db.Usuarios
+                .Include("UsuarioRol.Empresas")
+                .Include("UsuarioRol.Roles")
+                .ToList();
+
+            return usuarios.Select(u => new UsuariosVM
+            {
+                Id = u.Id,
+                Usuario = u.Usuario,
+                Contrasenia = u.Contrasenia,
+                UsuariosRolesVMs = u.UsuarioRol.Select(ur => new UsuariosRolVM
+                {
+                    IdUsuario = ur.IdUsuario,
+                    IdRol = ur.IdRol,
+                    RolesVM = new RolVM
+                    {
+                        Id = ur.Roles.Id,
+                        Nombre = ur.Roles.Nombre
+                    },
+                    EmpresaVM = new EmpresaVM
+                    {
+                        IdEmpresa = ur.Empresas.Id,
+                        Nombre = ur.Empresas.Nombre
+                    }
+                }).ToList()
+            }).ToList();
+        }
+        public bool AsignarRolEmpresa(int idUsuario, int idRol, int idEmpresa)
+        {
+            try
+            {
+                var existe = db.UsuarioRol.Any(ur => ur.IdUsuario == idUsuario && ur.IdRol == idRol && ur.IdEmpresa == idEmpresa);
+                if (existe)
+                    return false;
+
+                UsuarioRol nuevo = new UsuarioRol
+                {
+                    IdUsuario = idUsuario,
+                    IdRol = idRol,
+                    IdEmpresa = idEmpresa,
+                    FechaRegistro = DateTime.Now
+                };
+                db.UsuarioRol.Add(nuevo);
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error al asignar rol: " + ex.Message);
+                return false;
+            }
+        }
     }
 }
