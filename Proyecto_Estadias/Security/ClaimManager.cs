@@ -28,6 +28,7 @@ namespace Proyecto_Estadias.Security
             {
                 new Claim(ClaimTypes.NameIdentifier, usuariosVM.Id.ToString()),
                 new Claim(ClaimTypes.Name, usuariosVM.Usuario),
+                new Claim("IdEmpresa", usuariosVM.UsuariosRolesVMs.First().IdEmpresa.ToString())
 
             };
             if (usuariosVM.UsuariosRolesVMs != null && usuariosVM.UsuariosRolesVMs.Any())

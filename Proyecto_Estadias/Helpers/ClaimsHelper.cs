@@ -10,7 +10,7 @@ namespace Proyecto_Estadias.Helpers
     {
         public static int? GetEmpresaId(ClaimsIdentity identity)
         {
-            var claim = identity.Claims.FirstOrDefault(c => c.Type == "EmpresaId");
+            var claim = identity.Claims.FirstOrDefault(c => c.Type == "IdEmpresa");
             return claim != null ? int.Parse(claim.Value) : (int?)null;
         }
 
@@ -31,11 +31,17 @@ namespace Proyecto_Estadias.Helpers
                 .ToList();
         }
 
+        public static List<string> GetRolEmpresa(ClaimsIdentity identity)
+        {
+            return identity.Claims
+                .Where(c => c.Type == "RolEmpresa")
+                .Select(c => c.Value)
+                .ToList();
+        }
         public static bool TieneAccesoARolYEmpresa(ClaimsIdentity identity, string rol, int idEmpresa)
             {
-            return identity.Claims.All(c =>
-            c.Type == "RolEmpresa" &&
-            c.Type == $"{rol} : {idEmpresa}");
+            var valor = $"{rol}:{idEmpresa}";
+            return identity.Claims.Any(c => c.Type == "RolEmpresa" && c.Value == valor);
         }
 
     }

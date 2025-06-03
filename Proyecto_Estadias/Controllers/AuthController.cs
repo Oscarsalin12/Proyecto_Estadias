@@ -1,4 +1,5 @@
 ﻿using Proyecto_Estadias.Filters;
+using Proyecto_Estadias.Helpers;
 using Proyecto_Estadias.Infraestructura;
 using Proyecto_Estadias.Models;
 using Proyecto_Estadias.Security;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 
@@ -138,6 +140,11 @@ namespace Proyecto_Estadias.Controllers
         [Authorize]
         public ActionResult Perfil()
         {
+            var identity = (ClaimsIdentity)User.Identity;
+            var empresasPermitidas = ClaimsHelper.GetEmpresas(identity);
+            var roles = ClaimsHelper.GetRoles(identity);
+
+
             var usuarioNombre = User.Identity.Name;
             var usuario = authServices.GetUsuarioConRelaciones(usuarioNombre); 
             if (usuario == null)
@@ -155,20 +162,45 @@ namespace Proyecto_Estadias.Controllers
         }
         #endregion
 
+        [Authorize]
         public ActionResult EmpleadosPorEmpresa(int id)
         {
+            var identity = (ClaimsIdentity)User.Identity;
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("perfil", "Auth");
+            }
+            //obtener el eol del ususrio actual 
+
+            var roles = ClaimsHelper.GetRoles(identity);
+            var rol = roles.FirstOrDefault();
+
+            // se realiza la verificacion 
+            if (!ClaimsHelper.TieneAccesoARolYEmpresa(identity, rol , id))
+            {
+                return new HttpUnauthorizedResult("no tiene acceso a esta empresa");
+            }
             empleadoServices.ActualizarVacacionesYPermisos();
             var empleados = authServices.GetEmpleadosPorEmpresa(id); 
-             
             ViewBag.EmpresaNombre = authServices.GetEmpresaNombre(id);
             return View(empleados);
         }
+
+
+
+
         [HttpGet]
         public ActionResult ListarUsuairos()
         {
             var usuariosVM = authServices.UsuariosAll();
             return View(usuariosVM);
         }
+
+
+
+
+
 
         [HttpGet]
         public ActionResult AsignarRol(int id)
