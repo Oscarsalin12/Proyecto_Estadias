@@ -30,7 +30,7 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                       
-                        <li>@Html.ActionLink("Añadir Usuaurio", "Account", "Auth", null, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Añadir Usuario", "Account", "Auth", null, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Añadir Empleado", "InsertarEmpleado", "Empleados", null, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Crear Permiso", "CrearPermiso", "Permisos", null, new { @class = "nav-link" })</li>
                         <li>@Html.ActionLink("Historial de Reportes", "Paginacion", "Permisos", null, new { @class = "nav-link" })</li>

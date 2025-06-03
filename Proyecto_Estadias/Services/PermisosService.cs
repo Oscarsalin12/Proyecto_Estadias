@@ -73,7 +73,7 @@ namespace Proyecto_Estadias.Services
 
         #endregion
 
-#region  listado de permisos
+        #region  listado de permisos
         public List<Permisos> ObtenerPermisosConDetalles()
         {
             return db.Permisos

@@ -72,6 +72,28 @@ namespace Proyecto_Estadias.Controllers
             return View(model);
         }
 
+
+        public JsonResult BuscarEmpleado(string filtro)
+        {
+            if (string.IsNullOrWhiteSpace(filtro))
+                return Json(null, JsonRequestBehavior.AllowGet);
+
+            var empleado = db.Empleados.Include("Empresas")
+                .FirstOrDefault(e => e.Nombre.Contains(filtro) || e.NumEmpleado.ToString() == filtro);
+
+            if (empleado == null)
+                return Json(null, JsonRequestBehavior.AllowGet);
+
+            return Json(new
+            {
+                id = empleado.Id,
+                nombre = empleado.Nombre,
+                numEmpleado = empleado.NumEmpleado,
+                empresa = empleado.Empresas?.Nombre ?? "",
+                empresaId = empleado.IdEmpresa,
+                vacaciones = empleado.DiasDisponibles
+            }, JsonRequestBehavior.AllowGet);
+        }
         #endregion
 
 
@@ -181,7 +203,7 @@ namespace Proyecto_Estadias.Controllers
         #endregion
 
 
-
+        #region listado de permisos generales 
         [HttpGet]
         public ActionResult Paginacion(int? page, int pageSize = 5)
         {
@@ -194,28 +216,10 @@ namespace Proyecto_Estadias.Controllers
             return View(permisosPdfVM.ToPagedList(pageNumber, pageSize));
         }
 
+        #endregion
 
-        public JsonResult BuscarEmpleado(string filtro)
-        {
-            if (string.IsNullOrWhiteSpace(filtro))
-                return Json(null, JsonRequestBehavior.AllowGet);
-
-            var empleado = db.Empleados.Include("Empresas")
-                .FirstOrDefault(e => e.Nombre.Contains(filtro) || e.NumEmpleado.ToString() == filtro);
-
-            if (empleado == null)
-                return Json(null, JsonRequestBehavior.AllowGet);
-
-            return Json(new
-            {
-                id = empleado.Id,
-                nombre = empleado.Nombre,
-                numEmpleado = empleado.NumEmpleado,
-                empresa = empleado.Empresas?.Nombre ?? "",
-                empresaId = empleado.IdEmpresa,
-                vacaciones = empleado.DiasDisponibles
-            }, JsonRequestBehavior.AllowGet);
-        }
+       
+      
 
     } 
 }

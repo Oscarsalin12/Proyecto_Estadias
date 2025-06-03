@@ -138,8 +138,11 @@ namespace Proyecto_Estadias.Services
             return db.Empresas.Where(e => e.Id == idEmpresa).Select(e => e.Nombre).FirstOrDefault();
         }
 
-        #endregion 
-public List<UsuariosVM> UsuariosAll()
+        #endregion
+
+        #region metodos para listado de usuario
+
+        public List<UsuariosVM> UsuariosAll()
         {
             var usuarios = db.Usuarios
                 .Include("UsuarioRol.Empresas")
@@ -193,5 +196,6 @@ public List<UsuariosVM> UsuariosAll()
                 return false;
             }
         }
+        #endregion 
     }
 }

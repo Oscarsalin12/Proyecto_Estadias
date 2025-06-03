@@ -19,6 +19,9 @@ namespace Proyecto_Estadias.Controllers
             empleadoServices = new EmpleadoServices();
         }
 
+        #region metodos para insertar empleado
+
+
         [HttpGet]
         public ActionResult InsertarEmpleado()
         {
@@ -43,7 +46,10 @@ namespace Proyecto_Estadias.Controllers
             
         }
 
+        #endregion
 
+
+        #region metodos de actualizacion 
         [HttpGet]
         public ActionResult EditarEmpleado(int id)
         {
@@ -68,6 +74,10 @@ namespace Proyecto_Estadias.Controllers
 
             return View(emp);
         }
+
+        #endregion
+
+
 
 
         //public ActionResult EmpleadosPorEmpresa(int id)

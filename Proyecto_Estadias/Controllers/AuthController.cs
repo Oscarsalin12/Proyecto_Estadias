@@ -162,6 +162,8 @@ namespace Proyecto_Estadias.Controllers
         }
         #endregion
 
+        #region metodos de lista por empresa 
+
         [Authorize]
         public ActionResult EmpleadosPorEmpresa(int id)
         {
@@ -169,38 +171,34 @@ namespace Proyecto_Estadias.Controllers
 
             if (!User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("perfil", "Auth");
+                return RedirectToAction("Login", "Auth");
             }
             //obtener el eol del ususrio actual 
 
             var roles = ClaimsHelper.GetRoles(identity);
-            var rol = roles.FirstOrDefault();
+            bool tieneAcceso = roles.Any(rol => ClaimsHelper.TieneAccesoARolYEmpresa(identity, rol, id));
 
             // se realiza la verificacion 
-            if (!ClaimsHelper.TieneAccesoARolYEmpresa(identity, rol , id))
+            if (!tieneAcceso)
             {
                 return new HttpUnauthorizedResult("no tiene acceso a esta empresa");
             }
+
             empleadoServices.ActualizarVacacionesYPermisos();
             var empleados = authServices.GetEmpleadosPorEmpresa(id); 
             ViewBag.EmpresaNombre = authServices.GetEmpresaNombre(id);
             return View(empleados);
         }
+        #endregion
 
 
-
-
+        #region metodos de usuarios n
         [HttpGet]
         public ActionResult ListarUsuairos()
         {
             var usuariosVM = authServices.UsuariosAll();
             return View(usuariosVM);
         }
-
-
-
-
-
 
         [HttpGet]
         public ActionResult AsignarRol(int id)
@@ -230,5 +228,6 @@ namespace Proyecto_Estadias.Controllers
 
             return RedirectToAction("Perfil", "Auth");
         }
+        #endregion
     }
 }

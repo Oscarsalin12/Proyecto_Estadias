@@ -2,6 +2,7 @@
 using Proyecto_Estadias.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 
@@ -56,6 +57,8 @@ namespace Proyecto_Estadias.Services
             return Math.Min(dias, 30);
         }
         #endregion
+
+        #region metodo de actualizacion 
         public void ActualizarEmpleado(Empleados empleado)
         {
             var existe = db.Empleados.Find(empleado.Id);
@@ -89,8 +92,11 @@ namespace Proyecto_Estadias.Services
 
             db.SaveChanges();
         }
-     
-      public void ActualizarVacacionesYPermisos()
+        #endregion
+
+        #region metodo para calculo de vaciones 
+
+        public void ActualizarVacacionesYPermisos()
         {
             var empleados = db.Empleados.ToList();
             var hoy = DateTime.Today;
@@ -127,5 +133,6 @@ namespace Proyecto_Estadias.Services
         {
             return db.Empleados.FirstOrDefault(e => e.Id == id);
         }
+        #endregion
     }
 }
