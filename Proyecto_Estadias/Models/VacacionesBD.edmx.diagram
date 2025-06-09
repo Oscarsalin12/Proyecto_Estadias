@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1f5cb50a7ac54be4a45a0c782541a49b" Name="Diagram1">
+        <EntityTypeShape EntityType="Vacaciones_BDModel.Departamentos" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.EmpleadosJuarezO" Width="1.5" PointX="5.25" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.EmpleadosMEDJ" Width="1.5" PointX="5.25" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.EmpleadosTHH" Width="1.5" PointX="5.25" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.Empresas" Width="1.5" PointX="0.75" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.MotivosAusencia" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.PermisosJuarezO" Width="1.5" PointX="7.5" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.PermisosMedJ" Width="1.5" PointX="7.5" PointY="11.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.PermisosTHH" Width="1.5" PointX="7.5" PointY="15.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.Roles" Width="1.5" PointX="5.75" PointY="19.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.SubEmpresasJuarezO" Width="1.5" PointX="3" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.SubEmpresasMedJ" Width="1.5" PointX="3" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.SubEmpresasTHH" Width="1.5" PointX="3" PointY="11.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.UsuarioRol" Width="1.5" PointX="8" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Vacaciones_BDModel.Usuarios" Width="1.5" PointX="5.75" PointY="21.75" IsExpanded="true" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_EmpleadosJuarezO_Departamentos" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_EmpleadosMEDJ_Departamentos" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_EmpleadosTHH_Departamentos" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_EmpleadosJuarezO_SubEmpresasJuarezO" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_PermisosJuarezO_EmpleadosJuarezO" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_EmpleadosMEDJ_SubEmpresasMedJ" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_PermisosMedJ_EmpleadosMEDJ" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_EmpleadosTHH_SubEmpresasTHH" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_Permisos_Empleados" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK__UsuarioRo__IdEmp__4AB81AF0" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_SubEmpresasJuarezO_Empresas" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_SubEmpresasMedJ_Empresas" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_SubEmpresasTHH_Empresas" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_Permisos_MotivosAusencia" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_PermisosJuarezO_MotivosAusencia" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_PermisosMedJ_MotivosAusencia" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_PermisosJuarezO_SubEmpresasJuarezO" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_PermisosMedJ_SubEmpresasMedJ" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK_PermisosTHH_SubEmpresasTHH" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK__UsuarioRo__IdRol__49C3F6B7" ManuallyRouted="false" />
+        <AssociationConnector Association="Vacaciones_BDModel.FK__UsuarioRo__IdUsu__48CFD27E" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

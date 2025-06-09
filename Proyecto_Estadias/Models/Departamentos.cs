@@ -12,26 +12,26 @@ namespace Proyecto_Estadias.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Empleados
+    public partial class Departamentos
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Empleados()
+        public Departamentos()
         {
-            this.Permisos = new HashSet<Permisos>();
+            this.EmpleadosJuarezO = new HashSet<EmpleadosJuarezO>();
+            this.EmpleadosMEDJ = new HashSet<EmpleadosMEDJ>();
+            this.EmpleadosTHH = new HashSet<EmpleadosTHH>();
         }
     
         public int Id { get; set; }
-        public int NumEmpleado { get; set; }
-        public string Nombre { get; set; }
-        public System.DateTime FechaIDeIngreso { get; set; }
-        public int AniosTrabajados { get; set; }
-        public int MesesTrabajados { get; set; }
-        public int intDiasVacaciones { get; set; }
-        public int IdEmpresa { get; set; }
-        public int DiasDisponibles { get; set; }
+        public string ClaveDep { get; set; }
+        public string NombreDep { get; set; }
+        public string NombreEmcargado { get; set; }
     
-        public virtual Empresas Empresas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Permisos> Permisos { get; set; }
+        public virtual ICollection<EmpleadosJuarezO> EmpleadosJuarezO { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EmpleadosMEDJ> EmpleadosMEDJ { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EmpleadosTHH> EmpleadosTHH { get; set; }
     }
 }

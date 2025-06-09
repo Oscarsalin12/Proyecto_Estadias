@@ -25,12 +25,19 @@ namespace Proyecto_Estadias.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Empleados> Empleados { get; set; }
+        public virtual DbSet<Departamentos> Departamentos { get; set; }
+        public virtual DbSet<EmpleadosJuarezO> EmpleadosJuarezO { get; set; }
+        public virtual DbSet<EmpleadosMEDJ> EmpleadosMEDJ { get; set; }
+        public virtual DbSet<EmpleadosTHH> EmpleadosTHH { get; set; }
         public virtual DbSet<Empresas> Empresas { get; set; }
         public virtual DbSet<MotivosAusencia> MotivosAusencia { get; set; }
-        public virtual DbSet<Permisos> Permisos { get; set; }
+        public virtual DbSet<PermisosJuarezO> PermisosJuarezO { get; set; }
+        public virtual DbSet<PermisosMedJ> PermisosMedJ { get; set; }
+        public virtual DbSet<PermisosTHH> PermisosTHH { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
-        public virtual DbSet<SubEmpresas> SubEmpresas { get; set; }
+        public virtual DbSet<SubEmpresasJuarezO> SubEmpresasJuarezO { get; set; }
+        public virtual DbSet<SubEmpresasMedJ> SubEmpresasMedJ { get; set; }
+        public virtual DbSet<SubEmpresasTHH> SubEmpresasTHH { get; set; }
         public virtual DbSet<UsuarioRol> UsuarioRol { get; set; }
         public virtual DbSet<Usuarios> Usuarios { get; set; }
     }

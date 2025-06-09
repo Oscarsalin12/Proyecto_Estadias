@@ -17,23 +17,25 @@ namespace Proyecto_Estadias.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Empresas()
         {
-            this.Empleados = new HashSet<Empleados>();
             this.UsuarioRol = new HashSet<UsuarioRol>();
-            this.Permisos = new HashSet<Permisos>();
-            this.SubEmpresas = new HashSet<SubEmpresas>();
+            this.SubEmpresasJuarezO = new HashSet<SubEmpresasJuarezO>();
+            this.SubEmpresasMedJ = new HashSet<SubEmpresasMedJ>();
+            this.SubEmpresasTHH = new HashSet<SubEmpresasTHH>();
         }
     
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Rfc { get; set; }
+        public string Direccion { get; set; }
+        public byte[] Logo { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Empleados> Empleados { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UsuarioRol> UsuarioRol { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Permisos> Permisos { get; set; }
+        public virtual ICollection<SubEmpresasJuarezO> SubEmpresasJuarezO { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SubEmpresas> SubEmpresas { get; set; }
+        public virtual ICollection<SubEmpresasMedJ> SubEmpresasMedJ { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SubEmpresasTHH> SubEmpresasTHH { get; set; }
     }
 }

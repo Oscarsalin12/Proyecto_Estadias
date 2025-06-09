@@ -1,4 +1,4 @@
-﻿@model List<Proyecto_Estadias.Models.Empleados>
+﻿@model List<Proyecto_Estadias.ViewModels.EmpleadosVM>
 
 @{
     ViewBag.Title = "Empleados";
@@ -7,33 +7,39 @@
 
 <h2>Empleados de @ViewBag.EmpresaNombre</h2>
 
-<table class="table">
-    <tr>
-        <th>Numero de empleado</th>
-        <th>Nombre</th>
-        <th>Fecha de ingreso</th>
-        <th>años trabajados</th>
-        <th>meses trabajados</th>
-        <th>dias de vaciones </th>
-        <th>Dias disponibles</th>
-        
-        <!-- Agrega aquí los campos que tenga tu entidad Empleados -->
-    </tr>
-    @foreach (var emp in Model)
-    {
+<table class="table table-bordered">
+    <thead>
         <tr>
-            <td>@emp.NumEmpleado</td>
-            <td>@emp.Nombre</td>
-            <td>@emp.FechaIDeIngreso</td>
-            <td>@emp.AniosTrabajados</td>
-            <td>@emp.MesesTrabajados</td>
-            <td>@emp.intDiasVacaciones</td>
-            <td>@emp.DiasDisponibles</td>
-            <td>
-                @Html.ActionLink("Editar", "EditarEmpleado", "Empleados", new { id = emp.Id }, new { @class = "btn btn-primary btn-sm" })
+            <th>Numero de empleado</th>
+            <th>Nombre</th>
+            <th>Fecha de ingreso</th>
+            <th>años trabajados</th>
+            <th>meses trabajados</th>
+            <th>dias de vaciones </th>
+            <th>Dias disponibles</th>
+            <th>Departamento</th>
 
-            </td>
-
+            <!-- Agrega aquí los campos que tenga tu entidad Empleados -->
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var emp in Model)
+        {
+            <tr>
+                <td>@emp.NumEmpleado</td>
+                <td>@emp.Nombre</td>
+                <td>@emp.FechaDeIngreso</td>
+                <td>@emp.AniosTrabajados</td>
+                <td>@emp.MesesTrabajados</td>
+                <td>@emp.intDiasVacaciones</td>
+                <td>@emp.DiasDisponibles</td>
+               <
+                <td>
+                    @*@Html.ActionLink("Editar", "EditarEmpleado", "Empleados", new { id = emp.Id }, new { @class = "btn btn-primary btn-sm" })*@
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
 </table>

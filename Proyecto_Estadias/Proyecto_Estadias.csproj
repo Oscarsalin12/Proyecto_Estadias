@@ -180,9 +180,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AuthController.cs" />
-    <Compile Include="Controllers\EmpleadosController.cs" />
+    <Compile Include="Controllers\EmpleadosJuarezOController.cs" />
+    <Compile Include="Controllers\EmpleadosMedJController.cs" />
+    <Compile Include="Controllers\EmpleadosTHHController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\PermisosController.cs" />
+    <Compile Include="Controllers\PermisosJuarezOController.cs" />
+    <Compile Include="Controllers\PermisosMedJController.cs" />
+    <Compile Include="Controllers\PermisosTHHController.cs" />
     <Compile Include="Filters\ExceptionFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -190,54 +194,84 @@
     <Compile Include="Helpers\ClaimsHelper.cs" />
     <Compile Include="Infraestructura\IAuthServices.cs" />
     <Compile Include="Infraestructura\IClaimManager.cs" />
-    <Compile Include="Infraestructura\IEmpleadoServices.cs" />
-    <Compile Include="Infraestructura\IPermisosServices.cs" />
+    <Compile Include="Infraestructura\IEmpleadoMedServices.cs" />
+    <Compile Include="Infraestructura\IEmpleadosJuarezServices.cs" />
+    <Compile Include="Infraestructura\IEmpleadosTHHServices.cs" />
+    <Compile Include="Infraestructura\IPermisosJuarezOServices.cs" />
+    <Compile Include="Infraestructura\IPermisosMedJServices.cs" />
+    <Compile Include="Infraestructura\IPermisosTHHServices.cs" />
     <Compile Include="Mapping\WebProfile.cs" />
-    <Compile Include="Models\Empleados.cs">
-      <DependentUpon>Vacaciones_BD.tt</DependentUpon>
+    <Compile Include="Models\Departamentos.cs">
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EmpleadosJuarezO.cs">
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EmpleadosMEDJ.cs">
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EmpleadosTHH.cs">
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Empresas.cs">
-      <DependentUpon>Vacaciones_BD.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MotivosAusencia.cs">
-      <DependentUpon>Vacaciones_BD.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Permisos.cs">
-      <DependentUpon>Vacaciones_BD.tt</DependentUpon>
+    <Compile Include="Models\PermisosJuarezO.cs">
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PermisosMedJ.cs">
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PermisosTHH.cs">
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Roles.cs">
-      <DependentUpon>Vacaciones_BD.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SubEmpresas.cs">
-      <DependentUpon>Vacaciones_BD.tt</DependentUpon>
+    <Compile Include="Models\SubEmpresasJuarezO.cs">
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SubEmpresasMedJ.cs">
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SubEmpresasTHH.cs">
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UsuarioRol.cs">
-      <DependentUpon>Vacaciones_BD.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Usuarios.cs">
-      <DependentUpon>Vacaciones_BD.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Vacaciones_BD.Context.cs">
+    <Compile Include="Models\VacacionesBD.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Vacaciones_BD.Context.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Vacaciones_BD.cs">
+    <Compile Include="Models\VacacionesBD.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Vacaciones_BD.tt</DependentUpon>
+      <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Vacaciones_BD.Designer.cs">
+    <Compile Include="Models\VacacionesBD.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Vacaciones_BD.edmx</DependentUpon>
+      <DependentUpon>VacacionesBD.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ClaimManager.cs" />
     <Compile Include="Services\AuthServices.cs" />
-    <Compile Include="Services\EmpleadoServices.cs" />
-    <Compile Include="Services\PermisosService.cs" />
+    <Compile Include="Services\EmpleadoJuarezServices.cs" />
+    <Compile Include="Services\EmpleadosMedServices.cs" />
+    <Compile Include="Services\EmpleadoThhServices.cs" />
+    <Compile Include="Services\PermisosJuarezOServices.cs" />
+    <Compile Include="Services\PermisosMedService.cs" />
+    <Compile Include="Services\PermisosTHHService.cs" />
     <Compile Include="ViewModels\AsignarRolVM.cs" />
+    <Compile Include="ViewModels\DepartamentosVM.cs" />
     <Compile Include="ViewModels\EmpleadosVM.cs" />
     <Compile Include="ViewModels\EmpresaVM.cs" />
     <Compile Include="ViewModels\MotivosAusenciaVM.cs" />
@@ -245,6 +279,7 @@
     <Compile Include="ViewModels\PermisosPdfVM.cs" />
     <Compile Include="ViewModels\PermisosVM.cs" />
     <Compile Include="ViewModels\RolVM.cs" />
+    <Compile Include="ViewModels\SubEmpresasVM.cs" />
     <Compile Include="ViewModels\UsuariosRolVM.cs" />
     <Compile Include="ViewModels\UsuariosVM.cs" />
   </ItemGroup>
@@ -275,15 +310,15 @@
     <Content Include="Content\Site.css" />
     <Content Include="Imagenes\1.jpg" />
     <Content Include="Imagenes\2.jpg" />
-    <Content Include="Models\Vacaciones_BD.Context.tt">
+    <Content Include="Models\VacacionesBD.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Vacaciones_BD.edmx</DependentUpon>
-      <LastGenOutput>Vacaciones_BD.Context.cs</LastGenOutput>
+      <DependentUpon>VacacionesBD.edmx</DependentUpon>
+      <LastGenOutput>VacacionesBD.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\Vacaciones_BD.tt">
+    <Content Include="Models\VacacionesBD.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Vacaciones_BD.edmx</DependentUpon>
-      <LastGenOutput>Vacaciones_BD.cs</LastGenOutput>
+      <DependentUpon>VacacionesBD.edmx</DependentUpon>
+      <LastGenOutput>VacacionesBD.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -294,12 +329,12 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EntityDeploy Include="Models\Vacaciones_BD.edmx">
+    <EntityDeploy Include="Models\VacacionesBD.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Vacaciones_BD.Designer.cs</LastGenOutput>
+      <LastGenOutput>VacacionesBD.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\Vacaciones_BD.edmx.diagram">
-      <DependentUpon>Vacaciones_BD.edmx</DependentUpon>
+    <Content Include="Models\VacacionesBD.edmx.diagram">
+      <DependentUpon>VacacionesBD.edmx</DependentUpon>
     </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
@@ -340,9 +375,14 @@
     <Content Include="Views\Permisos\Paginacion.cshtml" />
     <Content Include="Views\Auth\AsignarRol.cshtml" />
     <Content Include="Views\Auth\ListarUsuairos.cshtml" />
+    <Content Include="Views\EmpleadosMedJ\InsertarEmpleado.cshtml" />
+    <Content Include="Views\EmpleadosTHH\InsertarEmpleado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\EmpleadosJuarezO\" />
+    <Folder Include="Views\PermisosJuarezO\" />
+    <Folder Include="Views\PermisosMedJ\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

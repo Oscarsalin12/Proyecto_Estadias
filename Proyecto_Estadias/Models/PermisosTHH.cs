@@ -12,12 +12,18 @@ namespace Proyecto_Estadias.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class SubEmpresas
+    public partial class PermisosTHH
     {
         public int Id { get; set; }
-        public int IdEmpresa_madre { get; set; }
-        public string Nombre { get; set; }
+        public int IdEmpleado { get; set; }
+        public int IdTipoPermiso { get; set; }
+        public int IdEmpresa { get; set; }
+        public System.DateTime FechaGeneracion { get; set; }
+        public System.DateTime FechaInicio { get; set; }
+        public System.DateTime FechaFinal { get; set; }
     
-        public virtual Empresas Empresas { get; set; }
+        public virtual EmpleadosTHH EmpleadosTHH { get; set; }
+        public virtual MotivosAusencia MotivosAusencia { get; set; }
+        public virtual SubEmpresasTHH SubEmpresasTHH { get; set; }
     }
 }

@@ -22,10 +22,17 @@ namespace Proyecto_Estadias.ViewModels
         public DateTime FechaInicio { get; set; }
         [Required]
         [DataType(DataType.Date)]
-        public DateTime FechaFinal{get; set;}
-   
+        public DateTime FechaFinal { get; set; }
+
         public List<Empresas> Empresas { get; set; }
-        public List<Empleados> Empleados { get; set; }
+        public List<EmpleadosJuarezO> EmpleadosJuarezO { get; set; }
+        public List<EmpleadosTHH> EmpleadosTHH { get; set; }
+        public List<EmpleadosMEDJ> EmpleadosMedJ { get; set; }
+        public List<SubEmpresasJuarezO> SubEmpresasJuarezOs { get; set; }
+        public List<SubEmpresasMedJ> SubEmpresasMedJs { get; set; }
+        public List<SubEmpresasTHH> SubEmpresasTHHs { get; set; }
+
+
         public List<MotivosAusencia> MotivosAusencia { get; set; }
     }
 }

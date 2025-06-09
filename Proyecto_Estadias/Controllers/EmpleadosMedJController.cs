@@ -9,14 +9,14 @@ using System.Web.Mvc;
 
 namespace Proyecto_Estadias.Controllers
 {
-    public class EmpleadosController : Controller
+    public class EmpleadosMedJController : Controller
     {
-        private readonly IEmpleadoServices empleadoServices;
+        private readonly IEmpleadoMedServices empleadoServices;
         private readonly IAuthServices authServices;
-        public EmpleadosController()
+        public EmpleadosMedJController()
         {
             authServices = new AuthServices();
-            empleadoServices = new EmpleadoServices();
+            empleadoServices = new EmpleadosMedServices();
         }
 
         #region metodos para insertar empleado
@@ -25,7 +25,7 @@ namespace Proyecto_Estadias.Controllers
         [HttpGet]
         public ActionResult InsertarEmpleado()
         {
-            var empresas = authServices.GetAllEmpresas();
+            var empresas = authServices.ObtenerSubEmpresasMed();
             ViewBag.Empresas = new SelectList(empresas, "Id", "Nombre");
             return View();
         }
@@ -33,14 +33,14 @@ namespace Proyecto_Estadias.Controllers
 
 
         [HttpPost]
-        public ActionResult InsertarEmpleado(Empleados empleado)
+        public ActionResult InsertarEmpleado(EmpleadosMEDJ empleado)
         {
             if (ModelState.IsValid)
             {
                 empleadoServices.InsertarEmpleados(empleado);
                 return RedirectToAction("Perfil","Auth");
             }
-            var empresas = authServices.GetAllEmpresas();
+            var empresas = authServices.ObtenerSubEmpresasMed();
             ViewBag.Empresas = new SelectList(empresas, "Id", "Nombre");
             return View(empleado);
             
@@ -64,7 +64,7 @@ namespace Proyecto_Estadias.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditarEmpleado(Empleados emp)
+        public ActionResult EditarEmpleado(EmpleadosMEDJ emp)
         {
             if (ModelState.IsValid)
             {

@@ -17,7 +17,9 @@ namespace Proyecto_Estadias.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly IEmpleadoServices empleadoServices;
+        private readonly IEmpleadoMedServices empleadoMedServices;
+        private readonly IEmpleadosTHHServices empleadoThhServices;
+        private readonly IEmpleadosJuarezServices empleadoJuaServices;
         private IClaimManager claimManager;
         private readonly IAuthServices authServices;
         private readonly Vacaciones_ProyectoEntities db = new Vacaciones_ProyectoEntities();
@@ -25,7 +27,9 @@ namespace Proyecto_Estadias.Controllers
         {
             claimManager = new ClaimManager();
             authServices = new AuthServices();
-            empleadoServices = new EmpleadoServices();
+            empleadoJuaServices = new EmpleadoJuarezServices();
+            empleadoThhServices = new EmpleadoThhServices();
+            empleadoMedServices = new EmpleadosMedServices();
         }
 
         #region  inicio de sesion 
@@ -184,15 +188,17 @@ namespace Proyecto_Estadias.Controllers
                 return new HttpUnauthorizedResult("no tiene acceso a esta empresa");
             }
 
-            empleadoServices.ActualizarVacacionesYPermisos();
-            var empleados = authServices.GetEmpleadosPorEmpresa(id); 
+            empleadoJuaServices.ActualizarVacacionesYPermisos();
+            empleadoMedServices.ActualizarVacacionesYPermisos();
+            empleadoThhServices.ActualizarVacacionesYPermisos();
+            var empleados = authServices.GetEmpleadosPorEmpresaYSubempresa(id); 
             ViewBag.EmpresaNombre = authServices.GetEmpresaNombre(id);
             return View(empleados);
         }
         #endregion
 
 
-        #region metodos de usuarios n
+        #region metodos de usuarios 
         [HttpGet]
         public ActionResult ListarUsuairos()
         {

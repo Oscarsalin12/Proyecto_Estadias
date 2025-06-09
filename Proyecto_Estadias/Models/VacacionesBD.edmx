@@ -1,0 +1,1300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Vacaciones_BDModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Departamentos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClaveDep" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="NombreDep" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="NombreEmcargado" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmpleadosJuarezO">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NumEmpleado" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="70" Nullable="false" />
+          <Property Name="FechaIDeIngreso" Type="date" Nullable="false" />
+          <Property Name="AniosTrabajados" Type="int" Nullable="false" />
+          <Property Name="MesesTrabajados" Type="int" Nullable="false" />
+          <Property Name="intDiasVacaciones" Type="int" Nullable="false" />
+          <Property Name="IdEmpresa" Type="int" Nullable="false" />
+          <Property Name="DiasDisponibles" Type="int" Nullable="false" />
+          <Property Name="IdDepartamento" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmpleadosMEDJ">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NumEmpleado" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="70" Nullable="false" />
+          <Property Name="FechaIDeIngreso" Type="date" Nullable="false" />
+          <Property Name="AniosTrabajados" Type="int" Nullable="false" />
+          <Property Name="MesesTrabajados" Type="int" Nullable="false" />
+          <Property Name="intDiasVacaciones" Type="int" Nullable="false" />
+          <Property Name="IdEmpresa" Type="int" Nullable="false" />
+          <Property Name="DiasDisponibles" Type="int" Nullable="false" />
+          <Property Name="IdDepartamento" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmpleadosTHH">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NumEmpleado" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="70" Nullable="false" />
+          <Property Name="FechaIDeIngreso" Type="date" Nullable="false" />
+          <Property Name="AniosTrabajados" Type="int" Nullable="false" />
+          <Property Name="MesesTrabajados" Type="int" Nullable="false" />
+          <Property Name="intDiasVacaciones" Type="int" Nullable="false" />
+          <Property Name="IdEmpresa" Type="int" Nullable="false" />
+          <Property Name="DiasDisponibles" Type="int" Nullable="false" />
+          <Property Name="IdDepartamento" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Empresas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Rfc" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Direccion" Type="varchar" MaxLength="50" />
+          <Property Name="Logo" Type="varbinary" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="MotivosAusencia">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NombreMotivo" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PermisosJuarezO">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdEmpleado" Type="int" Nullable="false" />
+          <Property Name="IdTipoPermiso" Type="int" Nullable="false" />
+          <Property Name="IdEmpresa" Type="int" Nullable="false" />
+          <Property Name="FechaGeneracion" Type="date" Nullable="false" />
+          <Property Name="FechaInicio" Type="date" Nullable="false" />
+          <Property Name="FechaFinal" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PermisosMedJ">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdEmpleado" Type="int" Nullable="false" />
+          <Property Name="IdTipoPermiso" Type="int" Nullable="false" />
+          <Property Name="IdEmpresa" Type="int" Nullable="false" />
+          <Property Name="FechaGeneracion" Type="date" Nullable="false" />
+          <Property Name="FechaInicio" Type="date" Nullable="false" />
+          <Property Name="FechaFinal" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PermisosTHH">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdEmpleado" Type="int" Nullable="false" />
+          <Property Name="IdTipoPermiso" Type="int" Nullable="false" />
+          <Property Name="IdEmpresa" Type="int" Nullable="false" />
+          <Property Name="FechaGeneracion" Type="date" Nullable="false" />
+          <Property Name="FechaInicio" Type="date" Nullable="false" />
+          <Property Name="FechaFinal" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SubEmpresasJuarezO">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdEmpresa_madre" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Rfc" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Direccion" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Logo" Type="varbinary" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="SubEmpresasMedJ">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdEmpresa_madre" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Rfc" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Direccion" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Logo" Type="varbinary" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="SubEmpresasTHH">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="IdEmpresa_madre" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Rfc" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Direccion" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Logo" Type="varbinary" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="UsuarioRol">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="IdRol" Type="int" Nullable="false" />
+          <Property Name="FechaRegistro" Type="date" Nullable="false" />
+          <Property Name="IdEmpresa" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Usuario" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Contrasenia" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__UsuarioRo__IdEmp__4AB81AF0">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsuarioRol">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsuarioRo__IdRol__49C3F6B7">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsuarioRol">
+              <PropertyRef Name="IdRol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsuarioRo__IdUsu__48CFD27E">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsuarioRol">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmpleadosJuarezO_Departamentos">
+          <End Role="Departamentos" Type="Self.Departamentos" Multiplicity="1" />
+          <End Role="EmpleadosJuarezO" Type="Self.EmpleadosJuarezO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departamentos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmpleadosJuarezO">
+              <PropertyRef Name="IdDepartamento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmpleadosJuarezO_SubEmpresasJuarezO">
+          <End Role="SubEmpresasJuarezO" Type="Self.SubEmpresasJuarezO" Multiplicity="1" />
+          <End Role="EmpleadosJuarezO" Type="Self.EmpleadosJuarezO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubEmpresasJuarezO">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmpleadosJuarezO">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmpleadosMEDJ_Departamentos">
+          <End Role="Departamentos" Type="Self.Departamentos" Multiplicity="1" />
+          <End Role="EmpleadosMEDJ" Type="Self.EmpleadosMEDJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departamentos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmpleadosMEDJ">
+              <PropertyRef Name="IdDepartamento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmpleadosMEDJ_SubEmpresasMedJ">
+          <End Role="SubEmpresasMedJ" Type="Self.SubEmpresasMedJ" Multiplicity="1" />
+          <End Role="EmpleadosMEDJ" Type="Self.EmpleadosMEDJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubEmpresasMedJ">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmpleadosMEDJ">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmpleadosTHH_Departamentos">
+          <End Role="Departamentos" Type="Self.Departamentos" Multiplicity="1" />
+          <End Role="EmpleadosTHH" Type="Self.EmpleadosTHH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departamentos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmpleadosTHH">
+              <PropertyRef Name="IdDepartamento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmpleadosTHH_SubEmpresasTHH">
+          <End Role="SubEmpresasTHH" Type="Self.SubEmpresasTHH" Multiplicity="1" />
+          <End Role="EmpleadosTHH" Type="Self.EmpleadosTHH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubEmpresasTHH">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmpleadosTHH">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Permisos_Empleados">
+          <End Role="EmpleadosTHH" Type="Self.EmpleadosTHH" Multiplicity="1" />
+          <End Role="PermisosTHH" Type="Self.PermisosTHH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmpleadosTHH">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosTHH">
+              <PropertyRef Name="IdEmpleado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Permisos_MotivosAusencia">
+          <End Role="MotivosAusencia" Type="Self.MotivosAusencia" Multiplicity="1" />
+          <End Role="PermisosTHH" Type="Self.PermisosTHH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MotivosAusencia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosTHH">
+              <PropertyRef Name="IdTipoPermiso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosJuarezO_EmpleadosJuarezO">
+          <End Role="EmpleadosJuarezO" Type="Self.EmpleadosJuarezO" Multiplicity="1" />
+          <End Role="PermisosJuarezO" Type="Self.PermisosJuarezO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmpleadosJuarezO">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosJuarezO">
+              <PropertyRef Name="IdEmpleado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosJuarezO_MotivosAusencia">
+          <End Role="MotivosAusencia" Type="Self.MotivosAusencia" Multiplicity="1" />
+          <End Role="PermisosJuarezO" Type="Self.PermisosJuarezO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MotivosAusencia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosJuarezO">
+              <PropertyRef Name="IdTipoPermiso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosJuarezO_SubEmpresasJuarezO">
+          <End Role="SubEmpresasJuarezO" Type="Self.SubEmpresasJuarezO" Multiplicity="1" />
+          <End Role="PermisosJuarezO" Type="Self.PermisosJuarezO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubEmpresasJuarezO">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosJuarezO">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosMedJ_EmpleadosMEDJ">
+          <End Role="EmpleadosMEDJ" Type="Self.EmpleadosMEDJ" Multiplicity="1" />
+          <End Role="PermisosMedJ" Type="Self.PermisosMedJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmpleadosMEDJ">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosMedJ">
+              <PropertyRef Name="IdEmpleado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosMedJ_MotivosAusencia">
+          <End Role="MotivosAusencia" Type="Self.MotivosAusencia" Multiplicity="1" />
+          <End Role="PermisosMedJ" Type="Self.PermisosMedJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MotivosAusencia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosMedJ">
+              <PropertyRef Name="IdTipoPermiso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosMedJ_SubEmpresasMedJ">
+          <End Role="SubEmpresasMedJ" Type="Self.SubEmpresasMedJ" Multiplicity="1" />
+          <End Role="PermisosMedJ" Type="Self.PermisosMedJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubEmpresasMedJ">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosMedJ">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosTHH_SubEmpresasTHH">
+          <End Role="SubEmpresasTHH" Type="Self.SubEmpresasTHH" Multiplicity="1" />
+          <End Role="PermisosTHH" Type="Self.PermisosTHH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubEmpresasTHH">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosTHH">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubEmpresasJuarezO_Empresas">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+          <End Role="SubEmpresasJuarezO" Type="Self.SubEmpresasJuarezO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubEmpresasJuarezO">
+              <PropertyRef Name="IdEmpresa_madre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubEmpresasMedJ_Empresas">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+          <End Role="SubEmpresasMedJ" Type="Self.SubEmpresasMedJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubEmpresasMedJ">
+              <PropertyRef Name="IdEmpresa_madre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubEmpresasTHH_Empresas">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+          <End Role="SubEmpresasTHH" Type="Self.SubEmpresasTHH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubEmpresasTHH">
+              <PropertyRef Name="IdEmpresa_madre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Vacaciones_BDModelStoreContainer">
+          <EntitySet Name="Departamentos" EntityType="Self.Departamentos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmpleadosJuarezO" EntityType="Self.EmpleadosJuarezO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmpleadosMEDJ" EntityType="Self.EmpleadosMEDJ" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmpleadosTHH" EntityType="Self.EmpleadosTHH" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Empresas" EntityType="Self.Empresas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MotivosAusencia" EntityType="Self.MotivosAusencia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PermisosJuarezO" EntityType="Self.PermisosJuarezO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PermisosMedJ" EntityType="Self.PermisosMedJ" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PermisosTHH" EntityType="Self.PermisosTHH" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubEmpresasJuarezO" EntityType="Self.SubEmpresasJuarezO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubEmpresasMedJ" EntityType="Self.SubEmpresasMedJ" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubEmpresasTHH" EntityType="Self.SubEmpresasTHH" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UsuarioRol" EntityType="Self.UsuarioRol" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__UsuarioRo__IdEmp__4AB81AF0" Association="Self.FK__UsuarioRo__IdEmp__4AB81AF0">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsuarioRo__IdRol__49C3F6B7" Association="Self.FK__UsuarioRo__IdRol__49C3F6B7">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsuarioRo__IdUsu__48CFD27E" Association="Self.FK__UsuarioRo__IdUsu__48CFD27E">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmpleadosJuarezO_Departamentos" Association="Self.FK_EmpleadosJuarezO_Departamentos">
+            <End Role="Departamentos" EntitySet="Departamentos" />
+            <End Role="EmpleadosJuarezO" EntitySet="EmpleadosJuarezO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmpleadosJuarezO_SubEmpresasJuarezO" Association="Self.FK_EmpleadosJuarezO_SubEmpresasJuarezO">
+            <End Role="SubEmpresasJuarezO" EntitySet="SubEmpresasJuarezO" />
+            <End Role="EmpleadosJuarezO" EntitySet="EmpleadosJuarezO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmpleadosMEDJ_Departamentos" Association="Self.FK_EmpleadosMEDJ_Departamentos">
+            <End Role="Departamentos" EntitySet="Departamentos" />
+            <End Role="EmpleadosMEDJ" EntitySet="EmpleadosMEDJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmpleadosMEDJ_SubEmpresasMedJ" Association="Self.FK_EmpleadosMEDJ_SubEmpresasMedJ">
+            <End Role="SubEmpresasMedJ" EntitySet="SubEmpresasMedJ" />
+            <End Role="EmpleadosMEDJ" EntitySet="EmpleadosMEDJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmpleadosTHH_Departamentos" Association="Self.FK_EmpleadosTHH_Departamentos">
+            <End Role="Departamentos" EntitySet="Departamentos" />
+            <End Role="EmpleadosTHH" EntitySet="EmpleadosTHH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmpleadosTHH_SubEmpresasTHH" Association="Self.FK_EmpleadosTHH_SubEmpresasTHH">
+            <End Role="SubEmpresasTHH" EntitySet="SubEmpresasTHH" />
+            <End Role="EmpleadosTHH" EntitySet="EmpleadosTHH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Permisos_Empleados" Association="Self.FK_Permisos_Empleados">
+            <End Role="EmpleadosTHH" EntitySet="EmpleadosTHH" />
+            <End Role="PermisosTHH" EntitySet="PermisosTHH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Permisos_MotivosAusencia" Association="Self.FK_Permisos_MotivosAusencia">
+            <End Role="MotivosAusencia" EntitySet="MotivosAusencia" />
+            <End Role="PermisosTHH" EntitySet="PermisosTHH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosJuarezO_EmpleadosJuarezO" Association="Self.FK_PermisosJuarezO_EmpleadosJuarezO">
+            <End Role="EmpleadosJuarezO" EntitySet="EmpleadosJuarezO" />
+            <End Role="PermisosJuarezO" EntitySet="PermisosJuarezO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosJuarezO_MotivosAusencia" Association="Self.FK_PermisosJuarezO_MotivosAusencia">
+            <End Role="MotivosAusencia" EntitySet="MotivosAusencia" />
+            <End Role="PermisosJuarezO" EntitySet="PermisosJuarezO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosJuarezO_SubEmpresasJuarezO" Association="Self.FK_PermisosJuarezO_SubEmpresasJuarezO">
+            <End Role="SubEmpresasJuarezO" EntitySet="SubEmpresasJuarezO" />
+            <End Role="PermisosJuarezO" EntitySet="PermisosJuarezO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosMedJ_EmpleadosMEDJ" Association="Self.FK_PermisosMedJ_EmpleadosMEDJ">
+            <End Role="EmpleadosMEDJ" EntitySet="EmpleadosMEDJ" />
+            <End Role="PermisosMedJ" EntitySet="PermisosMedJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosMedJ_MotivosAusencia" Association="Self.FK_PermisosMedJ_MotivosAusencia">
+            <End Role="MotivosAusencia" EntitySet="MotivosAusencia" />
+            <End Role="PermisosMedJ" EntitySet="PermisosMedJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosMedJ_SubEmpresasMedJ" Association="Self.FK_PermisosMedJ_SubEmpresasMedJ">
+            <End Role="SubEmpresasMedJ" EntitySet="SubEmpresasMedJ" />
+            <End Role="PermisosMedJ" EntitySet="PermisosMedJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosTHH_SubEmpresasTHH" Association="Self.FK_PermisosTHH_SubEmpresasTHH">
+            <End Role="SubEmpresasTHH" EntitySet="SubEmpresasTHH" />
+            <End Role="PermisosTHH" EntitySet="PermisosTHH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubEmpresasJuarezO_Empresas" Association="Self.FK_SubEmpresasJuarezO_Empresas">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="SubEmpresasJuarezO" EntitySet="SubEmpresasJuarezO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubEmpresasMedJ_Empresas" Association="Self.FK_SubEmpresasMedJ_Empresas">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="SubEmpresasMedJ" EntitySet="SubEmpresasMedJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubEmpresasTHH_Empresas" Association="Self.FK_SubEmpresasTHH_Empresas">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="SubEmpresasTHH" EntitySet="SubEmpresasTHH" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Vacaciones_BDModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Departamentos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClaveDep" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NombreDep" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NombreEmcargado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="EmpleadosJuarezO" Relationship="Self.FK_EmpleadosJuarezO_Departamentos" FromRole="Departamentos" ToRole="EmpleadosJuarezO" />
+          <NavigationProperty Name="EmpleadosMEDJ" Relationship="Self.FK_EmpleadosMEDJ_Departamentos" FromRole="Departamentos" ToRole="EmpleadosMEDJ" />
+          <NavigationProperty Name="EmpleadosTHH" Relationship="Self.FK_EmpleadosTHH_Departamentos" FromRole="Departamentos" ToRole="EmpleadosTHH" />
+        </EntityType>
+        <EntityType Name="EmpleadosJuarezO">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NumEmpleado" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="70" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaIDeIngreso" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="AniosTrabajados" Type="Int32" Nullable="false" />
+          <Property Name="MesesTrabajados" Type="Int32" Nullable="false" />
+          <Property Name="intDiasVacaciones" Type="Int32" Nullable="false" />
+          <Property Name="IdEmpresa" Type="Int32" Nullable="false" />
+          <Property Name="DiasDisponibles" Type="Int32" Nullable="false" />
+          <Property Name="IdDepartamento" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Departamentos" Relationship="Self.FK_EmpleadosJuarezO_Departamentos" FromRole="EmpleadosJuarezO" ToRole="Departamentos" />
+          <NavigationProperty Name="SubEmpresasJuarezO" Relationship="Self.FK_EmpleadosJuarezO_SubEmpresasJuarezO" FromRole="EmpleadosJuarezO" ToRole="SubEmpresasJuarezO" />
+          <NavigationProperty Name="PermisosJuarezO" Relationship="Self.FK_PermisosJuarezO_EmpleadosJuarezO" FromRole="EmpleadosJuarezO" ToRole="PermisosJuarezO" />
+        </EntityType>
+        <EntityType Name="EmpleadosMEDJ">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NumEmpleado" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="70" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaIDeIngreso" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="AniosTrabajados" Type="Int32" Nullable="false" />
+          <Property Name="MesesTrabajados" Type="Int32" Nullable="false" />
+          <Property Name="intDiasVacaciones" Type="Int32" Nullable="false" />
+          <Property Name="IdEmpresa" Type="Int32" Nullable="false" />
+          <Property Name="DiasDisponibles" Type="Int32" Nullable="false" />
+          <Property Name="IdDepartamento" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Departamentos" Relationship="Self.FK_EmpleadosMEDJ_Departamentos" FromRole="EmpleadosMEDJ" ToRole="Departamentos" />
+          <NavigationProperty Name="SubEmpresasMedJ" Relationship="Self.FK_EmpleadosMEDJ_SubEmpresasMedJ" FromRole="EmpleadosMEDJ" ToRole="SubEmpresasMedJ" />
+          <NavigationProperty Name="PermisosMedJ" Relationship="Self.FK_PermisosMedJ_EmpleadosMEDJ" FromRole="EmpleadosMEDJ" ToRole="PermisosMedJ" />
+        </EntityType>
+        <EntityType Name="EmpleadosTHH">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NumEmpleado" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="70" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaIDeIngreso" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="AniosTrabajados" Type="Int32" Nullable="false" />
+          <Property Name="MesesTrabajados" Type="Int32" Nullable="false" />
+          <Property Name="intDiasVacaciones" Type="Int32" Nullable="false" />
+          <Property Name="IdEmpresa" Type="Int32" Nullable="false" />
+          <Property Name="DiasDisponibles" Type="Int32" Nullable="false" />
+          <Property Name="IdDepartamento" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Departamentos" Relationship="Self.FK_EmpleadosTHH_Departamentos" FromRole="EmpleadosTHH" ToRole="Departamentos" />
+          <NavigationProperty Name="SubEmpresasTHH" Relationship="Self.FK_EmpleadosTHH_SubEmpresasTHH" FromRole="EmpleadosTHH" ToRole="SubEmpresasTHH" />
+          <NavigationProperty Name="PermisosTHH" Relationship="Self.FK_Permisos_Empleados" FromRole="EmpleadosTHH" ToRole="PermisosTHH" />
+        </EntityType>
+        <EntityType Name="Empresas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Rfc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Direccion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Logo" Type="Binary" MaxLength="50" FixedLength="false" />
+          <NavigationProperty Name="UsuarioRol" Relationship="Self.FK__UsuarioRo__IdEmp__4AB81AF0" FromRole="Empresas" ToRole="UsuarioRol" />
+          <NavigationProperty Name="SubEmpresasJuarezO" Relationship="Self.FK_SubEmpresasJuarezO_Empresas" FromRole="Empresas" ToRole="SubEmpresasJuarezO" />
+          <NavigationProperty Name="SubEmpresasMedJ" Relationship="Self.FK_SubEmpresasMedJ_Empresas" FromRole="Empresas" ToRole="SubEmpresasMedJ" />
+          <NavigationProperty Name="SubEmpresasTHH" Relationship="Self.FK_SubEmpresasTHH_Empresas" FromRole="Empresas" ToRole="SubEmpresasTHH" />
+        </EntityType>
+        <EntityType Name="MotivosAusencia">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NombreMotivo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="PermisosTHH" Relationship="Self.FK_Permisos_MotivosAusencia" FromRole="MotivosAusencia" ToRole="PermisosTHH" />
+          <NavigationProperty Name="PermisosJuarezO" Relationship="Self.FK_PermisosJuarezO_MotivosAusencia" FromRole="MotivosAusencia" ToRole="PermisosJuarezO" />
+          <NavigationProperty Name="PermisosMedJ" Relationship="Self.FK_PermisosMedJ_MotivosAusencia" FromRole="MotivosAusencia" ToRole="PermisosMedJ" />
+        </EntityType>
+        <EntityType Name="PermisosJuarezO">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdEmpleado" Type="Int32" Nullable="false" />
+          <Property Name="IdTipoPermiso" Type="Int32" Nullable="false" />
+          <Property Name="IdEmpresa" Type="Int32" Nullable="false" />
+          <Property Name="FechaGeneracion" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FechaInicio" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FechaFinal" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="EmpleadosJuarezO" Relationship="Self.FK_PermisosJuarezO_EmpleadosJuarezO" FromRole="PermisosJuarezO" ToRole="EmpleadosJuarezO" />
+          <NavigationProperty Name="MotivosAusencia" Relationship="Self.FK_PermisosJuarezO_MotivosAusencia" FromRole="PermisosJuarezO" ToRole="MotivosAusencia" />
+          <NavigationProperty Name="SubEmpresasJuarezO" Relationship="Self.FK_PermisosJuarezO_SubEmpresasJuarezO" FromRole="PermisosJuarezO" ToRole="SubEmpresasJuarezO" />
+        </EntityType>
+        <EntityType Name="PermisosMedJ">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdEmpleado" Type="Int32" Nullable="false" />
+          <Property Name="IdTipoPermiso" Type="Int32" Nullable="false" />
+          <Property Name="IdEmpresa" Type="Int32" Nullable="false" />
+          <Property Name="FechaGeneracion" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FechaInicio" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FechaFinal" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="EmpleadosMEDJ" Relationship="Self.FK_PermisosMedJ_EmpleadosMEDJ" FromRole="PermisosMedJ" ToRole="EmpleadosMEDJ" />
+          <NavigationProperty Name="MotivosAusencia" Relationship="Self.FK_PermisosMedJ_MotivosAusencia" FromRole="PermisosMedJ" ToRole="MotivosAusencia" />
+          <NavigationProperty Name="SubEmpresasMedJ" Relationship="Self.FK_PermisosMedJ_SubEmpresasMedJ" FromRole="PermisosMedJ" ToRole="SubEmpresasMedJ" />
+        </EntityType>
+        <EntityType Name="PermisosTHH">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdEmpleado" Type="Int32" Nullable="false" />
+          <Property Name="IdTipoPermiso" Type="Int32" Nullable="false" />
+          <Property Name="IdEmpresa" Type="Int32" Nullable="false" />
+          <Property Name="FechaGeneracion" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FechaInicio" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FechaFinal" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="EmpleadosTHH" Relationship="Self.FK_Permisos_Empleados" FromRole="PermisosTHH" ToRole="EmpleadosTHH" />
+          <NavigationProperty Name="MotivosAusencia" Relationship="Self.FK_Permisos_MotivosAusencia" FromRole="PermisosTHH" ToRole="MotivosAusencia" />
+          <NavigationProperty Name="SubEmpresasTHH" Relationship="Self.FK_PermisosTHH_SubEmpresasTHH" FromRole="PermisosTHH" ToRole="SubEmpresasTHH" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="UsuarioRol" Relationship="Self.FK__UsuarioRo__IdRol__49C3F6B7" FromRole="Roles" ToRole="UsuarioRol" />
+        </EntityType>
+        <EntityType Name="SubEmpresasJuarezO">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdEmpresa_madre" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Rfc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Direccion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Logo" Type="Binary" MaxLength="50" FixedLength="false" />
+          <NavigationProperty Name="EmpleadosJuarezO" Relationship="Self.FK_EmpleadosJuarezO_SubEmpresasJuarezO" FromRole="SubEmpresasJuarezO" ToRole="EmpleadosJuarezO" />
+          <NavigationProperty Name="Empresas" Relationship="Self.FK_SubEmpresasJuarezO_Empresas" FromRole="SubEmpresasJuarezO" ToRole="Empresas" />
+          <NavigationProperty Name="PermisosJuarezO" Relationship="Self.FK_PermisosJuarezO_SubEmpresasJuarezO" FromRole="SubEmpresasJuarezO" ToRole="PermisosJuarezO" />
+        </EntityType>
+        <EntityType Name="SubEmpresasMedJ">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdEmpresa_madre" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Rfc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Direccion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Logo" Type="Binary" MaxLength="50" FixedLength="false" />
+          <NavigationProperty Name="EmpleadosMEDJ" Relationship="Self.FK_EmpleadosMEDJ_SubEmpresasMedJ" FromRole="SubEmpresasMedJ" ToRole="EmpleadosMEDJ" />
+          <NavigationProperty Name="Empresas" Relationship="Self.FK_SubEmpresasMedJ_Empresas" FromRole="SubEmpresasMedJ" ToRole="Empresas" />
+          <NavigationProperty Name="PermisosMedJ" Relationship="Self.FK_PermisosMedJ_SubEmpresasMedJ" FromRole="SubEmpresasMedJ" ToRole="PermisosMedJ" />
+        </EntityType>
+        <EntityType Name="SubEmpresasTHH">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="IdEmpresa_madre" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Rfc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Direccion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Logo" Type="Binary" MaxLength="50" FixedLength="false" />
+          <NavigationProperty Name="EmpleadosTHH" Relationship="Self.FK_EmpleadosTHH_SubEmpresasTHH" FromRole="SubEmpresasTHH" ToRole="EmpleadosTHH" />
+          <NavigationProperty Name="Empresas" Relationship="Self.FK_SubEmpresasTHH_Empresas" FromRole="SubEmpresasTHH" ToRole="Empresas" />
+          <NavigationProperty Name="PermisosTHH" Relationship="Self.FK_PermisosTHH_SubEmpresasTHH" FromRole="SubEmpresasTHH" ToRole="PermisosTHH" />
+        </EntityType>
+        <EntityType Name="UsuarioRol">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="IdRol" Type="Int32" Nullable="false" />
+          <Property Name="FechaRegistro" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="IdEmpresa" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Empresas" Relationship="Self.FK__UsuarioRo__IdEmp__4AB81AF0" FromRole="UsuarioRol" ToRole="Empresas" />
+          <NavigationProperty Name="Roles" Relationship="Self.FK__UsuarioRo__IdRol__49C3F6B7" FromRole="UsuarioRol" ToRole="Roles" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK__UsuarioRo__IdUsu__48CFD27E" FromRole="UsuarioRol" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Contrasenia" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="UsuarioRol" Relationship="Self.FK__UsuarioRo__IdUsu__48CFD27E" FromRole="Usuarios" ToRole="UsuarioRol" />
+        </EntityType>
+        <Association Name="FK_EmpleadosJuarezO_Departamentos">
+          <End Role="Departamentos" Type="Self.Departamentos" Multiplicity="1" />
+          <End Role="EmpleadosJuarezO" Type="Self.EmpleadosJuarezO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departamentos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmpleadosJuarezO">
+              <PropertyRef Name="IdDepartamento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmpleadosMEDJ_Departamentos">
+          <End Role="Departamentos" Type="Self.Departamentos" Multiplicity="1" />
+          <End Role="EmpleadosMEDJ" Type="Self.EmpleadosMEDJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departamentos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmpleadosMEDJ">
+              <PropertyRef Name="IdDepartamento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmpleadosTHH_Departamentos">
+          <End Role="Departamentos" Type="Self.Departamentos" Multiplicity="1" />
+          <End Role="EmpleadosTHH" Type="Self.EmpleadosTHH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departamentos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmpleadosTHH">
+              <PropertyRef Name="IdDepartamento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmpleadosJuarezO_SubEmpresasJuarezO">
+          <End Role="SubEmpresasJuarezO" Type="Self.SubEmpresasJuarezO" Multiplicity="1" />
+          <End Role="EmpleadosJuarezO" Type="Self.EmpleadosJuarezO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubEmpresasJuarezO">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmpleadosJuarezO">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosJuarezO_EmpleadosJuarezO">
+          <End Role="EmpleadosJuarezO" Type="Self.EmpleadosJuarezO" Multiplicity="1" />
+          <End Role="PermisosJuarezO" Type="Self.PermisosJuarezO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmpleadosJuarezO">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosJuarezO">
+              <PropertyRef Name="IdEmpleado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmpleadosMEDJ_SubEmpresasMedJ">
+          <End Role="SubEmpresasMedJ" Type="Self.SubEmpresasMedJ" Multiplicity="1" />
+          <End Role="EmpleadosMEDJ" Type="Self.EmpleadosMEDJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubEmpresasMedJ">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmpleadosMEDJ">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosMedJ_EmpleadosMEDJ">
+          <End Role="EmpleadosMEDJ" Type="Self.EmpleadosMEDJ" Multiplicity="1" />
+          <End Role="PermisosMedJ" Type="Self.PermisosMedJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmpleadosMEDJ">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosMedJ">
+              <PropertyRef Name="IdEmpleado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmpleadosTHH_SubEmpresasTHH">
+          <End Role="SubEmpresasTHH" Type="Self.SubEmpresasTHH" Multiplicity="1" />
+          <End Role="EmpleadosTHH" Type="Self.EmpleadosTHH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubEmpresasTHH">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmpleadosTHH">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Permisos_Empleados">
+          <End Role="EmpleadosTHH" Type="Self.EmpleadosTHH" Multiplicity="1" />
+          <End Role="PermisosTHH" Type="Self.PermisosTHH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmpleadosTHH">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosTHH">
+              <PropertyRef Name="IdEmpleado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsuarioRo__IdEmp__4AB81AF0">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsuarioRol">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubEmpresasJuarezO_Empresas">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+          <End Role="SubEmpresasJuarezO" Type="Self.SubEmpresasJuarezO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubEmpresasJuarezO">
+              <PropertyRef Name="IdEmpresa_madre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubEmpresasMedJ_Empresas">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+          <End Role="SubEmpresasMedJ" Type="Self.SubEmpresasMedJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubEmpresasMedJ">
+              <PropertyRef Name="IdEmpresa_madre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubEmpresasTHH_Empresas">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+          <End Role="SubEmpresasTHH" Type="Self.SubEmpresasTHH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubEmpresasTHH">
+              <PropertyRef Name="IdEmpresa_madre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Permisos_MotivosAusencia">
+          <End Role="MotivosAusencia" Type="Self.MotivosAusencia" Multiplicity="1" />
+          <End Role="PermisosTHH" Type="Self.PermisosTHH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MotivosAusencia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosTHH">
+              <PropertyRef Name="IdTipoPermiso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosJuarezO_MotivosAusencia">
+          <End Role="MotivosAusencia" Type="Self.MotivosAusencia" Multiplicity="1" />
+          <End Role="PermisosJuarezO" Type="Self.PermisosJuarezO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MotivosAusencia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosJuarezO">
+              <PropertyRef Name="IdTipoPermiso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosMedJ_MotivosAusencia">
+          <End Role="MotivosAusencia" Type="Self.MotivosAusencia" Multiplicity="1" />
+          <End Role="PermisosMedJ" Type="Self.PermisosMedJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MotivosAusencia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosMedJ">
+              <PropertyRef Name="IdTipoPermiso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosJuarezO_SubEmpresasJuarezO">
+          <End Role="SubEmpresasJuarezO" Type="Self.SubEmpresasJuarezO" Multiplicity="1" />
+          <End Role="PermisosJuarezO" Type="Self.PermisosJuarezO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubEmpresasJuarezO">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosJuarezO">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosMedJ_SubEmpresasMedJ">
+          <End Role="SubEmpresasMedJ" Type="Self.SubEmpresasMedJ" Multiplicity="1" />
+          <End Role="PermisosMedJ" Type="Self.PermisosMedJ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubEmpresasMedJ">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosMedJ">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PermisosTHH_SubEmpresasTHH">
+          <End Role="SubEmpresasTHH" Type="Self.SubEmpresasTHH" Multiplicity="1" />
+          <End Role="PermisosTHH" Type="Self.PermisosTHH" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubEmpresasTHH">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PermisosTHH">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsuarioRo__IdRol__49C3F6B7">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsuarioRol">
+              <PropertyRef Name="IdRol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsuarioRo__IdUsu__48CFD27E">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsuarioRol">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Vacaciones_ProyectoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Departamentos" EntityType="Self.Departamentos" />
+          <EntitySet Name="EmpleadosJuarezO" EntityType="Self.EmpleadosJuarezO" />
+          <EntitySet Name="EmpleadosMEDJ" EntityType="Self.EmpleadosMEDJ" />
+          <EntitySet Name="EmpleadosTHH" EntityType="Self.EmpleadosTHH" />
+          <EntitySet Name="Empresas" EntityType="Self.Empresas" />
+          <EntitySet Name="MotivosAusencia" EntityType="Self.MotivosAusencia" />
+          <EntitySet Name="PermisosJuarezO" EntityType="Self.PermisosJuarezO" />
+          <EntitySet Name="PermisosMedJ" EntityType="Self.PermisosMedJ" />
+          <EntitySet Name="PermisosTHH" EntityType="Self.PermisosTHH" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" />
+          <EntitySet Name="SubEmpresasJuarezO" EntityType="Self.SubEmpresasJuarezO" />
+          <EntitySet Name="SubEmpresasMedJ" EntityType="Self.SubEmpresasMedJ" />
+          <EntitySet Name="SubEmpresasTHH" EntityType="Self.SubEmpresasTHH" />
+          <EntitySet Name="UsuarioRol" EntityType="Self.UsuarioRol" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" />
+          <AssociationSet Name="FK_EmpleadosJuarezO_Departamentos" Association="Self.FK_EmpleadosJuarezO_Departamentos">
+            <End Role="Departamentos" EntitySet="Departamentos" />
+            <End Role="EmpleadosJuarezO" EntitySet="EmpleadosJuarezO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmpleadosMEDJ_Departamentos" Association="Self.FK_EmpleadosMEDJ_Departamentos">
+            <End Role="Departamentos" EntitySet="Departamentos" />
+            <End Role="EmpleadosMEDJ" EntitySet="EmpleadosMEDJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmpleadosTHH_Departamentos" Association="Self.FK_EmpleadosTHH_Departamentos">
+            <End Role="Departamentos" EntitySet="Departamentos" />
+            <End Role="EmpleadosTHH" EntitySet="EmpleadosTHH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmpleadosJuarezO_SubEmpresasJuarezO" Association="Self.FK_EmpleadosJuarezO_SubEmpresasJuarezO">
+            <End Role="SubEmpresasJuarezO" EntitySet="SubEmpresasJuarezO" />
+            <End Role="EmpleadosJuarezO" EntitySet="EmpleadosJuarezO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosJuarezO_EmpleadosJuarezO" Association="Self.FK_PermisosJuarezO_EmpleadosJuarezO">
+            <End Role="EmpleadosJuarezO" EntitySet="EmpleadosJuarezO" />
+            <End Role="PermisosJuarezO" EntitySet="PermisosJuarezO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmpleadosMEDJ_SubEmpresasMedJ" Association="Self.FK_EmpleadosMEDJ_SubEmpresasMedJ">
+            <End Role="SubEmpresasMedJ" EntitySet="SubEmpresasMedJ" />
+            <End Role="EmpleadosMEDJ" EntitySet="EmpleadosMEDJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosMedJ_EmpleadosMEDJ" Association="Self.FK_PermisosMedJ_EmpleadosMEDJ">
+            <End Role="EmpleadosMEDJ" EntitySet="EmpleadosMEDJ" />
+            <End Role="PermisosMedJ" EntitySet="PermisosMedJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmpleadosTHH_SubEmpresasTHH" Association="Self.FK_EmpleadosTHH_SubEmpresasTHH">
+            <End Role="SubEmpresasTHH" EntitySet="SubEmpresasTHH" />
+            <End Role="EmpleadosTHH" EntitySet="EmpleadosTHH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Permisos_Empleados" Association="Self.FK_Permisos_Empleados">
+            <End Role="EmpleadosTHH" EntitySet="EmpleadosTHH" />
+            <End Role="PermisosTHH" EntitySet="PermisosTHH" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsuarioRo__IdEmp__4AB81AF0" Association="Self.FK__UsuarioRo__IdEmp__4AB81AF0">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubEmpresasJuarezO_Empresas" Association="Self.FK_SubEmpresasJuarezO_Empresas">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="SubEmpresasJuarezO" EntitySet="SubEmpresasJuarezO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubEmpresasMedJ_Empresas" Association="Self.FK_SubEmpresasMedJ_Empresas">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="SubEmpresasMedJ" EntitySet="SubEmpresasMedJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubEmpresasTHH_Empresas" Association="Self.FK_SubEmpresasTHH_Empresas">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="SubEmpresasTHH" EntitySet="SubEmpresasTHH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Permisos_MotivosAusencia" Association="Self.FK_Permisos_MotivosAusencia">
+            <End Role="MotivosAusencia" EntitySet="MotivosAusencia" />
+            <End Role="PermisosTHH" EntitySet="PermisosTHH" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosJuarezO_MotivosAusencia" Association="Self.FK_PermisosJuarezO_MotivosAusencia">
+            <End Role="MotivosAusencia" EntitySet="MotivosAusencia" />
+            <End Role="PermisosJuarezO" EntitySet="PermisosJuarezO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosMedJ_MotivosAusencia" Association="Self.FK_PermisosMedJ_MotivosAusencia">
+            <End Role="MotivosAusencia" EntitySet="MotivosAusencia" />
+            <End Role="PermisosMedJ" EntitySet="PermisosMedJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosJuarezO_SubEmpresasJuarezO" Association="Self.FK_PermisosJuarezO_SubEmpresasJuarezO">
+            <End Role="SubEmpresasJuarezO" EntitySet="SubEmpresasJuarezO" />
+            <End Role="PermisosJuarezO" EntitySet="PermisosJuarezO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosMedJ_SubEmpresasMedJ" Association="Self.FK_PermisosMedJ_SubEmpresasMedJ">
+            <End Role="SubEmpresasMedJ" EntitySet="SubEmpresasMedJ" />
+            <End Role="PermisosMedJ" EntitySet="PermisosMedJ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PermisosTHH_SubEmpresasTHH" Association="Self.FK_PermisosTHH_SubEmpresasTHH">
+            <End Role="SubEmpresasTHH" EntitySet="SubEmpresasTHH" />
+            <End Role="PermisosTHH" EntitySet="PermisosTHH" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsuarioRo__IdRol__49C3F6B7" Association="Self.FK__UsuarioRo__IdRol__49C3F6B7">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsuarioRo__IdUsu__48CFD27E" Association="Self.FK__UsuarioRo__IdUsu__48CFD27E">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Vacaciones_BDModelStoreContainer" CdmEntityContainer="Vacaciones_ProyectoEntities">
+          <EntitySetMapping Name="Departamentos">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.Departamentos">
+              <MappingFragment StoreEntitySet="Departamentos">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ClaveDep" ColumnName="ClaveDep" />
+                <ScalarProperty Name="NombreDep" ColumnName="NombreDep" />
+                <ScalarProperty Name="NombreEmcargado" ColumnName="NombreEmcargado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmpleadosJuarezO">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.EmpleadosJuarezO">
+              <MappingFragment StoreEntitySet="EmpleadosJuarezO">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="NumEmpleado" ColumnName="NumEmpleado" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="FechaIDeIngreso" ColumnName="FechaIDeIngreso" />
+                <ScalarProperty Name="AniosTrabajados" ColumnName="AniosTrabajados" />
+                <ScalarProperty Name="MesesTrabajados" ColumnName="MesesTrabajados" />
+                <ScalarProperty Name="intDiasVacaciones" ColumnName="intDiasVacaciones" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="DiasDisponibles" ColumnName="DiasDisponibles" />
+                <ScalarProperty Name="IdDepartamento" ColumnName="IdDepartamento" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmpleadosMEDJ">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.EmpleadosMEDJ">
+              <MappingFragment StoreEntitySet="EmpleadosMEDJ">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="NumEmpleado" ColumnName="NumEmpleado" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="FechaIDeIngreso" ColumnName="FechaIDeIngreso" />
+                <ScalarProperty Name="AniosTrabajados" ColumnName="AniosTrabajados" />
+                <ScalarProperty Name="MesesTrabajados" ColumnName="MesesTrabajados" />
+                <ScalarProperty Name="intDiasVacaciones" ColumnName="intDiasVacaciones" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="DiasDisponibles" ColumnName="DiasDisponibles" />
+                <ScalarProperty Name="IdDepartamento" ColumnName="IdDepartamento" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmpleadosTHH">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.EmpleadosTHH">
+              <MappingFragment StoreEntitySet="EmpleadosTHH">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="NumEmpleado" ColumnName="NumEmpleado" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="FechaIDeIngreso" ColumnName="FechaIDeIngreso" />
+                <ScalarProperty Name="AniosTrabajados" ColumnName="AniosTrabajados" />
+                <ScalarProperty Name="MesesTrabajados" ColumnName="MesesTrabajados" />
+                <ScalarProperty Name="intDiasVacaciones" ColumnName="intDiasVacaciones" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="DiasDisponibles" ColumnName="DiasDisponibles" />
+                <ScalarProperty Name="IdDepartamento" ColumnName="IdDepartamento" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Empresas">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.Empresas">
+              <MappingFragment StoreEntitySet="Empresas">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Rfc" ColumnName="Rfc" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MotivosAusencia">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.MotivosAusencia">
+              <MappingFragment StoreEntitySet="MotivosAusencia">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="NombreMotivo" ColumnName="NombreMotivo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PermisosJuarezO">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.PermisosJuarezO">
+              <MappingFragment StoreEntitySet="PermisosJuarezO">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdEmpleado" ColumnName="IdEmpleado" />
+                <ScalarProperty Name="IdTipoPermiso" ColumnName="IdTipoPermiso" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="FechaGeneracion" ColumnName="FechaGeneracion" />
+                <ScalarProperty Name="FechaInicio" ColumnName="FechaInicio" />
+                <ScalarProperty Name="FechaFinal" ColumnName="FechaFinal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PermisosMedJ">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.PermisosMedJ">
+              <MappingFragment StoreEntitySet="PermisosMedJ">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdEmpleado" ColumnName="IdEmpleado" />
+                <ScalarProperty Name="IdTipoPermiso" ColumnName="IdTipoPermiso" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="FechaGeneracion" ColumnName="FechaGeneracion" />
+                <ScalarProperty Name="FechaInicio" ColumnName="FechaInicio" />
+                <ScalarProperty Name="FechaFinal" ColumnName="FechaFinal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PermisosTHH">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.PermisosTHH">
+              <MappingFragment StoreEntitySet="PermisosTHH">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdEmpleado" ColumnName="IdEmpleado" />
+                <ScalarProperty Name="IdTipoPermiso" ColumnName="IdTipoPermiso" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="FechaGeneracion" ColumnName="FechaGeneracion" />
+                <ScalarProperty Name="FechaInicio" ColumnName="FechaInicio" />
+                <ScalarProperty Name="FechaFinal" ColumnName="FechaFinal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.Roles">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubEmpresasJuarezO">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.SubEmpresasJuarezO">
+              <MappingFragment StoreEntitySet="SubEmpresasJuarezO">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdEmpresa_madre" ColumnName="IdEmpresa_madre" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Rfc" ColumnName="Rfc" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubEmpresasMedJ">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.SubEmpresasMedJ">
+              <MappingFragment StoreEntitySet="SubEmpresasMedJ">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdEmpresa_madre" ColumnName="IdEmpresa_madre" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Rfc" ColumnName="Rfc" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubEmpresasTHH">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.SubEmpresasTHH">
+              <MappingFragment StoreEntitySet="SubEmpresasTHH">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdEmpresa_madre" ColumnName="IdEmpresa_madre" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Rfc" ColumnName="Rfc" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UsuarioRol">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.UsuarioRol">
+              <MappingFragment StoreEntitySet="UsuarioRol">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdRol" ColumnName="IdRol" />
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="Vacaciones_BDModel.Usuarios">
+              <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+                <ScalarProperty Name="Contrasenia" ColumnName="Contrasenia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
