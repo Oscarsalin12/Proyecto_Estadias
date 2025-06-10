@@ -12,7 +12,7 @@ namespace Proyecto_Estadias.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class PermisosTHH
+    public partial class Permisos
     {
         public int Id { get; set; }
         public int IdEmpleado { get; set; }
@@ -22,8 +22,8 @@ namespace Proyecto_Estadias.Models
         public System.DateTime FechaInicio { get; set; }
         public System.DateTime FechaFinal { get; set; }
     
-        public virtual EmpleadosTHH EmpleadosTHH { get; set; }
+        public virtual Empleados Empleados { get; set; }
         public virtual MotivosAusencia MotivosAusencia { get; set; }
-        public virtual SubEmpresasTHH SubEmpresasTHH { get; set; }
+        public virtual SubEmpresas SubEmpresas { get; set; }
     }
 }

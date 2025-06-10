@@ -13,29 +13,26 @@ namespace Proyecto_Estadias.Infraestructura
         List<Empresas> GetAllEmpresas();
         List<Roles> GetAllRoles();
         List<Departamentos> GetDepartamentos();
+        List<Empleados> GetEmpleados(int idEmpresa);
+        List<EmpleadosVM> GetEmpleadosPorEmpresaYSubempresa(int idEmpresa);
+        string GetEmpresaNombre(int idEmpresa);
+        string GetNombreSubempresas(int idSub);
+        string GetSubEmpresasNombre(int idEmpresa_madre);
+        List<SubEmpresasVM> GetSubEmpresasPorEmpresa(int idEmpresa);
+        Usuarios GetUsuarioConRelaciones(string nombreusuario);
+        bool InsertUser(Usuarios usuarios);
+        bool InsertUser(UsuariosVM usuariosVM, List<int> roles, List<int> empresas);
+
 
         #region Lista de empleados
-        List<EmpleadosJuarezO> GetEmpleadosJuarezOs(int idEmpresa);
-        List<EmpleadosMEDJ> GetEmpleadosMed(int idEmpresa);
-        List<EmpleadosVM> GetEmpleadosPorEmpresaYSubempresa(int idEmpresa);
-        List<EmpleadosTHH> GetEmpleadosTHH(int idEmpresa);
+
         #endregion
 
         #region empresas y sub
-        string GetEmpresaNombre(int idEmpresa);
-        string GetSubEmpresasNombreJuarez(int idEmpresa_madre);
-        string GetSubEmpresasNombreMedica(int idEmpresa_madre);
-        string GetSubEmpresasNombreThh(int idEmpresa_madre);
-        #endregion
 
-        Usuarios GetUsuarioConRelaciones(string nombreusuario);
-        bool InsertUser(Usuarios usuarios);
-        //bool InsertUser(UsuariosVM usuariosVM, int Roles, int Empresas);
-        bool InsertUser(UsuariosVM usuariosVM, List<int> roles, List<int> empresas);
+        #endregion
         Usuarios login(string nombreusuario, string contrasenia);
-        List<SubEmpresasJuarezO> ObtenerSubEmpresasJuarez();
-        List<SubEmpresasMedJ> ObtenerSubEmpresasMed();
-        List<SubEmpresasTHH> ObtenerSubEmpresasTHH();
+        List<SubEmpresas> ObtenerSubEmpresas();
         List<UsuariosVM> UsuariosAll();
     }
 }

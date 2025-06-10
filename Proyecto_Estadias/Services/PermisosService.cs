@@ -1,28 +1,28 @@
-﻿using Proyecto_Estadias.Infraestructura;
-using Proyecto_Estadias.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using Org.BouncyCastle.Math.EC.Rfc8032;
+using Proyecto_Estadias.Infraestructura;
+using Proyecto_Estadias.Models;
 namespace Proyecto_Estadias.Services
 {
-    public class PermisosMedService : IPermisosMedJServices
+    public class PermisosService : IPermisosServices
     {
         private readonly Vacaciones_ProyectoEntities db = null;
-        public PermisosMedService()
+        public PermisosService()
         {
             this.db = new Vacaciones_ProyectoEntities();
         }
         #region Listas auxiliares 
-        public List<PermisosMedJ> PermisosAll()
+        public List<Permisos> PermisosAll()
         {
-            return db.PermisosMedJ.Include("SubEmpresasMedJ").Include("EmpleadosMEDJ").Include("MotivosAusencia").ToList();
+            return db.Permisos.Include("SubEmpresas").Include("Empleados").Include("MotivosAusencia").ToList();
         }
 
-        public List<EmpleadosMEDJ> ObtenerEmpleados()
+        public List<Empleados> ObtenerEmpleados()
         {
-            return db.EmpleadosMEDJ.OrderBy(e => e.Nombre).ToList();
+            return db.Empleados.OrderBy(e => e.Nombre).ToList();
         }
 
         public List<MotivosAusencia> ObtenerMotivos()
@@ -30,23 +30,23 @@ namespace Proyecto_Estadias.Services
             return db.MotivosAusencia.OrderBy(m => m.Id).ToList();
         }
 
-        public List<SubEmpresasMedJ> ObtenerEmpresas()
+        public List<SubEmpresas> ObtenerEmpresas()
         {
-            return db.SubEmpresasMedJ.OrderBy(emp => emp.Id).ToList();
+            return db.SubEmpresas.OrderBy(emp => emp.Id).ToList();
         }
 
         #endregion
 
         #region motodo de permisos
-        public EmpleadosMEDJ ObtenerEmpleadoPorId(int id)
+        public Empleados ObtenerEmpleadoPorId(int id)
         {
-            return db.EmpleadosMEDJ.Include("SubEmpresasMedJ").FirstOrDefault(e => e.Id == id);
+            return db.Empleados.Include("SubEmpresasTHH").FirstOrDefault(e => e.Id == id);
         }
 
-        public bool CrearPermiso(PermisosMedJ permisos, out string error)
+        public bool CrearPermiso(Permisos permisos, out string error)
         {
             error = "";
-            var empleado = db.EmpleadosMEDJ.FirstOrDefault(e => e.Id == permisos.IdEmpleado);
+            var empleado = db.Empleados.FirstOrDefault(e => e.Id == permisos.IdEmpleado);
             if (empleado == null)
             {
                 error = "Empleado no emcontrado";
@@ -66,7 +66,7 @@ namespace Proyecto_Estadias.Services
             }
 
             empleado.DiasDisponibles -= diasSolicitados;
-            db.PermisosMedJ.Add(permisos);
+            db.Permisos.Add(permisos);
             db.SaveChanges();
             return true;
         }
@@ -74,19 +74,19 @@ namespace Proyecto_Estadias.Services
         #endregion
 
         #region  listado de permisos
-        public List<PermisosMedJ> ObtenerPermisosConDetalles()
+        public List<Permisos> ObtenerPermisosConDetalles()
         {
-            return db.PermisosMedJ
-                .Include("SubEmpresasMedJ")
-                .Include("EmpleadosMEDJ").
+            return db.Permisos
+                .Include("SubEmpresas")
+                .Include("Empleados").
                 Include("MotivosAusencia").ToList();
         }
 
-        public Tuple<EmpleadosMEDJ, List<PermisosMedJ>> ObtenerPermisosPorEmpleados(int idEmpleado)
+        public Tuple<Empleados, List<Permisos>> ObtenerPermisosPorEmpleados(int idEmpleado)
         {
-            var empleado = db.EmpleadosMEDJ.Include("SubEmpresasMedJ").FirstOrDefault(e => e.Id == idEmpleado);
-            var permisos = db.PermisosMedJ
-                .Include("SubEmpresasMedJ")
+            var empleado = db.Empleados.Include("Empresas").FirstOrDefault(e => e.Id == idEmpleado);
+            var permisos = db.Permisos
+                .Include("SubEmpresas")
                 .Include("MotivosAusencia")
                 .Where(p => p.IdEmpleado == idEmpleado)
                 .ToList();

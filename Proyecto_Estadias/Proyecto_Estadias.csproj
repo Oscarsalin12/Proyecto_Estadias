@@ -180,13 +180,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AuthController.cs" />
-    <Compile Include="Controllers\EmpleadosJuarezOController.cs" />
-    <Compile Include="Controllers\EmpleadosMedJController.cs" />
-    <Compile Include="Controllers\EmpleadosTHHController.cs" />
+    <Compile Include="Controllers\EmpleadosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\PermisosJuarezOController.cs" />
-    <Compile Include="Controllers\PermisosMedJController.cs" />
-    <Compile Include="Controllers\PermisosTHHController.cs" />
+    <Compile Include="Controllers\PermisosController.cs" />
     <Compile Include="Filters\ExceptionFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -194,23 +190,13 @@
     <Compile Include="Helpers\ClaimsHelper.cs" />
     <Compile Include="Infraestructura\IAuthServices.cs" />
     <Compile Include="Infraestructura\IClaimManager.cs" />
-    <Compile Include="Infraestructura\IEmpleadoMedServices.cs" />
-    <Compile Include="Infraestructura\IEmpleadosJuarezServices.cs" />
-    <Compile Include="Infraestructura\IEmpleadosTHHServices.cs" />
-    <Compile Include="Infraestructura\IPermisosJuarezOServices.cs" />
-    <Compile Include="Infraestructura\IPermisosMedJServices.cs" />
-    <Compile Include="Infraestructura\IPermisosTHHServices.cs" />
+    <Compile Include="Infraestructura\IEmpleadosServices.cs" />
+    <Compile Include="Infraestructura\IPermisosServices.cs" />
     <Compile Include="Mapping\WebProfile.cs" />
     <Compile Include="Models\Departamentos.cs">
       <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\EmpleadosJuarezO.cs">
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\EmpleadosMEDJ.cs">
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\EmpleadosTHH.cs">
+    <Compile Include="Models\Empleados.cs">
       <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Empresas.cs">
@@ -219,25 +205,13 @@
     <Compile Include="Models\MotivosAusencia.cs">
       <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\PermisosJuarezO.cs">
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\PermisosMedJ.cs">
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\PermisosTHH.cs">
+    <Compile Include="Models\Permisos.cs">
       <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Roles.cs">
       <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SubEmpresasJuarezO.cs">
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SubEmpresasMedJ.cs">
-      <DependentUpon>VacacionesBD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SubEmpresasTHH.cs">
+    <Compile Include="Models\SubEmpresas.cs">
       <DependentUpon>VacacionesBD.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UsuarioRol.cs">
@@ -264,12 +238,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ClaimManager.cs" />
     <Compile Include="Services\AuthServices.cs" />
-    <Compile Include="Services\EmpleadoJuarezServices.cs" />
-    <Compile Include="Services\EmpleadosMedServices.cs" />
-    <Compile Include="Services\EmpleadoThhServices.cs" />
-    <Compile Include="Services\PermisosJuarezOServices.cs" />
-    <Compile Include="Services\PermisosMedService.cs" />
-    <Compile Include="Services\PermisosTHHService.cs" />
+    <Compile Include="Services\EmpleadoServices.cs" />
+    <Compile Include="Services\PermisosService.cs" />
     <Compile Include="ViewModels\AsignarRolVM.cs" />
     <Compile Include="ViewModels\DepartamentosVM.cs" />
     <Compile Include="ViewModels\EmpleadosVM.cs" />
@@ -377,12 +347,11 @@
     <Content Include="Views\Auth\ListarUsuairos.cshtml" />
     <Content Include="Views\EmpleadosMedJ\InsertarEmpleado.cshtml" />
     <Content Include="Views\EmpleadosTHH\InsertarEmpleado.cshtml" />
+    <Content Include="Views\Auth\SeleccionarSubempresa.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\EmpleadosJuarezO\" />
-    <Folder Include="Views\PermisosJuarezO\" />
-    <Folder Include="Views\PermisosMedJ\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

@@ -18,9 +18,7 @@ namespace Proyecto_Estadias.Models
         public Empresas()
         {
             this.UsuarioRol = new HashSet<UsuarioRol>();
-            this.SubEmpresasJuarezO = new HashSet<SubEmpresasJuarezO>();
-            this.SubEmpresasMedJ = new HashSet<SubEmpresasMedJ>();
-            this.SubEmpresasTHH = new HashSet<SubEmpresasTHH>();
+            this.SubEmpresas = new HashSet<SubEmpresas>();
         }
     
         public int Id { get; set; }
@@ -32,10 +30,6 @@ namespace Proyecto_Estadias.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UsuarioRol> UsuarioRol { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SubEmpresasJuarezO> SubEmpresasJuarezO { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SubEmpresasMedJ> SubEmpresasMedJ { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SubEmpresasTHH> SubEmpresasTHH { get; set; }
+        public virtual ICollection<SubEmpresas> SubEmpresas { get; set; }
     }
 }

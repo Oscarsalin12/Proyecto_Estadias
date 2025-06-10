@@ -1,25 +1,25 @@
 ﻿using Proyecto_Estadias.Infraestructura;
 using Proyecto_Estadias.Models;
+using Proyecto_Estadias.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Web;
 
 namespace Proyecto_Estadias.Services
 {
-    public class EmpleadoJuarezServices : IEmpleadosJuarezServices
+    public class EmpleadoServices : IEmpleadosServices
     {
         private readonly Vacaciones_ProyectoEntities db = null;
 
-        public EmpleadoJuarezServices()
+        public EmpleadoServices()
         {
-            db =new Vacaciones_ProyectoEntities();
+            db = new Vacaciones_ProyectoEntities();
         }
 
         #region metodo para insertar empleados
 
-        public void InsertarEmpleados(EmpleadosJuarezO emp)
+        public void InsertarEmpleados(Empleados emp)
         {
             var fechaIngreso = emp.FechaIDeIngreso;
             var hoy = DateTime.Now;
@@ -45,7 +45,7 @@ namespace Proyecto_Estadias.Services
             emp.DiasDisponibles = diasVacaciones;
 
             // Insertar en la base de datos
-            db.EmpleadosJuarezO.Add(emp);
+            db.Empleados.Add(emp);
             db.SaveChanges();
         }
 
@@ -59,9 +59,9 @@ namespace Proyecto_Estadias.Services
         #endregion
 
         #region metodo de actualizacion 
-        public void ActualizarEmpleado(EmpleadosJuarezO empleado)
+        public void ActualizarEmpleado(Empleados empleado)
         {
-            var existe = db.EmpleadosJuarezO.Find(empleado.Id);
+            var existe = db.Empleados.Find(empleado.Id);
             if (existe == null) return;
 
             var hoy = DateTime.Today;
@@ -81,7 +81,7 @@ namespace Proyecto_Estadias.Services
             existe.Nombre = empleado.Nombre;
             existe.FechaIDeIngreso = empleado.FechaIDeIngreso;
 
-            if(empleado.IdEmpresa > 0)
+            if (empleado.IdEmpresa > 0)
             {
                 existe.IdEmpresa = empleado.IdEmpresa;
 
@@ -98,7 +98,7 @@ namespace Proyecto_Estadias.Services
 
         public void ActualizarVacacionesYPermisos()
         {
-            var empleados = db.EmpleadosJuarezO.ToList();
+            var empleados = db.Empleados.ToList();
             var hoy = DateTime.Today;
             foreach (var emp in empleados)
             {
@@ -117,7 +117,7 @@ namespace Proyecto_Estadias.Services
                 }
 
                 int diasBase = CalcularDiasVacaciones(anios);
-                int diasPermisoTomados = db.PermisosJuarezO
+                int diasPermisoTomados = db.Permisos
                     .Where(p => p.IdEmpleado == emp.Id)
                     .Count();
                 int diasDisponibles = Math.Max(diasBase - diasPermisoTomados, 0);
@@ -129,10 +129,11 @@ namespace Proyecto_Estadias.Services
             }
             db.SaveChanges();
         }
-        public EmpleadosJuarezO GetEmpleadoPorId(int id)
+        public Empleados GetEmpleadoPorId(int id)
         {
-            return db.EmpleadosJuarezO.FirstOrDefault(e => e.Id == id);
+            return db.Empleados.FirstOrDefault(e => e.Id == id);
         }
+
         #endregion
     }
 }

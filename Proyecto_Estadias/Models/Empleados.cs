@@ -12,12 +12,12 @@ namespace Proyecto_Estadias.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class EmpleadosTHH
+    public partial class Empleados
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public EmpleadosTHH()
+        public Empleados()
         {
-            this.PermisosTHH = new HashSet<PermisosTHH>();
+            this.Permisos = new HashSet<Permisos>();
         }
     
         public int Id { get; set; }
@@ -32,8 +32,8 @@ namespace Proyecto_Estadias.Models
         public int IdDepartamento { get; set; }
     
         public virtual Departamentos Departamentos { get; set; }
-        public virtual SubEmpresasTHH SubEmpresasTHH { get; set; }
+        public virtual SubEmpresas SubEmpresas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PermisosTHH> PermisosTHH { get; set; }
+        public virtual ICollection<Permisos> Permisos { get; set; }
     }
 }

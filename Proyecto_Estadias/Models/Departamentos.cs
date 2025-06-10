@@ -17,9 +17,7 @@ namespace Proyecto_Estadias.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Departamentos()
         {
-            this.EmpleadosJuarezO = new HashSet<EmpleadosJuarezO>();
-            this.EmpleadosMEDJ = new HashSet<EmpleadosMEDJ>();
-            this.EmpleadosTHH = new HashSet<EmpleadosTHH>();
+            this.Empleados = new HashSet<Empleados>();
         }
     
         public int Id { get; set; }
@@ -28,10 +26,6 @@ namespace Proyecto_Estadias.Models
         public string NombreEmcargado { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EmpleadosJuarezO> EmpleadosJuarezO { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EmpleadosMEDJ> EmpleadosMEDJ { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EmpleadosTHH> EmpleadosTHH { get; set; }
+        public virtual ICollection<Empleados> Empleados { get; set; }
     }
 }

@@ -17,19 +17,13 @@ namespace Proyecto_Estadias.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MotivosAusencia()
         {
-            this.PermisosTHH = new HashSet<PermisosTHH>();
-            this.PermisosJuarezO = new HashSet<PermisosJuarezO>();
-            this.PermisosMedJ = new HashSet<PermisosMedJ>();
+            this.Permisos = new HashSet<Permisos>();
         }
     
         public int Id { get; set; }
         public string NombreMotivo { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PermisosTHH> PermisosTHH { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PermisosJuarezO> PermisosJuarezO { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PermisosMedJ> PermisosMedJ { get; set; }
+        public virtual ICollection<Permisos> Permisos { get; set; }
     }
 }

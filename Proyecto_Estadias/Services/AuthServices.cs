@@ -56,18 +56,12 @@ namespace Proyecto_Estadias.Services
             return this.db.Empresas.OrderBy(p => p.Nombre).ToList();
         }
 
-        public List<SubEmpresasMedJ> ObtenerSubEmpresasMed()
+      
+        public List<SubEmpresas> ObtenerSubEmpresas()
         {
-            return this.db.SubEmpresasMedJ.OrderBy(p => p.Nombre).ToList();
+            return this.db.SubEmpresas.OrderBy(p => p.Nombre).ToList();
         }
-        public List<SubEmpresasTHH> ObtenerSubEmpresasTHH()
-        {
-            return this.db.SubEmpresasTHH.OrderBy(p => p.Nombre).ToList();
-        }
-        public List<SubEmpresasJuarezO> ObtenerSubEmpresasJuarez()
-        {
-            return this.db.SubEmpresasJuarezO.OrderBy(p => p.Nombre).ToList();
-        }
+    
         #endregion
 
         #region metodos para crear usuarios 
@@ -151,41 +145,24 @@ namespace Proyecto_Estadias.Services
         }
 
         #region Listado de SubEmpresas
-        public string GetSubEmpresasNombreJuarez(int idEmpresa_madre)
+     
+        public string GetSubEmpresasNombre(int idEmpresa_madre)
         {
-            return db.SubEmpresasJuarezO.Where(e => e.IdEmpresa_madre == idEmpresa_madre).Select(e => e.Nombre).FirstOrDefault();
-        }
-        public string GetSubEmpresasNombreMedica(int idEmpresa_madre)
-        {
-            return db.SubEmpresasMedJ.Where(e => e.IdEmpresa_madre == idEmpresa_madre).Select(e => e.Nombre).FirstOrDefault();
-        }
-        public string GetSubEmpresasNombreThh(int idEmpresa_madre)
-        {
-            return db.SubEmpresasTHH.Where(e => e.IdEmpresa_madre == idEmpresa_madre).Select(e => e.Nombre).FirstOrDefault();
+            return db.SubEmpresas.Where(e => e.IdEmpresa_madre == idEmpresa_madre).Select(e => e.Nombre).FirstOrDefault();
         }
         #endregion 
 
 
         #region Listas de empleados por empresas 
-        public List<EmpleadosJuarezO> GetEmpleadosJuarezOs(int idEmpresa)
+     
+        public List<Empleados> GetEmpleados(int idEmpresa)
         {
-            return db.EmpleadosJuarezO
-                .Where(e => e.IdEmpresa == idEmpresa)
-                .ToList();
-        }
-        public List<EmpleadosTHH> GetEmpleadosTHH(int idEmpresa)
-        {
-            return db.EmpleadosTHH
+            return db.Empleados
                 .Where(e => e.IdEmpresa == idEmpresa)
                 .ToList();
         }
 
-        public List<EmpleadosMEDJ> GetEmpleadosMed(int idEmpresa)
-        {
-            return db.EmpleadosMEDJ
-                .Where(e => e.IdEmpresa == idEmpresa)
-                .ToList();
-        }
+     
         #endregion 
 
         #endregion
@@ -253,11 +230,11 @@ namespace Proyecto_Estadias.Services
         {
             var empleadosVM = new List<EmpleadosVM>();
 
-            //para empresa THH 
-            if (db.SubEmpresasTHH.Any(s => s.IdEmpresa_madre == idEmpresa))
+            //para empresa 
+            if (db.SubEmpresas.Any(s => s.IdEmpresa_madre == idEmpresa))
             {
-                var subempresas = db.SubEmpresasTHH.Where(s => s.IdEmpresa_madre == idEmpresa).Select(s => s.Id).ToList();
-                var empleados = db.EmpleadosTHH.Where(e => subempresas.Contains(e.IdEmpresa)).ToList();
+                var subempresas = db.SubEmpresas.Where(s => s.IdEmpresa_madre == idEmpresa).Select(s => s.Id).ToList();
+                var empleados = db.Empleados.Where(e => subempresas.Contains(e.IdEmpresa)).ToList();
 
                 empleadosVM.AddRange(empleados.Select(e => new EmpleadosVM
                 {
@@ -272,48 +249,31 @@ namespace Proyecto_Estadias.Services
                     IdDepartamento = e.IdDepartamento
 
                 }));
-            }
-            else if (db.SubEmpresasMedJ.Any(s => s.IdEmpresa_madre == idEmpresa))
-            {
-                var subempresas = db.SubEmpresasMedJ.Where(s => s.IdEmpresa_madre == idEmpresa).Select(s => s.Id).ToList();
-                var empleados = db.EmpleadosMEDJ.Where(e => subempresas.Contains(e.IdEmpresa)).ToList();
-
-                empleadosVM.AddRange(empleados.Select(e => new EmpleadosVM
-                {
-                    Id = e.Id,
-                    NumEmpleado = e.NumEmpleado,
-                    Nombre = e.Nombre,
-                    FechaDeIngreso = e.FechaIDeIngreso,
-                    AniosTrabajados = e.AniosTrabajados,
-                    MesesTrabajados = e.MesesTrabajados,
-                    DiasDisponibles = e.DiasDisponibles,
-                    IdEmpresa = e.IdEmpresa,
-                    IdDepartamento = e.IdDepartamento
-
-                }));
-            }
-            else if (db.SubEmpresasJuarezO.Any(s => s.IdEmpresa_madre == idEmpresa))
-            {
-                var subempresas = db.SubEmpresasJuarezO.Where(s => s.IdEmpresa_madre == idEmpresa).Select(s => s.Id).ToList();
-                var empleados = db.EmpleadosJuarezO.Where(e => subempresas.Contains(e.IdEmpresa)).ToList();
-
-                empleadosVM.AddRange(empleados.Select(e => new EmpleadosVM
-                {
-                    Id = e.Id,
-                    NumEmpleado = e.NumEmpleado,
-                    Nombre = e.Nombre,
-                    FechaDeIngreso = e.FechaIDeIngreso,
-                    AniosTrabajados = e.AniosTrabajados,
-                    MesesTrabajados = e.MesesTrabajados,
-                    DiasDisponibles = e.DiasDisponibles,
-                    IdEmpresa = e.IdEmpresa,
-                    IdDepartamento = e.IdDepartamento
-
-                }));
-
+            
             }
             return empleadosVM;
         }
+
+        public List<SubEmpresasVM> GetSubEmpresasPorEmpresa(int idEmpresa)
+        {
+            var subempresas = new List<SubEmpresasVM>();
+
+            subempresas.AddRange(db.SubEmpresas
+                .Where(s => s.IdEmpresa_madre == idEmpresa)
+                .Select(s => new SubEmpresasVM { Id = s.Id, Nombre = s.Nombre }));
+        
+
+            return subempresas;
+        }
+
+        public string GetNombreSubempresas(int idSub)
+        {
+            return db.SubEmpresas.FirstOrDefault(se => se.Id == idSub)?.Nombre
+              
+                ?? "Nombre no encontrado";
+        }
+
+
     }
 }
 

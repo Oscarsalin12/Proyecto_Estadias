@@ -17,9 +17,9 @@ namespace Proyecto_Estadias.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly IEmpleadoMedServices empleadoMedServices;
-        private readonly IEmpleadosTHHServices empleadoThhServices;
-        private readonly IEmpleadosJuarezServices empleadoJuaServices;
+       
+        private readonly IEmpleadosServices empleadoServices;
+      
         private IClaimManager claimManager;
         private readonly IAuthServices authServices;
         private readonly Vacaciones_ProyectoEntities db = new Vacaciones_ProyectoEntities();
@@ -27,9 +27,7 @@ namespace Proyecto_Estadias.Controllers
         {
             claimManager = new ClaimManager();
             authServices = new AuthServices();
-            empleadoJuaServices = new EmpleadoJuarezServices();
-            empleadoThhServices = new EmpleadoThhServices();
-            empleadoMedServices = new EmpleadosMedServices();
+            empleadoServices = new EmpleadoServices();
         }
 
         #region  inicio de sesion 
@@ -114,7 +112,7 @@ namespace Proyecto_Estadias.Controllers
         [ExceptionFilter]
         public ActionResult Account(UsuariosVM usuariosVM)
         {
-          
+
 
             if (ModelState.IsValid)
             {
@@ -150,7 +148,7 @@ namespace Proyecto_Estadias.Controllers
 
 
             var usuarioNombre = User.Identity.Name;
-            var usuario = authServices.GetUsuarioConRelaciones(usuarioNombre); 
+            var usuario = authServices.GetUsuarioConRelaciones(usuarioNombre);
             if (usuario == null)
             {
                 return RedirectToAction("Login");
@@ -159,7 +157,7 @@ namespace Proyecto_Estadias.Controllers
             var model = new PerfilVM
             {
                 Usuario = usuario,
-                
+
                 Empresas = empresas
             };
             return View(model);
@@ -172,34 +170,48 @@ namespace Proyecto_Estadias.Controllers
         public ActionResult EmpleadosPorEmpresa(int id)
         {
             var identity = (ClaimsIdentity)User.Identity;
-
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Login", "Auth");
-            }
-            //obtener el eol del ususrio actual 
-
             var roles = ClaimsHelper.GetRoles(identity);
             bool tieneAcceso = roles.Any(rol => ClaimsHelper.TieneAccesoARolYEmpresa(identity, rol, id));
 
             // se realiza la verificacion 
             if (!tieneAcceso)
+                return new HttpUnauthorizedResult("no tiene acceso a esta empresa");
+
+            var subempresas = authServices.GetSubEmpresasPorEmpresa(id);
+            if(subempresas.Any())
+            {
+                ViewBag.EmpresaMadre = db.Empresas.Where(e => e.Id == id).Select(e => e.Nombre).FirstOrDefault();
+                ViewBag.EmpresaId = id;
+                return View("SeleccionarSubempresa", subempresas);
+
+            }
+            return RedirectToAction("ListaEmpleadosSubempresa", new { idSub = id });
+
+        }
+        public ActionResult ListaEmpleadosSubempresa(int idSub)
+        {
+            var identity = (ClaimsIdentity)User.Identity;
+            var roles = ClaimsHelper.GetRoles(identity);
+            var empresaDelUsuario = ClaimsHelper.GetEmpresas(identity);
+
+            if (!empresaDelUsuario.Contains(idSub))
             {
                 return new HttpUnauthorizedResult("no tiene acceso a esta empresa");
             }
+            //obtener el eol del ususrio actual 
 
-            empleadoJuaServices.ActualizarVacacionesYPermisos();
-            empleadoMedServices.ActualizarVacacionesYPermisos();
-            empleadoThhServices.ActualizarVacacionesYPermisos();
-            var empleados = authServices.GetEmpleadosPorEmpresaYSubempresa(id); 
-            ViewBag.EmpresaNombre = authServices.GetEmpresaNombre(id);
-            return View(empleados);
+         
+            empleadoServices.ActualizarVacacionesYPermisos();
+            var empleados = authServices.GetEmpleadosPorEmpresaYSubempresa(idSub);
+            ViewBag.SubempresaNombre = authServices.GetNombreSubempresas(idSub);
+
+            return View("EmpleadosPorEmpresa", empleados);
         }
-        #endregion
+    #endregion
 
 
-        #region metodos de usuarios 
-        [HttpGet]
+    #region metodos de usuarios 
+    [HttpGet]
         public ActionResult ListarUsuairos()
         {
             var usuariosVM = authServices.UsuariosAll();
@@ -217,13 +229,13 @@ namespace Proyecto_Estadias.Controllers
             {
                 IdUsuario = id,
                 ListaRoles = roles.Select(r => new SelectListItem { Value = r.Id.ToString(), Text = r.Nombre }).ToList(),
-                ListaEmpresas = empresas.Select(e => new SelectListItem { Value = e.Id.ToString(), Text = e.Nombre}).ToList()
+                ListaEmpresas = empresas.Select(e => new SelectListItem { Value = e.Id.ToString(), Text = e.Nombre }).ToList()
             };
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult AsignarRol(int idUsuario, int idRol , int idEmpresa)
+        public ActionResult AsignarRol(int idUsuario, int idRol, int idEmpresa)
         {
             bool resultado = authServices.AsignarRolEmpresa(idUsuario, idRol, idEmpresa);
 

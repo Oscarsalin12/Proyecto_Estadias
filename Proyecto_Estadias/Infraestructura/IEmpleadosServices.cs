@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Proyecto_Estadias.Infraestructura
 {
-    public interface IEmpleadosTHHServices
+    public interface IEmpleadosServices
     {
-        void ActualizarEmpleado(EmpleadosTHH empleado);
+        void ActualizarEmpleado(Empleados empleado);
         void ActualizarVacacionesYPermisos();
-        EmpleadosTHH GetEmpleadoPorId(int id);
-        void InsertarEmpleados(EmpleadosTHH emp);
+        Empleados GetEmpleadoPorId(int id);
+        void InsertarEmpleados(Empleados emp);
     }
 }
