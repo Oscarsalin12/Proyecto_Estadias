@@ -12,51 +12,64 @@ using System.Web.UI;
 
 namespace Proyecto_Estadias.Services
 {
-    public class AuthServices : IAuthServices
+    public class AuthServices : IAuthServices // Implementa la interfaz para los metodos 
     {
-        private readonly Vacaciones_ProyectoEntities db = null;
+        // conección a base de datos 
+        private readonly Vacaciones_ProyectoEntities db  = null;  // Objeto de base de datos 
+
+        // metodo contructor 
         public AuthServices()
         {
-            db = new Vacaciones_ProyectoEntities();
+             
+            db = new Vacaciones_ProyectoEntities(); // Se instancia el contexto de la base de datos  
         }
        
         #region metodo para inicio de sesion
+        // Metodo de inicio de sesión 
         public Usuarios login(string nombreusuario, string contrasenia)
         {
+            // Se realiza validación del nombre de usuario y contraseña 
             if (string.IsNullOrWhiteSpace(nombreusuario) || string.IsNullOrWhiteSpace(contrasenia))
             {
-                return null;
+                
+                return null; // En caso de no tener coinsidencias retorna nulo  
             }
+            // Consulta en base de datos trae la primera coinsidencia de nombre y contraseña
             Usuarios usuario = db.Usuarios
-                .Include("UsuarioRol")
+                .Include("UsuarioRol") // Incluye los roles del Usuario 
                 .FirstOrDefault(u => u.Usuario == nombreusuario && u.Contrasenia == contrasenia);
-            if (usuario == null)
+            
+            if (usuario == null) // Validacion de nombre de usuario
             {
-                return null;
+                return null; // no existe usuario con permisos 
             }
-            usuario.UsuarioRol = db.UsuarioRol.Where(u => u.IdUsuario == usuario.Id).ToList();
-            return usuario;
+              
+            usuario.UsuarioRol = db.UsuarioRol.Where(u => u.IdUsuario == usuario.Id).ToList(); // Carga los roles asignados con el usuario
+
+            return usuario; // Retorna el usuario con sus roles 
         }
 
         #endregion
 
         #region listas auxiliares
-
+        // Consulta para traer Registros de Departamentos ordenados por nombre
         public List<Departamentos> GetDepartamentos()
         {
             return this.db.Departamentos.OrderBy(d => d.NombreDep).ToList();
         }
+        // Consulta trae la lista de registros de los roles ordenados por nombre  
         public List<Roles> GetAllRoles()
         {
             return this.db.Roles.OrderBy(p => p.Nombre).ToList();
         }
 
+        // Consulta, trae la lista de registros de las empresa ordenados por nombre 
         public List<Empresas> GetAllEmpresas()
         {
             return this.db.Empresas.OrderBy(p => p.Nombre).ToList();
         }
 
-      
+        // Consulta, trae la lista de registros de las SubEmpresa ordenados por nombre  
         public List<SubEmpresas> ObtenerSubEmpresas()
         {
             return this.db.SubEmpresas.OrderBy(p => p.Nombre).ToList();
@@ -65,41 +78,54 @@ namespace Proyecto_Estadias.Services
         #endregion
 
         #region metodos para crear usuarios 
-
+        // metodo de insercion de usuarios 
         public bool InsertUser(Usuarios usuarios)
         {
-            bool respuesta = false;
-            var transaccion = this.db.Database.BeginTransaction();
-            try
+         
+            bool respuesta = false; // Variale booleana inicalisada en falso
+
+            var transaccion = this.db.Database.BeginTransaction(); // Inicia transaccion para base de datos  
+
+            try    // inicia el intento de insercion
             {
-                this.db.Usuarios.Add(usuarios);
-                this.db.SaveChanges();
-                transaccion.Commit();
-                return respuesta = true;
+               
+                this.db.Usuarios.Add(usuarios); // inserta el usuario resivido 
+                
+                this.db.SaveChanges();// Guarda los cambios
+               
+                transaccion.Commit(); // Finaliza la transaccion
+               
+                return respuesta = true;   // Retorna la respuesta en verdadero
             }
-            catch (System.Exception ex)
+           
+            catch (System.Exception ex) // en caso de fallar el intento retorna una excepcion 
             {
-                transaccion.Rollback();
-                return respuesta;
+               
+                transaccion.Rollback(); // reinvierte los cambios en la transaccion 
+               
+                return respuesta; // retorna la respuesta en falso 
             }
         }
 
         public bool InsertUser(UsuariosVM usuariosVM, List<int> roles, List<int> empresas)
         {
-            bool respuesta = false;
+            
+            bool respuesta = false; // Variale booleana inicalisada en falso 
 
-            try
+
+            try // Inicia un intento
             {
-                Usuarios usuarios = new Usuarios
+                
+                Usuarios usuarios = new Usuarios // Crea objeto de usuarios 
                 {
-                    Usuario = usuariosVM.Usuario.ToLower(),
-                    Contrasenia = usuariosVM.Contrasenia.ToLower(),
+                    Usuario = usuariosVM.Usuario.ToLower(), // se asigna el usuario en minusculas, desde el ViewModel, al campo "Usuario" del nuevo objeto
+                    Contrasenia = usuariosVM.Contrasenia.ToLower(), // Asigna la contraseña en minusculas, al igual desde el ViewModel, Al campo "contrasenia"
                    
                 };
 
                 usuarios.UsuarioRol = new List<UsuarioRol>();
 
-             foreach (var empresaId in empresas)
+             foreach (var empresaId in empresas) // por cada empresa y rol, asigna una relacion con el UsuarioRol
                 {
                     foreach(var rolId in roles)
                     {
@@ -112,18 +138,18 @@ namespace Proyecto_Estadias.Services
                     }
                 }
 
-                var transaccion = db.Database.BeginTransaction();
-                db.Usuarios.Add(usuarios);
-                db.SaveChanges();
-                transaccion.Commit();
-                respuesta = true;
+                var transaccion = db.Database.BeginTransaction(); // se inicializa la transaccion 
+                db.Usuarios.Add(usuarios); // se añade el nuevo usuario
+                db.SaveChanges(); // se guardan cambios en vase de datos
+                transaccion.Commit(); // se concluye la transaccion 
+                respuesta = true; // retorna verdadero 
             }
-            catch (Exception ex)
+            catch (Exception ex) // Entra en la execcion 
             {
                 System.Diagnostics.Debug.WriteLine("Error en InsertUser: " + ex.Message);
             }
-
-            return respuesta;
+            
+            return respuesta; // retorna falso 
         }
 
         #endregion
@@ -135,20 +161,20 @@ namespace Proyecto_Estadias.Services
             return db.Usuarios
                 .Include("UsuarioRol.Empresas")
                 .Include("UsuarioRol.Roles")
-                .FirstOrDefault(u => u.Usuario == nombreusuario);
+                .FirstOrDefault(u => u.Usuario == nombreusuario); // Trae usuario con roles y empresas 
         }
 
 
         public string GetEmpresaNombre(int idEmpresa)
         {
-            return db.Empresas.Where(e => e.Id == idEmpresa).Select(e => e.Nombre).FirstOrDefault();
+            return db.Empresas.Where(e => e.Id == idEmpresa).Select(e => e.Nombre).FirstOrDefault(); // Trae el nombre de la empresa del usuairo
         }
 
         #region Listado de SubEmpresas
      
         public string GetSubEmpresasNombre(int idEmpresa_madre)
         {
-            return db.SubEmpresas.Where(e => e.IdEmpresa_madre == idEmpresa_madre).Select(e => e.Nombre).FirstOrDefault();
+            return db.SubEmpresas.Where(e => e.IdEmpresa_madre == idEmpresa_madre).Select(e => e.Nombre).FirstOrDefault(); // Trae el nombre de las Sub empresas 
         }
         #endregion 
 
@@ -159,7 +185,7 @@ namespace Proyecto_Estadias.Services
         {
             return db.Empleados
                 .Where(e => e.IdEmpresa == idEmpresa)
-                .ToList();
+                .ToList(); // empleados por empresa 
         }
 
      
@@ -174,7 +200,7 @@ namespace Proyecto_Estadias.Services
             var usuarios = db.Usuarios
                 .Include("UsuarioRol.Empresas")
                 .Include("UsuarioRol.Roles")
-                .ToList();
+                .ToList(); // Lista completa de los usuarios con rolos y empresas 
 
             return usuarios.Select(u => new UsuariosVM
             {
@@ -196,16 +222,18 @@ namespace Proyecto_Estadias.Services
                         Nombre = ur.Empresas.Nombre
                     }
                 }).ToList()
-            }).ToList();
+            }).ToList();  // se transforma a ViewModel
         }
         public bool AsignarRolEmpresa(int idUsuario, int idRol, int idEmpresa)
         {
             try
             {
+                // se verifica si ya existe asignacion 
                 var existe = db.UsuarioRol.Any(ur => ur.IdUsuario == idUsuario && ur.IdRol == idRol && ur.IdEmpresa == idEmpresa);
                 if (existe)
                     return false;
 
+                // crea nuevo registro de relacion usuario-rol-empresa
                 UsuarioRol nuevo = new UsuarioRol
                 {
                     IdUsuario = idUsuario,
@@ -231,7 +259,7 @@ namespace Proyecto_Estadias.Services
             var empleadosVM = new List<EmpleadosVM>();
 
             //para empresa 
-            if (db.SubEmpresas.Any(s => s.IdEmpresa_madre == idEmpresa))
+            if (db.SubEmpresas.Any(s => s.IdEmpresa_madre == idEmpresa)) // se verifica si la empresa tiene subempresas 
             {
                 var subempresas = db.SubEmpresas.Where(s => s.IdEmpresa_madre == idEmpresa).Select(s => s.Id).ToList();
                 var empleados = db.Empleados.Where(e => subempresas.Contains(e.IdEmpresa)).ToList();

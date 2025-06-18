@@ -21,6 +21,8 @@ namespace Proyecto_Estadias.ViewModels
         public int DiasDisponibles { get; set; }
         public int IdDepartamento { get; set; }
 
+        public string NombreEmpresa { get; set; }
+        public string NombreDepartamento { get; set; }
         public List<DepartamentosVM> DepatamentosVM { get; set; } 
         public List<SubEmpresasVM> SubEmpresaVM { get; set; }
         //public virtual Empresas Empresa { get; set; }

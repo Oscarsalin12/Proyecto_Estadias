@@ -35,9 +35,9 @@ namespace Proyecto_Estadias.Controllers
         {
             var model = new PermisosVM
             {
-                EmpleadosTHH = permisosServices.ObtenerEmpleados(),
+                Empleados = permisosServices.ObtenerEmpleados(),
                 MotivosAusencia = permisosServices.ObtenerMotivos(),
-                SubEmpresasTHHs = permisosServices.ObtenerEmpresas(),
+                SubEmpresas = permisosServices.ObtenerEmpresas(),
                 FechaGeneracion = DateTime.Today
             };
             return View(model);
@@ -45,10 +45,12 @@ namespace Proyecto_Estadias.Controllers
 
         [HttpPost]
         public ActionResult CrearPermiso(PermisosVM model)
+
+
         {
             if (ModelState.IsValid)
             {
-                var permiso = new PermisosTHH
+                var permiso = new Permisos
                 {
                     IdEmpleado = model.IdEmpleado,
                     IdTipoPermiso = model.IdTipoPermiso,
@@ -67,9 +69,9 @@ namespace Proyecto_Estadias.Controllers
                     ModelState.AddModelError("", error);
                 }
             }
-            model.EmpleadosTHH = permisosServices.ObtenerEmpleados();
+            model.Empleados = permisosServices.ObtenerEmpleados();
             model.MotivosAusencia = permisosServices.ObtenerMotivos();
-            model.SubEmpresasTHHs = permisosServices.ObtenerEmpresas();
+            model.SubEmpresas = permisosServices.ObtenerEmpresas();
             return View(model);
         }
 
@@ -79,7 +81,7 @@ namespace Proyecto_Estadias.Controllers
             if (string.IsNullOrWhiteSpace(filtro))
                 return Json(null, JsonRequestBehavior.AllowGet);
 
-            var empleado = db.EmpleadosTHH.Include("SubEmpresasTHH")
+            var empleado = db.Empleados.Include("SubEmpresas")
                 .FirstOrDefault(e => e.Nombre.Contains(filtro) || e.NumEmpleado.ToString() == filtro);
 
             if (empleado == null)
@@ -90,7 +92,7 @@ namespace Proyecto_Estadias.Controllers
                 id = empleado.Id,
                 nombre = empleado.Nombre,
                 numEmpleado = empleado.NumEmpleado,
-                empresa = empleado.SubEmpresasTHH?.Nombre ?? "",
+                empresa = empleado.SubEmpresas?.Nombre ?? "",
                 empresaId = empleado.IdEmpresa,
                 vacaciones = empleado.DiasDisponibles
             }, JsonRequestBehavior.AllowGet);
@@ -128,8 +130,8 @@ namespace Proyecto_Estadias.Controllers
 
                 foreach (var p in permisos)
                 {
-                    table.AddCell(p.SubEmpresasTHH?.Nombre ?? "N/A");
-                    table.AddCell(p.EmpleadosTHH?.Nombre ?? "N/A");
+                    table.AddCell(p.SubEmpresas?.Nombre ?? "N/A");
+                    table.AddCell(p.Empleados?.Nombre ?? "N/A");
                     table.AddCell(p.MotivosAusencia?.NombreMotivo ?? "N/A");
                     table.AddCell(p.FechaGeneracion.ToShortDateString());
 
@@ -151,7 +153,7 @@ namespace Proyecto_Estadias.Controllers
                 return Json(new
                 {
                     empresaId = empleado.IdEmpresa,
-                    empresa = empleado.SubEmpresasTHH.Nombre ?? "No asignada",
+                    empresa = empleado.SubEmpresas.Nombre ?? "No asignada",
                     vacaciones = empleado.DiasDisponibles
                 }, JsonRequestBehavior.AllowGet);
             }
@@ -177,7 +179,7 @@ namespace Proyecto_Estadias.Controllers
                 doc.Open();
 
                 doc.Add(new Paragraph($"Reporte indiviual de permisos para: {empleado.Nombre}"));
-                doc.Add(new Paragraph($"que forma parte de la Empresa : {empleado.SubEmpresasTHH?.Nombre}"));
+                doc.Add(new Paragraph($"que forma parte de la Empresa : {empleado.SubEmpresas?.Nombre}"));
                 doc.Add(new Paragraph($"Con derecho a : {empleado.intDiasVacaciones} de vacaciones"));
                 doc.Add(new Paragraph($"Con dias disponibles : {empleado.DiasDisponibles}"));
                 doc.Add(new Paragraph(""));
@@ -211,7 +213,7 @@ namespace Proyecto_Estadias.Controllers
         public ActionResult Paginacion(int? page, int pageSize = 5)
         {
             int pageNumber = (page ?? 1); //Pagina por defecto 
-            List<PermisosTHH> resultado = permisosServices.PermisosAll()
+            List<Permisos> resultado = permisosServices.PermisosAll()
                 .OrderBy(p => p.FechaGeneracion).ToList(); //Ordenamiento por fecha 
             //Se aplica paginacon paginacion
             List<PermisosPdfVM> permisosPdfVM = Mapper.Map<List<PermisosPdfVM>>(resultado);

@@ -1,31 +1,50 @@
 ﻿@model Proyecto_Estadias.ViewModels.PerfilVM
-
+@using Proyecto_Estadias.Helpers
 @{
     ViewBag.Title = "Perfil";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var identity = (System.Security.Claims.ClaimsIdentity)User.Identity;
+
 }
 
 <h2>Bienvenido, @Model.Usuario.Usuario</h2>
 
 <h3>Empresas</h3>
-
 <div class="row">
-    @foreach (var empresa in Model.Empresas)
-    {
+  
+    
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
-                <img src="~/Content/imagenes/empresas/@(empresa.Id).jpg" class="card-img-top" alt="Imagen de @empresa.Nombre" style="height:200px; object-fit:cover;" />
+                <img src="~/Content/imagenes/empresas/@(Model.Empresas[0].Id).jpg" class="card-img-top" alt="Imagen de @Model.Empresas[0].Nombre" style="height:200px; object-fit:cover;" />
                 <div class="card-body text-center">
-                    <h5 class="card-title">@empresa.Nombre</h5>
-                    @Html.ActionLink("Ver empleados", "EmpleadosPorEmpresa", "Auth", new { id = empresa.Id }, new { @class = "btn btn-primary" })
-
+                    <h5 class="card-title">@Model.Empresas[0].Nombre</h5>
+                    @Html.ActionLink("Ver empleados", "EmpleadosPorEmpresa", "Auth", new { id = Model.Empresas[0].Id }, new { @class = "btn btn-primary" })
                 </div>
             </div>
-
         </div>
+    
 
-    }
-
-    @Html.ActionLink("asignar Roles", "AsignarRol", "Auth", new { id = Model.Usuario.Id }, new { @class = "btn btn-primary" })
-    Asignar Rol
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="~/Content/imagenes/empresas/@(Model.Empresas[1].Id).jpg" class="card-img-top" alt="Imagen de @Model.Empresas[1].Nombre" style="height:200px; object-fit:cover;" />
+                <div class="card-body text-center">
+                    <h5 class="card-title">@Model.Empresas[1].Nombre</h5>
+                    @Html.ActionLink("Ver empleados", "EmpleadosPorEmpresa", "Auth", new { id = Model.Empresas[1].Id }, new { @class = "btn btn-primary" })
+                </div>
+            </div>
+        </div>
+    
+ 
+<div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <img src="~/Content/imagenes/empresas/@(Model.Empresas[2].Id).jpg" class="card-img-top" alt="Imagen de @Model.Empresas[2].Nombre" style="height:200px; object-fit:cover;" />
+            <div class="card-body text-center">
+                <h5 class="card-title">@Model.Empresas[2].Nombre</h5>
+                @Html.ActionLink("Ver empleados", "EmpleadosPorEmpresa", "Auth", new { id = Model.Empresas[2].Id }, new { @class = "btn btn-primary" })
+            </div>
+        </div>
 </div>
+    
+</div>
+    

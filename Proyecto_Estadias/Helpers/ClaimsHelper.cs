@@ -44,5 +44,11 @@ namespace Proyecto_Estadias.Helpers
             return identity.Claims.Any(c => c.Type == "RolEmpresa" && c.Value == valor);
         }
 
+        public static bool TieneAccesoARolYSubEmpresa(ClaimsIdentity identity, string rol, int idEmpresamadre)
+        {
+            var valor = $"{rol}:{idEmpresamadre}";
+            return identity.Claims.Any(c => c.Type == "RolSubEmpresa" && c.Value == valor);
+        }
+
     }
 }

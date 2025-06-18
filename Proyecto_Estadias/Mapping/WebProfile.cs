@@ -32,7 +32,7 @@ namespace Proyecto_Estadias.Mapping
 
             CreateMap<Proyecto_Estadias.Models.Permisos, Proyecto_Estadias.ViewModels.PermisosPdfVM>()
    .ForMember(dest => dest.Empleados, opt => opt.MapFrom(c => c.Empleados))
-   .ForMember(dest => dest.Empresas, opt => opt.MapFrom(c => c.SubEmpresas))
+   .ForMember(dest => dest.SubEmpresas,opt => opt.MapFrom(c => c.SubEmpresas))
    .ForMember(dest => dest.MotivosAusencia, opt => opt.MapFrom(c => c.MotivosAusencia))
    .ReverseMap();
 

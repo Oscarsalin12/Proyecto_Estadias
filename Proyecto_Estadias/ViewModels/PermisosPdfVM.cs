@@ -17,12 +17,12 @@ namespace Proyecto_Estadias.ViewModels
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFinal { get; set; }
 
-        public List<Empleados> Empleados { get; set; }
-    
-        public Empresas Empresas { get; set; }
+        public Empleados Empleados { get; set; }
+
+        public SubEmpresas SubEmpresas { get; set; }
         public MotivosAusencia MotivosAusencia { get; set; }
-        //public List<Empresas> Empresas { get; set; }
-        //public List<Empleados> Empleados { get; set; }
-        //public List<MotivosAusencia> MotivosAusencia { get; set; }
+        //public List<SubEmpresasVM> SubEmpresasVM { get; set; }
+        //public List<EmpleadosVM> EmpleadosVM { get; set; }
+        //public List<MotivosAusenciaVM> MotivosAusenciaVM { get; set; }
     }
 }

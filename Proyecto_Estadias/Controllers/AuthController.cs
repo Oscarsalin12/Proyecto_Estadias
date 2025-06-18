@@ -172,8 +172,8 @@ namespace Proyecto_Estadias.Controllers
             var identity = (ClaimsIdentity)User.Identity;
             var roles = ClaimsHelper.GetRoles(identity);
             bool tieneAcceso = roles.Any(rol => ClaimsHelper.TieneAccesoARolYEmpresa(identity, rol, id));
-
-            // se realiza la verificacion 
+         
+            // se realiza la verificacion
             if (!tieneAcceso)
                 return new HttpUnauthorizedResult("no tiene acceso a esta empresa");
 
@@ -182,36 +182,65 @@ namespace Proyecto_Estadias.Controllers
             {
                 ViewBag.EmpresaMadre = db.Empresas.Where(e => e.Id == id).Select(e => e.Nombre).FirstOrDefault();
                 ViewBag.EmpresaId = id;
+                ViewBag.SubEmpresaId = id; 
                 return View("SeleccionarSubempresa", subempresas);
 
             }
             return RedirectToAction("ListaEmpleadosSubempresa", new { idSub = id });
 
         }
-        public ActionResult ListaEmpleadosSubempresa(int idSub)
+        public ActionResult ListaEmpleadosSubempresa(int idSub, int? bus)
         {
-            var identity = (ClaimsIdentity)User.Identity;
-            var roles = ClaimsHelper.GetRoles(identity);
-            var empresaDelUsuario = ClaimsHelper.GetEmpresas(identity);
-
-            if (!empresaDelUsuario.Contains(idSub))
+          
+            if (idSub <= 0)
             {
-                return new HttpUnauthorizedResult("no tiene acceso a esta empresa");
+                return HttpNotFound("ID de subempresa no válido");
             }
-            //obtener el eol del ususrio actual 
 
-         
+          
             empleadoServices.ActualizarVacacionesYPermisos();
-            var empleados = authServices.GetEmpleadosPorEmpresaYSubempresa(idSub);
+
+            var empleadosQuery = db.Empleados
+                .Include("SubEmpresas")
+                .Include("Departamentos")
+                .Where(e => e.IdEmpresa == idSub);
+
+            if (bus.HasValue && bus.Value > 0)
+            {
+                empleadosQuery = empleadosQuery.Where(e => e.IdDepartamento == bus.Value);
+            }
+
+            var empleadosVM = empleadosQuery.Select(e => new EmpleadosVM
+            {
+                Id = e.Id,
+                NumEmpleado = e.NumEmpleado,
+                Nombre = e.Nombre,
+                FechaDeIngreso = e.FechaIDeIngreso,
+                AniosTrabajados = e.AniosTrabajados,
+                MesesTrabajados = e.MesesTrabajados,
+                intDiasVacaciones = e.intDiasVacaciones,
+                DiasDisponibles = e.DiasDisponibles,
+                IdEmpresa = e.IdEmpresa,
+                IdDepartamento = e.IdDepartamento,
+                NombreEmpresa = e.SubEmpresas.Nombre,
+                NombreDepartamento = e.Departamentos.NombreDep
+            }).ToList();
+
             ViewBag.SubempresaNombre = authServices.GetNombreSubempresas(idSub);
+            ViewBag.IdSub = idSub;
 
-            return View("EmpleadosPorEmpresa", empleados);
+            ViewBag.Departamentos = new SelectList(db.Departamentos, "Id", "NombreDep");
+
+            return View("EmpleadosPorEmpresa", empleadosVM);
         }
-    #endregion
 
 
-    #region metodos de usuarios 
-    [HttpGet]
+
+        #endregion
+
+
+        #region metodos de usuarios 
+        [HttpGet]
         public ActionResult ListarUsuairos()
         {
             var usuariosVM = authServices.UsuariosAll();
@@ -247,5 +276,58 @@ namespace Proyecto_Estadias.Controllers
             return RedirectToAction("Perfil", "Auth");
         }
         #endregion
+        //[HttpGet]
+        //[Authorize]
+        //public ActionResult BuscarEmpleados(string busqueda, int? idSubEmpresa)
+        //{
+        //    empleadoServices.ActualizarVacacionesYPermisos();
+
+        //    var empleados = db.Empleados
+        //        .Include("SubEmpresas")
+        //        .Include("Departamentos")
+        //        .AsQueryable();
+
+        //    if (idSubEmpresa.HasValue)
+        //        empleados = empleados.Where(e => e.IdEmpresa == idSubEmpresa.Value);
+
+        //    if (!string.IsNullOrWhiteSpace(busqueda))
+        //        empleados = empleados.Where(e => e.Nombre.Contains(busqueda));
+
+        //    var empleadosVM = empleados.Select(e => new EmpleadosVM
+        //    {
+        //        Id = e.Id,
+        //        NumEmpleado = e.NumEmpleado,
+        //        Nombre = e.Nombre,
+        //        FechaDeIngreso = e.FechaIDeIngreso,
+        //        AniosTrabajados = e.AniosTrabajados,
+        //        MesesTrabajados = e.MesesTrabajados,
+        //        intDiasVacaciones = e.intDiasVacaciones,
+        //        DiasDisponibles = e.DiasDisponibles,
+        //        IdEmpresa = e.IdEmpresa,
+        //        IdDepartamento = e.IdDepartamento,
+        //        NombreEmpresa = e.SubEmpresas.Nombre,
+        //        NombreDepartamento = e.Departamentos.NombreDep
+        //    }).ToList();
+
+        //    var model = new EmpleadosPorEmpresaVM
+        //    {
+        //        Busqueda = busqueda,
+        //        IdSubEmpresa = idSubEmpresa,
+        //        Empleados = empleadosVM,
+        //        SubEmpresas = authServices.ObtenerSubEmpresas()
+        //            .Select(s => new SelectListItem
+        //            {
+        //                Value = s.Id.ToString(),
+        //                Text = s.Nombre,
+        //                Selected = idSubEmpresa.HasValue && s.Id == idSubEmpresa.Value
+        //            }).ToList()
+        //    };
+
+        //    return View("EmpleadosPorEmpresa", model);
+        //}
+
+
     }
 }
+    
+

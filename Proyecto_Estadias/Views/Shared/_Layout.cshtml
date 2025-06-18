@@ -1,48 +1,78 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    <link rel="stylesheet" href="~/Content/custom-navbar.css" />
 
+    <link href="~/Content/custom-navbar.css" rel="stylesheet" />
+    <link href="~/Content/fonts-roboto.css" rel="stylesheet" />
+    <link href="~/Content/toastr.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="https://kit.fontawesome.com/5549e90f49.js" crossorigin="anonymous"></script>
+    <script src="~/Scripts/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
         <div class="container">
             <a class="navbar-brand" href="@Url.Action("Perfil", "Auth")">
-                <img src="~/Content/logo.png" alt="Logo" height="40" class="me-2"> <!-- Logo -->
+                <img src="~/Content/logo.png" alt="Logo" height="40" class="me-2" />
                 Mi Aplicación
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    @*<li class="nav-item">
-                        @Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "nav-link" })
-                    </li>*@
-
-
                     @if (User.Identity.IsAuthenticated)
                     {
-                      
-                        <li>@Html.ActionLink("Añadir Usuario", "Account", "Auth", null, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Añadir Empleado", "InsertarEmpleado", "Empleados", null, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Crear Permiso", "CrearPermiso", "Permisos", null, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Historial de Reportes", "Paginacion", "Permisos", null, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Cerrar Sesión", "Logout", "Auth", null, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Añadir Usuario", "Account", "Auth", null, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Añadir Empleado", "InsertarEmpleado", "Empleados", null, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Crear Permiso", "CrearPermiso", "Permisos", null, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Historial de Reportes", "Paginacion", "Permisos", null, new { @class = "nav-link" })</li>
                     }
                     else
                     {
-                        <li>@Html.ActionLink("Login", "Login", "Auth", null, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Login", "Login", "Auth", null, new { @class = "nav-link" })</li>
                     }
-
                 </ul>
-                @*<button class="btn btn-outline-light">Iniciar Sesión</button>*@
+
+                <ul class="navbar-nav ms-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle"></i> @User.Identity.Name
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="#">Configuración</a></li>
+                                <li>@Html.ActionLink("Salir", "LogOut", "Auth", null, new { @class = "dropdown-item" })</li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="guestDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user"></i> Usuario
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="guestDropdown">
+                                <li><a class="dropdown-item" href="@Url.Action("Login", "Auth")">Iniciar sesión</a></li>
+                                <li><a class="dropdown-item" href="#">Configuración</a></li>
+                                <li><a class="dropdown-item" href="#">Salir</a></li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
     </nav>
@@ -60,3 +90,8 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+
+
+     
+
+  

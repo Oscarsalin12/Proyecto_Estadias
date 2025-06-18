@@ -28,7 +28,8 @@ namespace Proyecto_Estadias.Security
             {
                 new Claim(ClaimTypes.NameIdentifier, usuariosVM.Id.ToString()),
                 new Claim(ClaimTypes.Name, usuariosVM.Usuario),
-                new Claim("IdEmpresa", usuariosVM.UsuariosRolesVMs.First().IdEmpresa.ToString())
+                new Claim("IdEmpresa", usuariosVM.UsuariosRolesVMs.First().IdEmpresa.ToString()),
+                new Claim("IdEmpresaMadre",usuariosVM.UsuariosRolesVMs.First().IdEmpresa.ToString())
 
             };
             if (usuariosVM.UsuariosRolesVMs != null && usuariosVM.UsuariosRolesVMs.Any())
@@ -38,12 +39,14 @@ namespace Proyecto_Estadias.Security
                     //Roles 
                     claims.Add(new Claim(ClaimTypes.Role, item.RolesVM.Nombre));
 
-                    // EMpresa asignada al Rol 
+                    // Empresa asignada al Rol 
                     claims.Add(new Claim("EmpresaId", item.IdEmpresa.ToString()));
-
+                    // Sub empresa asignada al rol
+                    claims.Add(new Claim("EmpresaMadreId", item.IdEmpresa.ToString()));
                     // Rol + Empresa combinados
-
                     claims.Add(new Claim("RolEmpresa", $"{item.RolesVM.Nombre}:{item.IdEmpresa}"));
+                    // Rol + SubmpresaCombinados 
+                    claims.Add(new Claim("RolSubEmpresa", $"{item.RolesVM.Nombre}:{item.IdEmpresa}"));
                 }
             }
             return new ClaimsIdentity(claims,DefaultAuthenticationTypes.ApplicationCookie);
@@ -83,6 +86,7 @@ namespace Proyecto_Estadias.Security
                     IdRol = r.IdRol,
                     IdUsuario = r.IdUsuario,
                     IdEmpresa = r.IdEmpresa,
+                    IdEmpresaMadre = r.IdEmpresa,
                     RolesVM = new RolVM
                     {
                         Nombre = r.Roles.Nombre,
