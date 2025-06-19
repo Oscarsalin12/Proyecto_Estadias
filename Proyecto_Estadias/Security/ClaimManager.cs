@@ -59,7 +59,7 @@ namespace Proyecto_Estadias.Security
 
         public ActionResult SignIn(UsuariosVM usuariosVM, bool rememberMe, Controller ctx, string _returnurl)
         {
-            ActionResult Result;
+          
             string returnUrl = _returnurl;
 
             var identity = CreateIdentity(usuariosVM, rememberMe);

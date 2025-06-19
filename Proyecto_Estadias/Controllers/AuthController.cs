@@ -42,45 +42,19 @@ namespace Proyecto_Estadias.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(UsuariosVM usuariosVM, string returnUrl)
+        public ActionResult Login(UsuariosVM model, string returnUrl)
         {
-            if (usuariosVM == null || !ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                ViewBag.Error = "Datos inválidos.";
-                return View(usuariosVM);
-            }
-
-            var usuarioDb = authServices.login(usuariosVM.Usuario.ToLower(), usuariosVM.Contrasenia.ToLower());
-            if (usuarioDb == null)
-            {
-                ViewBag.Error = "Usuario o contraseña incorrectos.";
-                return View(usuariosVM);
-            }
-
-            var rolesVM = usuarioDb.UsuarioRol.Select(r => new UsuariosRolVM
-            {
-                IdRol = r.IdRol,
-                IdUsuario = r.IdUsuario,
-                RolesVM = new RolVM
+                if (claimManager.SignIn(model, true, returnUrl))
                 {
-                    Id = r.Roles.Id,
-                    Nombre = r.Roles.Nombre,
+                    return Redirect(returnUrl ?? Url.Action("Perfil", "Auth"));
                 }
-            }).ToList();
-
-            usuariosVM.UsuariosRolesVMs = rolesVM;
-            usuariosVM.Id = usuarioDb.Id;
-            usuariosVM.Usuario = usuarioDb.Usuario;
-            usuariosVM.Contrasenia = usuarioDb.Contrasenia;
-
-            if (claimManager.SignIn(usuariosVM, true, returnUrl))
-            {
-                return RedirectToAction("Perfil", "Auth");
+                ModelState.AddModelError("", "Credenciales incorrectas.");
             }
-
-            ViewBag.Error = "Error de autenticación.";
-            return View(usuariosVM);
+            return View(model);
         }
+
 
         #endregion
 
@@ -139,7 +113,7 @@ namespace Proyecto_Estadias.Controllers
 
         #region perfil
 
-        [Authorize]
+        //[Authorize]
         public ActionResult Perfil()
         {
             var identity = (ClaimsIdentity)User.Identity;
@@ -189,7 +163,7 @@ namespace Proyecto_Estadias.Controllers
             return RedirectToAction("ListaEmpleadosSubempresa", new { idSub = id });
 
         }
-        public ActionResult ListaEmpleadosSubempresa(int idSub, int? bus)
+        public ActionResult ListaEmpleadosSubempresa(int idSub, int? bus, string busqueda)
         {
           
             if (idSub <= 0)
@@ -197,7 +171,7 @@ namespace Proyecto_Estadias.Controllers
                 return HttpNotFound("ID de subempresa no válido");
             }
 
-          
+
             empleadoServices.ActualizarVacacionesYPermisos();
 
             var empleadosQuery = db.Empleados
@@ -205,6 +179,11 @@ namespace Proyecto_Estadias.Controllers
                 .Include("Departamentos")
                 .Where(e => e.IdEmpresa == idSub);
 
+            if (!String.IsNullOrEmpty(busqueda))
+            {
+                empleadosQuery = empleadosQuery.Where(e => e.Nombre.Contains(busqueda));
+            }
+            
             if (bus.HasValue && bus.Value > 0)
             {
                 empleadosQuery = empleadosQuery.Where(e => e.IdDepartamento == bus.Value);
@@ -241,6 +220,7 @@ namespace Proyecto_Estadias.Controllers
 
         #region metodos de usuarios 
         [HttpGet]
+        [Authorize(Roles = "AdministadorGeneral")]
         public ActionResult ListarUsuairos()
         {
             var usuariosVM = authServices.UsuariosAll();

@@ -100,10 +100,12 @@ namespace Proyecto_Estadias.Services
         {
             var empleados = db.Empleados.ToList();
             var hoy = DateTime.Today;
+
             foreach (var emp in empleados)
             {
                 var fechaIngreso = emp.FechaIDeIngreso;
 
+                // Cálculo de años y meses trabajados
                 int anios = hoy.Year - fechaIngreso.Year;
                 int meses = hoy.Month - fechaIngreso.Month;
 
@@ -116,19 +118,40 @@ namespace Proyecto_Estadias.Services
                     meses += 12;
                 }
 
+                // Días base de vacaciones
                 int diasBase = CalcularDiasVacaciones(anios);
-                int diasPermisoTomados = db.Permisos
-                    .Where(p => p.IdEmpleado == emp.Id)
-                    .Count();
+
+                // Sumar solo los días hábiles de cada permiso
+                var permisos = db.Permisos.Where(p => p.IdEmpleado == emp.Id).ToList();
+                int diasPermisoTomados = permisos.Sum(p => ContarDiasHabiles(p.FechaInicio, p.FechaFinal));
+
+                // Días disponibles
                 int diasDisponibles = Math.Max(diasBase - diasPermisoTomados, 0);
 
+                // Guardar
                 emp.AniosTrabajados = anios;
                 emp.MesesTrabajados = meses;
                 emp.intDiasVacaciones = diasBase;
                 emp.DiasDisponibles = diasDisponibles;
             }
+
             db.SaveChanges();
         }
+
+        // Método que cuenta solo días hábiles (lunes a viernes)
+        private int ContarDiasHabiles(DateTime inicio, DateTime fin)
+        {
+            int diasHabiles = 0;
+            for (DateTime fecha = inicio.Date; fecha <= fin.Date; fecha = fecha.AddDays(1))
+            {
+                if (fecha.DayOfWeek != DayOfWeek.Saturday && fecha.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    diasHabiles++;
+                }
+            }
+            return diasHabiles;
+        }
+
         public Empleados GetEmpleadoPorId(int id)
         {
             return db.Empleados.FirstOrDefault(e => e.Id == id);

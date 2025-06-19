@@ -114,34 +114,61 @@ namespace Proyecto_Estadias.Controllers
 
             using (MemoryStream ms = new MemoryStream())
             {
-                Document doc = new Document(PageSize.A4, 20, 20, 20, 20);
+                Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
                 PdfWriter.GetInstance(doc, ms);
                 doc.Open();
 
-                doc.Add(new Paragraph("Reporte de faltas"));
-                doc.Add(new Paragraph("Fecha: " + DateTime.Now.ToShortDateString()));
-                doc.Add(new Paragraph(""));
+                // Fuente personalizada
+                var tituloFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK);
+                var subTituloFont = FontFactory.GetFont(FontFactory.HELVETICA, 12, BaseColor.DARK_GRAY);
+                var encabezadoFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.WHITE);
+                var celdaFont = FontFactory.GetFont(FontFactory.HELVETICA, 11, BaseColor.BLACK);
 
+                // Título principal
+                Paragraph titulo = new Paragraph("Reporte de Faltas", tituloFont);
+                titulo.Alignment = Element.ALIGN_CENTER;
+                doc.Add(titulo);
+
+                // Fecha
+                Paragraph fecha = new Paragraph("Fecha de generación: " + DateTime.Now.ToString("dd/MM/yyyy"), subTituloFont);
+                fecha.Alignment = Element.ALIGN_RIGHT;
+                fecha.SpacingAfter = 20f;
+                doc.Add(fecha);
+
+                // Tabla
                 PdfPTable table = new PdfPTable(4);
-                table.AddCell("Empresas");
-                table.AddCell("Empleado");
-                table.AddCell("Motivo");
-                table.AddCell("Fecha");
+                table.WidthPercentage = 100;
+                table.SetWidths(new float[] { 2.5f, 2.5f, 2.5f, 2f });
 
+                // Encabezados
+                BaseColor headerBackground = new BaseColor(0, 122, 204); // azul suave
+                string[] headers = { "Empresa", "Empleado", "Motivo", "Fecha" };
+
+                foreach (var header in headers)
+                {
+                    PdfPCell cell = new PdfPCell(new Phrase(header, encabezadoFont));
+                    cell.BackgroundColor = headerBackground;
+                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    cell.Padding = 5;
+                    table.AddCell(cell);
+                }
+
+                // Celdas de contenido
                 foreach (var p in permisos)
                 {
-                    table.AddCell(p.SubEmpresas?.Nombre ?? "N/A");
-                    table.AddCell(p.Empleados?.Nombre ?? "N/A");
-                    table.AddCell(p.MotivosAusencia?.NombreMotivo ?? "N/A");
-                    table.AddCell(p.FechaGeneracion.ToShortDateString());
-
+                    table.AddCell(new PdfPCell(new Phrase(p.SubEmpresas?.Nombre ?? "N/A", celdaFont)) { Padding = 5 });
+                    table.AddCell(new PdfPCell(new Phrase(p.Empleados?.Nombre ?? "N/A", celdaFont)) { Padding = 5 });
+                    table.AddCell(new PdfPCell(new Phrase(p.MotivosAusencia?.NombreMotivo ?? "N/A", celdaFont)) { Padding = 5 });
+                    table.AddCell(new PdfPCell(new Phrase(p.FechaGeneracion.ToString("dd/MM/yyyy"), celdaFont)) { Padding = 5, HorizontalAlignment = Element.ALIGN_CENTER });
                 }
+
                 doc.Add(table);
                 doc.Close();
 
-                return File(ms.ToArray(), "application/pdf", "Reportes.pdf");
+                return File(ms.ToArray(), "application/pdf", "ReporteDeFaltas.pdf");
             }
         }
+
 
         [HttpGet]
         public JsonResult ObtenerDatosEmpleado(int id)
@@ -174,28 +201,55 @@ namespace Proyecto_Estadias.Controllers
 
             using (MemoryStream ms = new MemoryStream())
             {
-                Document doc = new Document(PageSize.A4, 20, 20, 20, 20);
+                Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
                 PdfWriter.GetInstance(doc, ms);
                 doc.Open();
 
-                doc.Add(new Paragraph($"Reporte indiviual de permisos para: {empleado.Nombre}"));
-                doc.Add(new Paragraph($"que forma parte de la Empresa : {empleado.SubEmpresas?.Nombre}"));
-                doc.Add(new Paragraph($"Con derecho a : {empleado.intDiasVacaciones} de vacaciones"));
-                doc.Add(new Paragraph($"Con dias disponibles : {empleado.DiasDisponibles}"));
-                doc.Add(new Paragraph(""));
+                // Fuentes
+                var tituloFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK);
+                var subTituloFont = FontFactory.GetFont(FontFactory.HELVETICA, 12, BaseColor.DARK_GRAY);
+                var headerFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.WHITE);
+                var cellFont = FontFactory.GetFont(FontFactory.HELVETICA, 11, BaseColor.BLACK);
 
+                // Título
+                Paragraph titulo = new Paragraph("Reporte Individual de Permisos", tituloFont);
+                titulo.Alignment = Element.ALIGN_CENTER;
+                titulo.SpacingAfter = 20f;
+                doc.Add(titulo);
+
+                // Datos del empleado
+                doc.Add(new Paragraph($"Empleado: {empleado.Nombre}", subTituloFont));
+                doc.Add(new Paragraph($"Empresa: {empleado.SubEmpresas?.Nombre ?? "N/A"}", subTituloFont));
+                doc.Add(new Paragraph($"Días de vacaciones otorgados: {empleado.intDiasVacaciones}", subTituloFont));
+                doc.Add(new Paragraph($"Días disponibles: {empleado.DiasDisponibles}", subTituloFont));
+                doc.Add(new Paragraph($"Fecha de generación: {DateTime.Now:dd/MM/yyyy}", subTituloFont));
+                doc.Add(new Paragraph(" ")); // Espacio
+
+                // Tabla
                 PdfPTable table = new PdfPTable(4);
-                table.AddCell("Fecha Generacion");
-                table.AddCell("Motivo");
-                table.AddCell("Inicio");
-                table.AddCell("Final");
+                table.WidthPercentage = 100;
+                table.SetWidths(new float[] { 2f, 3f, 2f, 2f });
 
+                // Encabezados
+                BaseColor azulEncabezado = new BaseColor(0, 122, 204);
+                string[] headers = { "Fecha Generación", "Motivo", "Inicio", "Final" };
+
+                foreach (var header in headers)
+                {
+                    PdfPCell cell = new PdfPCell(new Phrase(header, headerFont));
+                    cell.BackgroundColor = azulEncabezado;
+                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    cell.Padding = 5;
+                    table.AddCell(cell);
+                }
+
+                // Filas de contenido
                 foreach (var p in permisos)
                 {
-                    table.AddCell(p.FechaGeneracion.ToShortDateString());
-                    table.AddCell(p.MotivosAusencia?.NombreMotivo ?? "N/A");
-                    table.AddCell(p.FechaInicio.ToShortDateString());
-                    table.AddCell(p.FechaFinal.ToShortDateString());
+                    table.AddCell(new PdfPCell(new Phrase(p.FechaGeneracion.ToString("dd/MM/yyyy"), cellFont)) { Padding = 5 });
+                    table.AddCell(new PdfPCell(new Phrase(p.MotivosAusencia?.NombreMotivo ?? "N/A", cellFont)) { Padding = 5 });
+                    table.AddCell(new PdfPCell(new Phrase(p.FechaInicio.ToString("dd/MM/yyyy"), cellFont)) { Padding = 5 });
+                    table.AddCell(new PdfPCell(new Phrase(p.FechaFinal.ToString("dd/MM/yyyy"), cellFont)) { Padding = 5 });
                 }
 
                 doc.Add(table);
@@ -204,6 +258,7 @@ namespace Proyecto_Estadias.Controllers
                 return File(ms.ToArray(), "application/pdf", $"ReporteEmpleado_{empleado.Nombre}.pdf");
             }
         }
+
 
         #endregion
 
@@ -223,6 +278,118 @@ namespace Proyecto_Estadias.Controllers
 
         #endregion
 
+        public FileResult GenerarPDFPermiso(int idPermiso)
+        {
+            var permiso = permisosServices.ObtenerPermisoPorId(idPermiso);
+            var empleado = permiso.Empleados;
+
+            // Empresa madre o subempresa
+            var empresa = permiso.SubEmpresas?.Empresas?.Nombre ?? permiso.SubEmpresas?.Nombre ?? "N/A";
+            var motivo = permiso.MotivosAusencia?.NombreMotivo ?? "N/A";
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
+                PdfWriter.GetInstance(doc, ms);
+                doc.Open();
+
+                var normalFont = FontFactory.GetFont(FontFactory.HELVETICA, 11);
+                var boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12);
+                var titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+
+                // Encabezado dinámico
+                Paragraph header = new Paragraph(empresa.ToUpper(), titleFont);
+                header.Alignment = Element.ALIGN_CENTER;
+                doc.Add(header);
+
+
+                Paragraph subHeader = new Paragraph("AVISO DE AUSENCIA", boldFont);
+                subHeader.Alignment = Element.ALIGN_CENTER;
+                subHeader.SpacingAfter = 15f;
+                doc.Add(subHeader);
+
+                PdfPTable linea1 = new PdfPTable(3) { WidthPercentage = 100 };
+                linea1.SetWidths(new float[] { 1f, 1f, 1f });
+                linea1.AddCell(CreateCell($"No. Folio.: {permiso.Id}", normalFont));
+                linea1.AddCell(CreateCell($"No. Trab.: {empleado.NumEmpleado}", normalFont));
+                linea1.AddCell(CreateCell($"Fecha Solicitud: {permiso.FechaGeneracion:dd-MMMM-yyyy}", normalFont));
+                doc.Add(linea1);
+
+                doc.Add(CreateLabelLine("NOMBRE:", empleado.Nombre, normalFont));
+
+                PdfPTable linea2 = new PdfPTable(2) { WidthPercentage = 100 };
+                linea2.SetWidths(new float[] { 1f, 1f });
+                linea2.AddCell(CreateLabelLine("DEPARTAMENTO:", empleado.Departamentos?.NombreDep ?? "N/A", normalFont));
+                linea2.AddCell(CreateLabelLine("ENCARGADO:", empleado.Departamentos?.NombreEmcargado ?? "N/A", normalFont));
+                doc.Add(linea2);
+
+                doc.Add(CreateLabelLine("MOTIVO:", motivo, normalFont));
+
+                int totalDias = ContarDiasHabiles(permiso.FechaInicio, permiso.FechaFinal);
+
+                doc.Add(CreateLabelLine("DIAS:", totalDias.ToString(), normalFont));
+
+                PdfPTable linea3 = new PdfPTable(2) { WidthPercentage = 100 };
+                linea3.SetWidths(new float[] { 1f, 1f });
+                linea3.AddCell(CreateLabelLine("ESTARÁ AUSENTE A PARTIR DEL:", permiso.FechaInicio.ToString("dd-MMMM-yyyy"), normalFont));
+                linea3.AddCell(CreateLabelLine("AL:", permiso.FechaFinal.ToString("dd-MMMM-yyyy"), normalFont));
+                doc.Add(linea3);
+
+                doc.Add(CreateLabelLine("OBS.:", $"Restan {empleado.DiasDisponibles} días de vacaciones periodo {DateTime.Now.Year}", normalFont));
+
+                doc.Add(new Paragraph("\n\n\n"));
+
+                PdfPTable firmas = new PdfPTable(3) { WidthPercentage = 100 };
+                firmas.AddCell(CreateSignatureCell("RECURSOS HUMANOS"));
+                firmas.AddCell(CreateSignatureCell("ENC. DEPARTAMENTO"));
+                firmas.AddCell(CreateSignatureCell("INTERESADO"));
+                doc.Add(firmas);
+
+                doc.Close();
+                return File(ms.ToArray(), "application/pdf", $"AvisoPermiso_{empleado.Nombre}.pdf");
+            }
+        }
+
+
+        // Métodos de apoyo
+        private PdfPCell CreateCell(string text, Font font)
+        {
+            return new PdfPCell(new Phrase(text, font)) { Border = Rectangle.NO_BORDER, PaddingBottom = 5f };
+        }
+
+        private PdfPTable CreateLabelLine(string label, string value, Font font)
+        {
+            PdfPTable table = new PdfPTable(2) { WidthPercentage = 100 };
+            table.SetWidths(new float[] { 0.25f, 0.75f });
+            table.AddCell(new PdfPCell(new Phrase(label, font)) { Border = Rectangle.NO_BORDER });
+            table.AddCell(new PdfPCell(new Phrase(value, font)) { Border = Rectangle.NO_BORDER });
+            return table;
+        }
+
+        private PdfPCell CreateSignatureCell(string label)
+        {
+            var cell = new PdfPCell
+            {
+                Border = Rectangle.NO_BORDER,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                PaddingTop = 20f
+            };
+            cell.Phrase = new Phrase(label, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10));
+            return cell;
+        }
+
+        private int ContarDiasHabiles(DateTime fechaInicio, DateTime fechaFin)
+        {
+            int diasHabiles = 0;
+            for (DateTime fecha = fechaInicio; fecha <= fechaFin; fecha = fecha.AddDays(1))
+            {
+                if (fecha.DayOfWeek != DayOfWeek.Saturday && fecha.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    diasHabiles++;
+                }
+            }
+            return diasHabiles;
+        }
 
     }
 }
