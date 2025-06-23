@@ -21,6 +21,7 @@ namespace Proyecto_Estadias.Models
         public System.DateTime FechaGeneracion { get; set; }
         public System.DateTime FechaInicio { get; set; }
         public System.DateTime FechaFinal { get; set; }
+        public int DiasDisponibles { get; set; }
     
         public virtual Empleados Empleados { get; set; }
         public virtual MotivosAusencia MotivosAusencia { get; set; }

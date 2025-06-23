@@ -1,4 +1,5 @@
 ﻿@model Proyecto_Estadias.Models.Empleados
+
 @{
     ViewBag.Title = "Insertar Empleado";
 }
@@ -8,6 +9,7 @@
 @using (Html.BeginForm("InsertarEmpleado", "Empleados", FormMethod.Post, new { @class = "form-horizontal" }))
 {
     @Html.AntiForgeryToken()
+
     <div class="form-group">
         @Html.LabelFor(m => m.NumEmpleado, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
@@ -33,14 +35,15 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.IdEmpresa, "Empresa", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(m => m.IdEmpresa, "Subempresa", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(m => m.IdEmpresa, (SelectList)ViewBag.Empresas, "Seleccione una empresa", new { @class = "form-control" })
+            @Html.DropDownListFor(m => m.IdEmpresa, (SelectList)ViewBag.Empresas, "Seleccione una subempresa", new { @class = "form-control" })
             @Html.ValidationMessageFor(m => m.IdEmpresa, "", new { @class = "text-danger" })
         </div>
     </div>
+
     <div class="form-group">
-        @Html.LabelFor(m => m.IdDepartamento, "Departamentos", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(m => m.IdDepartamento, "Departamento", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.DropDownListFor(m => m.IdDepartamento, (SelectList)ViewBag.Departamentos, "Seleccione un departamento", new { @class = "form-control" })
             @Html.ValidationMessageFor(m => m.IdDepartamento, "", new { @class = "text-danger" })
@@ -53,7 +56,6 @@
             @Html.ActionLink("Cancelar", "Perfil", "Auth", null, new { @class = "btn btn-default" })
         </div>
     </div>
-
 }
 
 @section Scripts {

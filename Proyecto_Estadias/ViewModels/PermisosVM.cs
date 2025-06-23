@@ -23,6 +23,9 @@ namespace Proyecto_Estadias.ViewModels
         [Required]
         [DataType(DataType.Date)]
         public DateTime FechaFinal { get; set; }
+        public string NombreEmpleado { get; set; }
+        public string EmpresaNombre { get; set; }
+        public int VacacionesDisponibles { get; set; }
 
         public List<Empresas> Empresas { get; set; }
        

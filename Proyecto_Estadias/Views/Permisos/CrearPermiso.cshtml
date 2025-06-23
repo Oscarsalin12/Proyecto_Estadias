@@ -9,34 +9,30 @@
 
 @using (Html.BeginForm("CrearPermiso", "Permisos", FormMethod.Post))
 {
-    <div class="form-group">
-        @*despliege de lista*@
+    @Html.AntiForgeryToken()
 
-        @*<select id="IdEmpleado" name="IdEmpleado" class="form-control" onchange="cargarDatosEmpleado()">
-                <option value="">Seleccione un Empleado</option>
-                @foreach (var emp in Model.Empleados)
-                      {
-                          <option value="@emp.Id">@emp.Nombre</option>
-                      }
-            </select>
-              @Html.ValidationMessageFor(m => m.IdEmpleado, "", new { @class = "text-danger"})
-              </div>*@
-        @*<div class="form-group">*@
-        <Label>buscar empleado por Nombre o Numero</Label>
-        <input type="text" id="busquedaEmpleado" class="form-control" placeholder="ej. empleado tal o 123" />
+    <div class="form-group">
+        <label>Buscar empleado por Nombre o Número</label>
+        <input type="text" id="busquedaEmpleado" class="form-control"
+               placeholder="Ej. Juan o 123"
+               autocomplete="off"
+               value="@Model.NombreEmpleado"
+               @(Model.IdEmpleado > 0 ? "readonly" : "") />
+
         @Html.HiddenFor(m => m.IdEmpleado)
+        @Html.ValidationMessageFor(m => m.IdEmpleado, "", new { @class = "text-danger" })
     </div>
 
     <div id="datosEmpleado" style="margin-bottom:15px;">
         @Html.HiddenFor(m => m.IdEmpresa)
-        <p><strong>Empresa:</strong> <span id="empresa"></span></p>
-        <p><strong>Días de Vacaciones:</strong> <span id="vacaciones"></span></p>
+        <p><strong>Empresa:</strong> <span id="empresa">@Model.EmpresaNombre</span></p>
+        <p><strong>Días de Vacaciones:</strong> <span id="vacaciones">@Model.VacacionesDisponibles</span></p>
     </div>
 
     <div class="form-group">
         @Html.LabelFor(m => m.IdTipoPermiso)
         <select id="IdTipoPermiso" name="IdTipoPermiso" class="form-control">
-            <option value="">Seleccione El Motivo</option>
+            <option value="">Seleccione el motivo</option>
             @foreach (var motivo in Model.MotivosAusencia)
             {
                 <option value="@motivo.Id">@motivo.NombreMotivo</option>
@@ -47,13 +43,14 @@
 
     <div class="form-group">
         @Html.LabelFor(m => m.FechaInicio, "Fecha de inicio")
-        @Html.TextBoxFor(m => m.FechaInicio, Model.FechaInicio != DateTime.MinValue ? Model.FechaInicio.ToString("yyyy-MM-dd") : "", new { @type = "date", @class = "form-control" })
-
+        @Html.TextBoxFor(m => m.FechaInicio, new { @type = "date", @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.FechaInicio, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
         @Html.LabelFor(m => m.FechaFinal, "Fecha final")
-        @Html.TextBoxFor(m => m.FechaFinal, Model.FechaFinal != DateTime.MinValue ? Model.FechaFinal.ToString("yyyy-MM-dd") : "", new { @type = "date", @class = "form-control" })
+        @Html.TextBoxFor(m => m.FechaFinal, new { @type = "date", @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.FechaFinal, "", new { @class = "text-danger" })
     </div>
 
     <button type="submit" class="btn btn-primary">Guardar Permiso</button>
@@ -63,57 +60,42 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
-    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+
     <script>
-        function cargarDatosEmpleado() {
-            var empleadoId = $('#IdEmpleado').val();
-            if (empleadoId) {
-                $.get('@Url.Action("ObtenerDatosEmpleado","Permisos")',
-                    { id: empleadoId },
-                    function (data) {
-
-                        $('#empresa').text(data.empresa);
-                        $('#vacaciones').text(data.vacaciones);
-                        $('#IdEmpresa').val(data.empresaId);
-                    });
-            } else {
-                $('#empresa').text('');
-                $('#vacaciones').text('');
-            }
-        }
         $(function () {
-            $('#busquedaEmpleado').autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: '@Url.Action("BuscarEmpleado", "Permisos")',
-                        data: { filtro: request.term },
-                        success: function (data) {
-                            if (data) {
-                                response([{
-                                    label: data.nombre + " (" + data.numEmpleado + ")",
-                                    value: data.nombre,
-                                    id: data.id,
-                                    empresa: data.empresa,
-                                    vacaciones: data.vacaciones,
-                                    empresaId: data.empresaId
-
-                                }]);
-                            } else {
-                                response([]);
+            // Solo activa el autocomplete si el campo no está readonly
+            if (!$('#busquedaEmpleado').prop('readonly')) {
+                $('#busquedaEmpleado').autocomplete({
+                    source: function (request, response) {
+                        $.ajax({
+                            url: '@Url.Action("BuscarEmpleado", "Permisos")',
+                            data: { filtro: request.term },
+                            success: function (data) {
+                                if (data) {
+                                    response([{
+                                        label: data.nombre + " (" + data.numEmpleado + ")",
+                                        value: data.nombre,
+                                        id: data.id,
+                                        empresa: data.empresa,
+                                        vacaciones: data.vacaciones,
+                                        empresaId: data.empresaId
+                                    }]);
+                                } else {
+                                    response([]);
+                                }
                             }
-                        }
-                    });
-                },
-                minLength: 2,
-                select: function (event, ui) {
-                    $('#IdEmpleado').val(ui.item.id);
-                    $('#empresa').text(ui.item.empresa);
-                    $('#vacaciones').text(ui.item.vacaciones);
-                    $('#IdEmpresa').val(ui.item.empresaId);
-                }
-            });
+                        });
+                    },
+                    minLength: 2,
+                    select: function (event, ui) {
+                        console.log(ui.item);
+                        $('#IdEmpleado').val(ui.item.id);
+                        $('#empresa').text(ui.item.empresa);
+                        $('#vacaciones').text(ui.item.vacaciones);
+                        $('#IdEmpresa').val(ui.item.empresaId);
+                    }
+                });
+            }
         });
-
-
     </script>
 }

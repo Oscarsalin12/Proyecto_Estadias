@@ -4,13 +4,20 @@
     ViewBag.Title = "Selecciona una subempresa";
 }
 
-<h2>@ViewBag.EmpresaMadre - Subempresas</h2>
+<h2 class="mb-4">@ViewBag.EmpresaMadre - Subempresas</h2>
 
-<ul>
+<div class="row">
     @foreach (var sub in Model)
     {
-        <li>
-            @Html.ActionLink(sub.Nombre, "ListaEmpleadosSubempresa", "Auth", new { idSub = sub.Id }, null)
-        </li>
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">@sub.Nombre</h5>
+                    <a href="@Url.Action("ListaEmpleadosSubempresa", "Auth", new { idSub = sub.Id })" class="btn btn-primary">
+                        Ver Empleados
+                    </a>
+                </div>
+            </div>
+        </div>
     }
-</ul>
+</div>

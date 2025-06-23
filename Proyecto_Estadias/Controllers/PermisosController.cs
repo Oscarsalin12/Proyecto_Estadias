@@ -15,6 +15,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using PagedList;
+using System.Security.Claims;
 namespace Proyecto_Estadias.Controllers
 {
     public class PermisosController : Controller
@@ -27,19 +28,31 @@ namespace Proyecto_Estadias.Controllers
             this.permisosServices = new PermisosService();
         }
 
-        #region metodo para crear permisos
+        #region metodo para crear permisos Empleados conpletos 
 
         [HttpGet]
 
-        public ActionResult CrearPermiso()
+        public ActionResult CrearPermiso(int? idEmpleado = null)
         {
             var model = new PermisosVM
             {
                 Empleados = permisosServices.ObtenerEmpleados(),
                 MotivosAusencia = permisosServices.ObtenerMotivos(),
                 SubEmpresas = permisosServices.ObtenerEmpresas(),
-                FechaGeneracion = DateTime.Today
+                FechaGeneracion = DateTime.Today,
+               
             };
+
+            if (idEmpleado.HasValue)
+            {
+                var empleado = permisosServices.ObtenerEmpleadoPorId(idEmpleado.Value);
+
+                model.IdEmpleado = empleado.Id;
+                model.IdEmpresa = empleado.IdEmpresa;
+                model.NombreEmpleado = empleado.Nombre;
+                model.EmpresaNombre = empleado.SubEmpresas.Nombre;
+                model.VacacionesDisponibles = empleado.DiasDisponibles;
+            }
             return View(model);
         }
 
@@ -99,6 +112,12 @@ namespace Proyecto_Estadias.Controllers
         }
         #endregion
 
+
+        #region metodo para permisos para empleado individual 
+
+
+   
+        #endregion
 
         // no aplica 
         //public ActionResult Reporte()
@@ -335,7 +354,7 @@ namespace Proyecto_Estadias.Controllers
                 linea3.AddCell(CreateLabelLine("AL:", permiso.FechaFinal.ToString("dd-MMMM-yyyy"), normalFont));
                 doc.Add(linea3);
 
-                doc.Add(CreateLabelLine("OBS.:", $"Restan {empleado.DiasDisponibles} días de vacaciones periodo {DateTime.Now.Year}", normalFont));
+                doc.Add(CreateLabelLine("OBS.:", $"Restan {permiso.DiasDisponibles} días de vacaciones periodo {DateTime.Now.Year}", normalFont));
 
                 doc.Add(new Paragraph("\n\n\n"));
 
@@ -389,6 +408,22 @@ namespace Proyecto_Estadias.Controllers
                 }
             }
             return diasHabiles;
+        }
+
+
+
+        [HttpGet]
+        public ActionResult PaginacionPorEmpresa(int idEmpresa, int? page, int pageSize = 5)
+        {
+            int pageNumber = (page ?? 1);
+
+            List<Permisos> resultado = permisosServices.PermisosPorEmpresa(idEmpresa)
+                .OrderBy(p => p.FechaGeneracion)
+                .ToList();
+
+            List<PermisosPdfVM> permisosPdfVM = Mapper.Map<List<PermisosPdfVM>>(resultado);
+
+            return View("Paginacion", permisosPdfVM.ToPagedList(pageNumber, pageSize));
         }
 
     }

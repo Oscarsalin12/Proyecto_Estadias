@@ -18,5 +18,6 @@ namespace Proyecto_Estadias.Infraestructura
         List<Permisos> ObtenerPermisosConDetalles();
         Tuple<Empleados, List<Permisos>> ObtenerPermisosPorEmpleados(int idEmpleado);
         List<Permisos> PermisosAll();
+        List<Permisos> PermisosPorEmpresa(int idEmpresa);
     }
 }

@@ -18,7 +18,7 @@ namespace Proyecto_Estadias.ViewModels
         public DateTime FechaFinal { get; set; }
 
         public Empleados Empleados { get; set; }
-
+        public int DiasDisponibles { get; set; }
         public SubEmpresas SubEmpresas { get; set; }
         public MotivosAusencia MotivosAusencia { get; set; }
         //public List<SubEmpresasVM> SubEmpresasVM { get; set; }

@@ -31,7 +31,7 @@ namespace Proyecto_Estadias.Services
         {
             return db.MotivosAusencia.OrderBy(m => m.Id).ToList();
         }
-
+    
         public List<SubEmpresas> ObtenerEmpresas()
         {
             return db.SubEmpresas.OrderBy(emp => emp.Id).ToList();
@@ -42,9 +42,10 @@ namespace Proyecto_Estadias.Services
         #region motodo de permisos
         public Empleados ObtenerEmpleadoPorId(int id)
         {
-            return db.Empleados.Include("SubEmpresasTHH").FirstOrDefault(e => e.Id == id);
+            return db.Empleados.Include("SubEmpresas").FirstOrDefault(e => e.Id == id);
         }
 
+  
         public bool CrearPermiso(Permisos permisos, out string error)
         {
             error = "";
@@ -55,7 +56,7 @@ namespace Proyecto_Estadias.Services
                 error = "Empleado no encontrado";
                 return false;
             }
-
+            
             // Contar solo los días hábiles
             int diasSolicitados = ContarDiasHabiles(permisos.FechaInicio, permisos.FechaFinal);
             if (diasSolicitados <= 0)
@@ -72,6 +73,7 @@ namespace Proyecto_Estadias.Services
 
             // Descontar solo días hábiles
             empleado.DiasDisponibles -= diasSolicitados;
+            permisos.DiasDisponibles = empleado.DiasDisponibles;
             db.Permisos.Add(permisos);
             db.SaveChanges();
 
@@ -138,14 +140,23 @@ namespace Proyecto_Estadias.Services
                 FechaFinal = permiso.FechaFinal,
                 Empleados = permiso.Empleados,
                 SubEmpresas = permiso.SubEmpresas,
-                MotivosAusencia = permiso.MotivosAusencia
+                MotivosAusencia = permiso.MotivosAusencia,
+                DiasDisponibles = permiso.DiasDisponibles
             };
 
             return result;
         }
         
 
-
+        public List<Permisos> PermisosPorEmpresa(int idEmpresa)
+        {
+            return db.Permisos
+                .Include("SubEmpresas")
+                .Include("Empleados")
+                .Include("MotivosAusencia")
+                .Where(p => p.IdEmpresa == idEmpresa)
+                .ToList();
+        }
 
         #endregion
     }
