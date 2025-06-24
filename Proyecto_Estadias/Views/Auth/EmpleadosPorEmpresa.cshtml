@@ -2,81 +2,158 @@
 
 @{
     ViewBag.Title = "Empleados por Subempresa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
     var idSub = ViewBag.IdSub ?? 0;
     var subempresaNombre = ViewBag.SubempresaNombre ?? "Subempresa";
     var departamentos = ViewBag.Departamentos as SelectList;
     var selectedDept = Request.QueryString["bus"];
 }
 
-<h2>Empleados de @subempresaNombre</h2>
+<style>
+    .content-box {
+        background-color: white;
+        padding: 30px;
+        margin: 40px auto;
+        border-radius: 15px;
+        max-width: 1100px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
 
-@using (Html.BeginForm("ListaEmpleadosSubempresa", "Auth", FormMethod.Get))
-{
-    <input type="hidden" name="idSub" value="@idSub" />
+    .content-header {
+        background: linear-gradient(to right, #0000ff, #9400d3);
+        color: white;
+        padding: 15px;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
-    <div class="form-group row">
-        <label class="col-form-label col-sm-3">Filtrar por departamento:</label>
-        <div class="col-sm-5">
-            @Html.DropDownList("bus", new SelectList(departamentos, "Value", "Text", selectedDept),
-                "Todos", new { @class = "form-control" })
+    .form-control {
+        border-radius: 8px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(to right, #0000ff, #4b0082);
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #5a379e;
+        }
+
+    .btn-success {
+        border-radius: 8px;
+    }
+
+    table th, table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+    .btn-gradient {
+        background: linear-gradient(to right, #0000ff, #4b0082);
+        border: none;
+        color: white;
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-weight: 500;
+        transition: background 0.3s ease;
+    }
+
+        .btn-gradient:hover {
+            background: linear-gradient(to right, #5a379e, #0000ff);
+            color: white;
+        }
+
+</style>
+
+<div class="content-box">
+    <div class="content-header">
+        Empleados de @subempresaNombre
+    </div>
+
+    @using (Html.BeginForm("ListaEmpleadosSubempresa", "Auth", FormMethod.Get, new { area = "Auth" }))
+    {
+        <input type="hidden" name="idSub" value="@idSub" />
+
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Filtrar por departamento:</label>
+            <div class="col-sm-5">
+                @Html.DropDownList("bus", new SelectList(departamentos, "Value", "Text", selectedDept),
+                    "Todos", new { @class = "form-control" })
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
         </div>
-        <div class="col-sm-4">
-            <button type="submit" class="btn btn-primary">Filtrar</button>
+
+        <div class="form-group row mt-3">
+            <label class="col-sm-4 col-form-label">Búsqueda por nombre:</label>
+            <div class="col-sm-5">
+                @Html.TextBox("busqueda", null, new { @class = "form-control", placeholder = "Nombre del empleado" })
+            </div>
+            <div class="col-sm-3">
+                <input type="submit" value="Buscar" class="btn btn-outline-secondary" />
+            </div>
         </div>
-    </div>
+    }
 
-    <p>
-        Busqueda por nombre: @Html.TextBox("busqueda")
-        <input type="submit" value="busqueda">
-    </p>
-}
+    <hr />
 
-@if (!Model.Any())
-{
-    <div class="alert alert-warning">No hay empleados para mostrar.</div>
-    <div class="mb-3">
-        @*@Html.ActionLink("Reportes", "PaginacionPorEmpresa", "Permisos", new { idEmpresa = Model.First().IdEmpresa }, new { @class = "btn btn-success" })*@
-        @Html.ActionLink("Añadir empleados", "InsertarEmpleado", "Empleados", new { idSub = idSub }, new { @class = "btn btn-success ml-2" })
-    </div>
-}
-else
-{
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Num. Empleado</th>
-                <th>Nombre</th>
-                <th>Fecha de Ingreso</th>
-                <th>Años</th>
-                <th>Meses</th>
-                <th>Vacaciones</th>
-                <th>Disponibles</th>
-                <th>Departamento</th>
-                <th>Permisos </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var emp in Model)
-            {
-                <tr>
-                    <td>@emp.NumEmpleado</td>
-                    <td>@emp.Nombre</td>
-                    <td>@emp.FechaDeIngreso</td>
-                    <td>@emp.AniosTrabajados</td>
-                    <td>@emp.MesesTrabajados</td>
-                    <td>@emp.intDiasVacaciones</td>
-                    <td>@emp.DiasDisponibles</td>
-                    <td>@emp.NombreDepartamento</td>
-                    <td>
-                        @Html.ActionLink("Crear Permiso", "CrearPermiso", "Permisos", new { idEmpleado = emp.Id }, new { @class = "btn btn-sm btn-success" })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center">No hay empleados para mostrar.</div>
+        <div class="text-center mt-3">
+            @Html.ActionLink("Añadir empleados", "InsertarEmpleado", "Empleados", new { area = "Empleado", idSub = idSub }, new { @class = "btn btn-success" })
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped mt-4">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Num. Empleado</th>
+                        <th>Nombre</th>
+                        <th>Fecha de Ingreso</th>
+                        <th>Años</th>
+                        <th>Meses</th>
+                        <th>Vacaciones</th>
+                        <th>Disponibles</th>
+                        <th>Departamento</th>
+                        <th>Permisos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var emp in Model)
+                    {
+                        <tr>
+                            <td>@emp.NumEmpleado</td>
+                            <td>@emp.Nombre</td>
+                            <td>@emp.FechaDeIngreso</td>
+                            <td>@emp.AniosTrabajados</td>
+                            <td>@emp.MesesTrabajados</td>
+                            <td>@emp.intDiasVacaciones</td>
+                            <td>@emp.DiasDisponibles</td>
+                            <td>@emp.NombreDepartamento</td>
+                            <td>
+                                @Html.ActionLink("Crear Permiso", "CrearPermiso", "Permisos", new { area = "Empleado", idEmpleado = emp.Id }, new { @class = "btn btn-sm btn-gradient" })
 
-    <div class="mb-3">
-        @Html.ActionLink("Reportes", "PaginacionPorEmpresa", "Permisos", new { idEmpresa = Model.First().IdEmpresa }, new { @class = "btn btn-success" })
-        @Html.ActionLink("Añadir empleados", "InsertarEmpleado", "Empleados", new { idSub = idSub }, new { @class = "btn btn-success ml-2" })
-    </div>
-}
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-4">
+            @Html.ActionLink("Reportes", "PaginacionPorEmpresa", "Permisos", new { area = "Empleado", idEmpresa = Model.First().IdEmpresa }, new { @class = "btn btn-gradient" })
+
+            @Html.ActionLink("Añadir empleados", "InsertarEmpleado", "Empleados", new { area = "Empleado", idSub = idSub }, new { @class = "btn btn-gradient ml-2" })
+
+        </div>
+    }
+</div>

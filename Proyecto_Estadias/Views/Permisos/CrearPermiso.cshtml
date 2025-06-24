@@ -5,56 +5,113 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Registrar Permiso</h2>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<style>
+    body {
+        background: white;
+        font-family: 'Segoe UI', sans-serif;
+    }
 
-@using (Html.BeginForm("CrearPermiso", "Permisos", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
+    .permiso-container {
+        background-color: white;
+        padding: 30px;
+        margin: 80px auto;
+        border-radius: 15px;
+        max-width: 700px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
 
-    <div class="form-group">
-        <label>Buscar empleado por Nombre o Número</label>
-        <input type="text" id="busquedaEmpleado" class="form-control"
-               placeholder="Ej. Juan o 123"
-               autocomplete="off"
-               value="@Model.NombreEmpleado"
-               @(Model.IdEmpleado > 0 ? "readonly" : "") />
+    .permiso-header {
+        background: linear-gradient(to right, #0000ff, #4b0082);
+        color: white;
+        text-align: center;
+        padding: 15px;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        font-size: 24px;
+        font-weight: bold;
+    }
 
-        @Html.HiddenFor(m => m.IdEmpleado)
-        @Html.ValidationMessageFor(m => m.IdEmpleado, "", new { @class = "text-danger" })
+    .form-control {
+        border-radius: 8px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(to right, #0000ff, #4b0082);
+        border-color: #6F42C1;
+    }
+
+        .btn-primary:hover {
+            background-color: #5a379e;
+            border-color: #5a379e;
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    #datosEmpleado p {
+        margin: 0;
+        font-size: 16px;
+    }
+</style>
+
+<div class="permiso-container">
+    <div class="permiso-header">
+        Registrar Permiso
     </div>
 
-    <div id="datosEmpleado" style="margin-bottom:15px;">
-        @Html.HiddenFor(m => m.IdEmpresa)
-        <p><strong>Empresa:</strong> <span id="empresa">@Model.EmpresaNombre</span></p>
-        <p><strong>Días de Vacaciones:</strong> <span id="vacaciones">@Model.VacacionesDisponibles</span></p>
-    </div>
+    @using (Html.BeginForm("CrearPermiso", "Permisos", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.IdTipoPermiso)
-        <select id="IdTipoPermiso" name="IdTipoPermiso" class="form-control">
-            <option value="">Seleccione el motivo</option>
-            @foreach (var motivo in Model.MotivosAusencia)
-            {
-                <option value="@motivo.Id">@motivo.NombreMotivo</option>
-            }
-        </select>
-        @Html.ValidationMessageFor(m => m.IdTipoPermiso, "", new { @class = "text-danger" })
-    </div>
+        <div class="form-group mt-3">
+            <label>Buscar empleado por Nombre o Número</label>
+            <input type="text" id="busquedaEmpleado" class="form-control"
+                   placeholder="Ej. Juan o 123"
+                   autocomplete="off"
+                   value="@Model.NombreEmpleado"
+                   @(Model.IdEmpleado > 0 ? "readonly" : "") />
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.FechaInicio, "Fecha de inicio")
-        @Html.TextBoxFor(m => m.FechaInicio, new { @type = "date", @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.FechaInicio, "", new { @class = "text-danger" })
-    </div>
+            @Html.HiddenFor(m => m.IdEmpleado)
+            @Html.ValidationMessageFor(m => m.IdEmpleado, "", new { @class = "text-danger" })
+        </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.FechaFinal, "Fecha final")
-        @Html.TextBoxFor(m => m.FechaFinal, new { @type = "date", @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.FechaFinal, "", new { @class = "text-danger" })
-    </div>
+        <div id="datosEmpleado" class="mb-3">
+            @Html.HiddenFor(m => m.IdEmpresa)
+            <p><strong>Empresa:</strong> <span id="empresa">@Model.EmpresaNombre</span></p>
+            <p><strong>Días de Vacaciones:</strong> <span id="vacaciones">@Model.VacacionesDisponibles</span></p>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Guardar Permiso</button>
-}
+        <div class="form-group">
+            @Html.LabelFor(m => m.IdTipoPermiso)
+            <select id="IdTipoPermiso" name="IdTipoPermiso" class="form-control">
+                <option value="">Seleccione el motivo</option>
+                @foreach (var motivo in Model.MotivosAusencia)
+                {
+                    <option value="@motivo.Id">@motivo.NombreMotivo</option>
+                }
+            </select>
+            @Html.ValidationMessageFor(m => m.IdTipoPermiso, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.FechaInicio, "Fecha de inicio")
+            @Html.TextBoxFor(m => m.FechaInicio, new { @type = "date", @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.FechaInicio, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.FechaFinal, "Fecha final")
+            @Html.TextBoxFor(m => m.FechaFinal, new { @type = "date", @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.FechaFinal, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-primary">Guardar Permiso</button>
+        </div>
+    }
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -63,7 +120,6 @@
 
     <script>
         $(function () {
-            // Solo activa el autocomplete si el campo no está readonly
             if (!$('#busquedaEmpleado').prop('readonly')) {
                 $('#busquedaEmpleado').autocomplete({
                     source: function (request, response) {
@@ -88,7 +144,6 @@
                     },
                     minLength: 2,
                     select: function (event, ui) {
-                        console.log(ui.item);
                         $('#IdEmpleado').val(ui.item.id);
                         $('#empresa').text(ui.item.empresa);
                         $('#vacaciones').text(ui.item.vacaciones);

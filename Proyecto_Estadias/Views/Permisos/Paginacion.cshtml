@@ -1,79 +1,130 @@
 ﻿@model PagedList.IPagedList<Proyecto_Estadias.ViewModels.PermisosPdfVM>
-    @using PagedList.Mvc
+@using PagedList.Mvc
+
 @{
-    ViewBag.Title = "Paginacion";
+    ViewBag.Title = "Listado de Permisos";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="card shadow-lg p-3 mb-5 bg-body rounded">
-            <div class="card-body">
-                <div class="card-header">Listado de permisos para super administrador</div>
-                <div class="card-text">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <table class=" table table-striped table-bordered">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Numero empleado</th>
-                                        <th>Empleado</th>
-                                        <th>Empresa</th>
-                                        <th>Motivo de Ausencia</th>
-                                        <th>Fecha Generacion</th>
-                                        <th>Inicio</th>
-                                        <th>Final</th>
-                                        <th>Generales</th>
-                                        <th>individuales</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tablaPermisos">
-                                    @foreach (var p in Model)
-                                    {
-                                        <tr>
-                                            <td>@p.Empleados.NumEmpleado</td>
-                                            <td>@p.Empleados.Nombre</td>
-                                            <td>@p.SubEmpresas.Nombre</td>
-                                            <td>@p.MotivosAusencia.NombreMotivo</td>
-                                            <td>@p.FechaGeneracion.ToString("dd/MM/yyyy")</td>
-                                            <td>@p.FechaInicio.ToString("dd/MM/yyyy")</td>
-                                            <td>@p.FechaFinal.ToString("dd/MM/yyyy")</td>
-                                            <td>@Html.ActionLink("GenerarPdf", "GenerarPDFEmpleado", "Permisos", new { id = p.IdEmpleado }, new { @class = "btn btn-primary btn-sm" })</td>
-                                            <td>
-                                                <a href="@Url.Action("GenerarPDFPermiso", "Permisos", new { idPermiso = p.Id })" class="btn btn-success btn-sm" target="_blank">🖨️ Imprimir</a>
-                                            </td>
-                                        </tr>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<style>
+    .page-container {
+        max-width: 1200px;
+        margin: 40px auto;
+    }
 
-                                    }
-                                    @Html.ActionLink("generar reporte", "GenerarPDF", "Permisos", null, new { @class = "btn btn-dark btn-group-sm w-25" })
-                             
+    .card-header {
+        background: linear-gradient(to right, #0000ff, #4b0082);
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 15px;
+    }
 
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div id="paginacion">
-                                @Html.PagedListPager(Model, page => Url.Action("Paginacion", new { page = page }), new PagedListRenderOptions
-                           {
-                               DisplayLinkToFirstPage = PagedListDisplayMode.Always,
-                               DisplayLinkToLastPage = PagedListDisplayMode.Always,
-                               DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-                               DisplayLinkToNextPage = PagedListDisplayMode.Always,
-                               DisplayEllipsesWhenNotShowingAllPageNumbers = true,
-                               MaximumPageNumbersToDisplay = 5 ,
-                               ContainerDivClasses = new[] { "pagination-container" },
-                               UlElementClasses = new[] { "pagination" },
-                               LiElementClasses = new[] { "page-item" }
-                           })
-                             </div>
-                        </div>
-                    </div>
-                </div>
+    .btn-sm {
+        border-radius: 8px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(to right, #0000ff, #4b0082);
+        border: none;
+    }
+
+    .btn-success {
+        background: #28a745;
+        border: none;
+    }
+
+    .btn-dark {
+        margin-top: 15px;
+        background: #343a40;
+        border: none;
+    }
+
+    .pagination-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .pagination > li > a, .pagination > li > span {
+        border-radius: 6px !important;
+        margin: 0 3px;
+    }
+
+    table th, table td {
+        vertical-align: middle !important;
+    }
+</style>
+
+<div class="page-container">
+    <div class="card shadow">
+        <div class="card-header">
+            Listado de permisos para super administrador
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th>Número</th>
+                            <th>Empleado</th>
+                            <th>Empresa</th>
+                            <th>Motivo</th>
+                            <th>Generado</th>
+                            <th>Inicio</th>
+                            <th>Final</th>
+                            <th>Generales</th>
+                            <th>Individual</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaPermisos">
+                        @foreach (var p in Model)
+                        {
+                            <tr class="text-center">
+                                <td>@p.Empleados.NumEmpleado</td>
+                                <td>@p.Empleados.Nombre</td>
+                                <td>@p.SubEmpresas.Nombre</td>
+                                <td>@p.MotivosAusencia.NombreMotivo</td>
+                                <td>@p.FechaGeneracion.ToString("dd/MM/yyyy")</td>
+                                <td>@p.FechaInicio.ToString("dd/MM/yyyy")</td>
+                                <td>@p.FechaFinal.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    @Html.ActionLink("Generar PDF", "GenerarPDFEmpleado", "Permisos", new { id = p.IdEmpleado }, new { @class = "btn btn-primary btn-sm" })
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("GenerarPDFPermiso", "Permisos", new { idPermiso = p.Id })" class="btn btn-success btn-sm" target="_blank">
+                                        🖨️ Imprimir
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center">
+                @Html.ActionLink("📥 Generar Reporte General", "GenerarPDF", "Permisos", null, new { @class = "btn btn-dark btn-sm" })
+            </div>
+
+            <div class="pagination-container">
+                @Html.PagedListPager(Model, page => Url.Action("Paginacion", new { page = page }), new PagedListRenderOptions
+                {
+                    DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                    DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                    DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                    DisplayEllipsesWhenNotShowingAllPageNumbers = true,
+                    MaximumPageNumbersToDisplay = 5,
+                    ContainerDivClasses = new[] { "pagination-container" },
+                    UlElementClasses = new[] { "pagination justify-content-center" },
+                    LiElementClasses = new[] { "page-item" }
+                })
             </div>
         </div>
     </div>
 </div>
-<Link href="~/Content/paginacion.css" rel="stylesheet" />
 
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -88,10 +139,11 @@
 
         function cargarDatos(url) {
             $.get(url, function (data) {
-                var html = $(data).find("#tablapermisos").html();
+                var html = $(data).find("#tablaPermisos").html();
                 $("#tablaPermisos").html(html);
                 var pagination = $(data).find("#pagination").html();
                 $("#pagination").html(pagination);
             });
-        }</script>
-    }
+        }
+    </script>
+}

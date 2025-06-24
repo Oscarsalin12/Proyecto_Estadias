@@ -3,48 +3,113 @@
 @{
     ViewBag.Title = "Perfil";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
     var identity = (System.Security.Claims.ClaimsIdentity)User.Identity;
-
 }
 
-<h2>Bienvenido, @Model.Usuario.Usuario</h2>
+<div class="container profile-container">
+    <div class="profile-header">
+        Bienvenido, @Model.Usuario.Usuario
+    </div>
+    <p class="profile-subtitle">Selecciona una empresa para ver sus empleados</p>
 
-<h3>Empresas</h3>
-<div class="row">
-  
-    
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="~/Content/imagenes/empresas/@(Model.Empresas[0].Id).jpg" class="card-img-top" alt="Imagen de @Model.Empresas[0].Nombre" style="height:200px; object-fit:cover;" />
-                <div class="card-body text-center">
-                    <h5 class="card-title">@Model.Empresas[0].Nombre</h5>
-                    @Html.ActionLink("Ver empleados", "EmpleadosPorEmpresa", "Auth", new { id = Model.Empresas[0].Id }, new { @class = "btn btn-primary" })
+    <div class="row">
+        @for (int i = 0; i < Model.Empresas.Count; i++)
+        {
+            <div class="col-md-4 mb-4 d-flex align-items-stretch">
+                <div class="card card-company w-100">
+                    <img src="~/Content/imagenes/empresas/@(Model.Empresas[i].Id).jpg"
+                         class="card-img-top"
+                         alt="Imagen de @Model.Empresas[i].Nombre"
+                         style="height: 200px; object-fit: cover;" />
+
+                    <div class="card-body text-center d-flex flex-column">
+                        <h5 class="card-title">@Model.Empresas[i].Nombre</h5>
+                        <div class="mt-auto">
+                            @Html.ActionLink("👥 Ver empleados", "EmpleadosPorEmpresa", "Auth", new { id = Model.Empresas[i].Id }, new { @class = "btn btn-gradient" })
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    
+        }
+    </div>
+</div>
 
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="~/Content/imagenes/empresas/@(Model.Empresas[1].Id).jpg" class="card-img-top" alt="Imagen de @Model.Empresas[1].Nombre" style="height:200px; object-fit:cover;" />
-                <div class="card-body text-center">
-                    <h5 class="card-title">@Model.Empresas[1].Nombre</h5>
-                    @Html.ActionLink("Ver empleados", "EmpleadosPorEmpresa", "Auth", new { id = Model.Empresas[1].Id }, new { @class = "btn btn-primary" })
-                </div>
-            </div>
-        </div>
-    
- 
-<div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-            <img src="~/Content/imagenes/empresas/@(Model.Empresas[2].Id).jpg" class="card-img-top" alt="Imagen de @Model.Empresas[2].Nombre" style="height:200px; object-fit:cover;" />
-            <div class="card-body text-center">
-                <h5 class="card-title">@Model.Empresas[2].Nombre</h5>
-                @Html.ActionLink("Ver empleados", "EmpleadosPorEmpresa", "Auth", new { id = Model.Empresas[2].Id }, new { @class = "btn btn-primary" })
-            </div>
-        </div>
-</div>
-    
-</div>
-    
+
+    <style>
+        body {
+            background: white;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .profile-container {
+            background-color: white;
+            padding: 30px;
+            margin: 40px auto 80px auto;
+            border-radius: 15px;
+            max-width: 960px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .profile-header {
+            background: linear-gradient(to right, #0000ff, #4b0082);
+            color: white;
+            text-align: center;
+            padding: 20px 15px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .profile-subtitle {
+            text-align: center;
+            color: #6c757d;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .card-company {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            border: none;
+            border-radius: 12px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+            .card-company:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 30px rgba(148, 0, 211, 0.4);
+            }
+
+            .card-company img {
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+            }
+
+            .card-company .card-title {
+                color: #222;
+                font-weight: 700;
+                font-size: 20px;
+            }
+
+        .btn-gradient {
+            color: white !important;
+            background: linear-gradient(to right, #0000ff, #4b0082);
+            border: none;
+            padding: 10px 0;
+            font-weight: 600;
+            border-radius: 50px;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+
+            .btn-gradient:hover,
+            .btn-gradient:focus {
+                background: linear-gradient(to right, #9400d3, #0000ff);
+                color: white !important;
+                box-shadow: 0 0 10px #9400d3;
+                outline: none;
+            }
+
+    </style>
+}

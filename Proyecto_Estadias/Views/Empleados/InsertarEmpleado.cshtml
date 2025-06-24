@@ -2,61 +2,108 @@
 
 @{
     ViewBag.Title = "Insertar Empleado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Insertar Nuevo Empleado</h2>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<style>
+    body {
+        background: white;
+        font-family: 'Segoe UI', sans-serif;
+    }
 
-@using (Html.BeginForm("InsertarEmpleado", "Empleados", FormMethod.Post, new { @class = "form-horizontal" }))
-{
-    @Html.AntiForgeryToken()
+    .empleado-container {
+        background-color: white;
+        padding: 30px;
+        margin: 80px auto;
+        border-radius: 15px;
+        max-width: 700px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.NumEmpleado, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
+    .empleado-header {
+        background: linear-gradient(to right, #0000ff, #9400d3);
+        color: white;
+        text-align: center;
+        padding: 15px;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(to right, #0000ff, #4b0082);
+        border-color: #6F42C1;
+        border-radius: 8px;
+    }
+
+        .btn-primary:hover {
+            background-color: #5a379e;
+            border-color: #5a379e;
+        }
+
+    .btn-default {
+        border-radius: 8px;
+        margin-left: 10px;
+    }
+
+    .text-danger {
+        font-size: 14px;
+    }
+</style>
+
+<div class="empleado-container">
+    <div class="empleado-header">
+        Insertar Nuevo Empleado
+    </div>
+
+    @using (Html.BeginForm("InsertarEmpleado", "Empleados", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.NumEmpleado)
             @Html.TextBoxFor(m => m.NumEmpleado, new { @class = "form-control", placeholder = "Número de empleado" })
             @Html.ValidationMessageFor(m => m.NumEmpleado, "", new { @class = "text-danger" })
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
+        <div class="form-group">
+            @Html.LabelFor(m => m.Nombre)
             @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", placeholder = "Nombre del empleado" })
             @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.FechaIDeIngreso, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
+        <div class="form-group">
+            @Html.LabelFor(m => m.FechaIDeIngreso)
             @Html.TextBoxFor(m => m.FechaIDeIngreso, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
             @Html.ValidationMessageFor(m => m.FechaIDeIngreso, "", new { @class = "text-danger" })
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.IdEmpresa, "Subempresa", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
+        <div class="form-group">
+            @Html.LabelFor(m => m.IdEmpresa, "Subempresa")
             @Html.DropDownListFor(m => m.IdEmpresa, (SelectList)ViewBag.Empresas, "Seleccione una subempresa", new { @class = "form-control" })
             @Html.ValidationMessageFor(m => m.IdEmpresa, "", new { @class = "text-danger" })
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.IdDepartamento, "Departamento", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
+        <div class="form-group">
+            @Html.LabelFor(m => m.IdDepartamento, "Departamento")
             @Html.DropDownListFor(m => m.IdDepartamento, (SelectList)ViewBag.Departamentos, "Seleccione un departamento", new { @class = "form-control" })
             @Html.ValidationMessageFor(m => m.IdDepartamento, "", new { @class = "text-danger" })
         </div>
-    </div>
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
+        <div class="form-group text-center">
             <input type="submit" value="Guardar" class="btn btn-primary" />
             @Html.ActionLink("Cancelar", "Perfil", "Auth", null, new { @class = "btn btn-default" })
         </div>
-    </div>
-}
+    }
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
