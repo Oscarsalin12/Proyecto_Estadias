@@ -1,6 +1,7 @@
 ﻿using Proyecto_Estadias.Infraestructura;
 using Proyecto_Estadias.Models;
 using Proyecto_Estadias.Services;
+using Proyecto_Estadias.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace Proyecto_Estadias.Controllers
             if (ModelState.IsValid)
             {
                 empleadoServices.InsertarEmpleados(empleado);
-                return RedirectToAction("Perfil", "Auth");
+                return RedirectToAction("ListaEmpleadosSubempresa", "Auth", new { idSub = empleado.IdEmpresa });
             }
             var empresas = authServices.ObtenerSubEmpresas();
             var departamentos = authServices.GetDepartamentos();
@@ -57,27 +58,41 @@ namespace Proyecto_Estadias.Controllers
         [HttpGet]
         public ActionResult EditarEmpleado(int id)
         {
-            var empleado = empleadoServices.GetEmpleadoPorId(id);
+            var empleado = empleadoServices.ObtenerEmpleadoPorId(id);
             if (empleado == null)
             {
                 return HttpNotFound();
             }
 
+            var empresas = authServices.ObtenerSubEmpresas();
+            var departamentos = authServices.GetDepartamentos();
+            ViewBag.Departamentos = new SelectList(departamentos, "Id", "NombreDep");
+            ViewBag.Empresas = new SelectList(empresas, "Id", "Nombre");
+
             return View(empleado);
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditarEmpleado(Empleados emp)
+        public ActionResult EditarEmpleado(Empleados empleado)
         {
             if (ModelState.IsValid)
             {
-                empleadoServices.ActualizarEmpleado(emp); // Aquí se hace el cálculo y el update
-                return RedirectToAction("Perfil", "Auth"); // Ajusta el nombre si es necesario
+                empleadoServices.ActualizarEmpleado(empleado);
+                return RedirectToAction("ListaEmpleadosSubempresa","Auth", new { idSub = empleado.IdEmpresa });
+
+
             }
 
-            return View(emp);
+            var empresas = authServices.ObtenerSubEmpresas();
+            var departamentos = authServices.GetDepartamentos();
+            ViewBag.Departamentos = new SelectList(departamentos, "Id", "NombreDep");
+            ViewBag.Empresas = new SelectList(empresas, "Id", "Nombre");
+
+            return View(empleado);
         }
+
 
         #endregion
 

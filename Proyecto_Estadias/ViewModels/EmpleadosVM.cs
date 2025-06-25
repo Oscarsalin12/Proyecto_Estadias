@@ -20,6 +20,7 @@ namespace Proyecto_Estadias.ViewModels
         public int IdEmpresa { get; set; }
         public int DiasDisponibles { get; set; }
         public int IdDepartamento { get; set; }
+        public int DiasLaboralesPorSemana { get; set; } // 5 o 6
 
         public string NombreEmpresa { get; set; }
         public string NombreDepartamento { get; set; }

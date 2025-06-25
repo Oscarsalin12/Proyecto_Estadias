@@ -11,28 +11,60 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
+        <h4>Editar Empleado</h4>
+        <hr />
+
         @Html.HiddenFor(model => model.Id)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Nombre)
+                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.FechaIDeIngreso, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.FechaIDeIngreso, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-                @Html.ValidationMessageFor(model => model.FechaIDeIngreso)
+                @Html.EditorFor(model => model.FechaIDeIngreso, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                @Html.ValidationMessageFor(model => model.FechaIDeIngreso, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IdEmpresa, "Empresa", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.IdEmpresa, (SelectList)ViewBag.Empresas, "Seleccione una empresa", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IdDepartamento, "Departamento", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.IdDepartamento, (SelectList)ViewBag.Departamentos, "Seleccione un departamento", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DiasLaboralesPorSemana, "Días Laborales por Semana", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.DiasLaboralesPorSemana,
+                    new SelectList(new[] {
+                        new SelectListItem { Value = "5", Text = "Lunes a Viernes (5 días)" },
+                        new SelectListItem { Value = "6", Text = "Lunes a Sábado (6 días)" }
+                    }, "Value", "Text", Model.DiasLaboralesPorSemana),
+                    "Seleccione días", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DiasLaboralesPorSemana, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
+                @Html.ActionLink("Cancelar", "ListaEmpleadosSubempresa", new { idSub = Model.IdEmpresa }, new { @class = "btn btn-default" })
             </div>
         </div>
     </div>
 }
+

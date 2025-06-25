@@ -197,6 +197,7 @@ namespace Proyecto_Estadias.Controllers
                 FechaDeIngreso = e.FechaIDeIngreso,
                 AniosTrabajados = e.AniosTrabajados,
                 MesesTrabajados = e.MesesTrabajados,
+                DiasLaboralesPorSemana = e.DiasLaboralesPorSemana,
                 intDiasVacaciones = e.intDiasVacaciones,
                 DiasDisponibles = e.DiasDisponibles,
                 IdEmpresa = e.IdEmpresa,

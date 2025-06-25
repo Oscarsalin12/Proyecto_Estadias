@@ -59,39 +59,26 @@ namespace Proyecto_Estadias.Services
         #endregion
 
         #region metodo de actualizacion 
-        public void ActualizarEmpleado(Empleados empleado)
+        public Empleados ObtenerEmpleadoPorId(int id)
         {
-            var existe = db.Empleados.Find(empleado.Id);
-            if (existe == null) return;
-
-            var hoy = DateTime.Today;
-            var fechaIngreso = empleado.FechaIDeIngreso;
-
-            int anios = hoy.Year - fechaIngreso.Year;
-            int meses = hoy.Month - fechaIngreso.Month;
-
-            if (hoy.Day < fechaIngreso.Day)
-                meses--;
-
-            if (meses < 0)
-            {
-                anios--;
-                meses += 12;
-            }
-            existe.Nombre = empleado.Nombre;
-            existe.FechaIDeIngreso = empleado.FechaIDeIngreso;
-
-            if (empleado.IdEmpresa > 0)
-            {
-                existe.IdEmpresa = empleado.IdEmpresa;
-
-            }
-            existe.AniosTrabajados = anios;
-            existe.MesesTrabajados = meses;
-            existe.intDiasVacaciones = CalcularDiasVacaciones(anios);
-
-            db.SaveChanges();
+            return db.Empleados.Find(id);
         }
+
+        public void ActualizarEmpleado(Empleados empleadoActualizado)
+        {
+            var empleado = db.Empleados.Find(empleadoActualizado.Id);
+            if (empleado != null)
+            {
+                empleado.Nombre = empleadoActualizado.Nombre;
+                empleado.FechaIDeIngreso = empleadoActualizado.FechaIDeIngreso;
+                empleado.IdEmpresa = empleadoActualizado.IdEmpresa;
+                empleado.IdDepartamento = empleadoActualizado.IdDepartamento;
+                empleado.DiasLaboralesPorSemana = empleadoActualizado.DiasLaboralesPorSemana;
+
+                db.SaveChanges();
+            }
+        }
+
         #endregion
 
         #region metodo para calculo de vaciones 
@@ -105,7 +92,6 @@ namespace Proyecto_Estadias.Services
             {
                 var fechaIngreso = emp.FechaIDeIngreso;
 
-                // Cálculo de años y meses trabajados
                 int anios = hoy.Year - fechaIngreso.Year;
                 int meses = hoy.Month - fechaIngreso.Month;
 
@@ -118,17 +104,19 @@ namespace Proyecto_Estadias.Services
                     meses += 12;
                 }
 
-                // Días base de vacaciones
                 int diasBase = CalcularDiasVacaciones(anios);
 
-                // Sumar solo los días hábiles de cada permiso
-                var permisos = db.Permisos.Where(p => p.IdEmpleado == emp.Id).ToList();
-                int diasPermisoTomados = permisos.Sum(p => ContarDiasHabiles(p.FechaInicio, p.FechaFinal));
+                int diasLaborales = (emp.DiasLaboralesPorSemana >= 5 && emp.DiasLaboralesPorSemana <= 6)
+                                    ? emp.DiasLaboralesPorSemana : 5;
 
-                // Días disponibles
+                var permisos = db.Permisos.Where(p => p.IdEmpleado == emp.Id).ToList();
+
+                int diasPermisoTomados = permisos.Sum(p =>
+                    ContarDiasHabiles(p.FechaInicio, p.FechaFinal, diasLaborales)
+                );
+
                 int diasDisponibles = Math.Max(diasBase - diasPermisoTomados, 0);
 
-                // Guardar
                 emp.AniosTrabajados = anios;
                 emp.MesesTrabajados = meses;
                 emp.intDiasVacaciones = diasBase;
@@ -138,18 +126,26 @@ namespace Proyecto_Estadias.Services
             db.SaveChanges();
         }
 
+
+
         // Método que cuenta solo días hábiles (lunes a viernes)
-        private int ContarDiasHabiles(DateTime inicio, DateTime fin)
+        private int ContarDiasHabiles(DateTime fechaInicio, DateTime fechaFin, int diasLaboralesPorSemana = 5)
         {
-            int diasHabiles = 0;
-            for (DateTime fecha = inicio.Date; fecha <= fin.Date; fecha = fecha.AddDays(1))
+            int total = 0;
+            for (var date = fechaInicio.Date; date <= fechaFin.Date; date = date.AddDays(1))
             {
-                if (fecha.DayOfWeek != DayOfWeek.Saturday && fecha.DayOfWeek != DayOfWeek.Sunday)
+                if (diasLaboralesPorSemana == 6)
                 {
-                    diasHabiles++;
+                    if (date.DayOfWeek != DayOfWeek.Sunday)
+                        total++;
+                }
+                else
+                {
+                    if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+                        total++;
                 }
             }
-            return diasHabiles;
+            return total;
         }
 
         public Empleados GetEmpleadoPorId(int id)
@@ -158,5 +154,8 @@ namespace Proyecto_Estadias.Services
         }
 
         #endregion
+
+       
+
     }
 }

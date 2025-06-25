@@ -46,11 +46,11 @@ namespace Proyecto_Estadias.Services
         }
 
   
-        public bool CrearPermiso(Permisos permisos, out string error)
+        public bool CrearPermiso(PermisosVM model, out string error)
         {
             error = "";
 
-            var empleado = db.Empleados.FirstOrDefault(e => e.Id == permisos.IdEmpleado);
+            var empleado = db.Empleados.FirstOrDefault(e => e.Id == model.IdEmpleado);
             if (empleado == null)
             {
                 error = "Empleado no encontrado";
@@ -58,7 +58,7 @@ namespace Proyecto_Estadias.Services
             }
             
             // Contar solo los días hábiles
-            int diasSolicitados = ContarDiasHabiles(permisos.FechaInicio, permisos.FechaFinal);
+            int diasSolicitados = ContarDiasHabiles(model.FechaInicio, model.FechaFinal,empleado.DiasLaboralesPorSemana);
             if (diasSolicitados <= 0)
             {
                 error = "El rango de fechas no contiene días hábiles válidos";
@@ -71,26 +71,42 @@ namespace Proyecto_Estadias.Services
                 return false;
             }
 
+            var permiso = new Permisos
+            {
+                IdEmpleado = model.IdEmpleado,
+                IdTipoPermiso = model.IdTipoPermiso,
+                IdEmpresa = model.IdEmpresa,
+                FechaGeneracion = DateTime.Now,
+                FechaInicio = model.FechaInicio,
+                FechaFinal = model.FechaFinal,
+                DiasDisponibles = empleado.DiasDisponibles - diasSolicitados
+            };
+
             // Descontar solo días hábiles
-            empleado.DiasDisponibles -= diasSolicitados;
-            permisos.DiasDisponibles = empleado.DiasDisponibles;
-            db.Permisos.Add(permisos);
+            empleado.DiasDisponibles = permiso.DiasDisponibles;
+            db.Permisos.Add(permiso);
             db.SaveChanges();
 
             return true;
         }
 
-        private int ContarDiasHabiles(DateTime inicio, DateTime fin)
+        private int ContarDiasHabiles(DateTime fechaInicio, DateTime fechaFin, int diasLaboralesPorSemana)
         {
-            int diasHabiles = 0;
-            for (DateTime fecha = inicio.Date; fecha <= fin.Date; fecha = fecha.AddDays(1))
+            int total = 0;
+            for (var date = fechaInicio.Date; date <= fechaFin.Date; date = date.AddDays(1))
             {
-                if (fecha.DayOfWeek != DayOfWeek.Saturday && fecha.DayOfWeek != DayOfWeek.Sunday)
+                if (diasLaboralesPorSemana == 6)
                 {
-                    diasHabiles++;
+                    if (date.DayOfWeek != DayOfWeek.Sunday)
+                        total++;
+                }
+                else
+                {
+                    if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+                        total++;
                 }
             }
-            return diasHabiles;
+            return total;
         }
 
 
@@ -142,7 +158,8 @@ namespace Proyecto_Estadias.Services
                 SubEmpresas = permiso.SubEmpresas,
                 MotivosAusencia = permiso.MotivosAusencia,
                 DiasDisponibles = permiso.DiasDisponibles
-            };
+                
+    };
 
             return result;
         }

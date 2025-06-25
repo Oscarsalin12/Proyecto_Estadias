@@ -21,6 +21,7 @@ namespace Proyecto_Estadias.ViewModels
         public int DiasDisponibles { get; set; }
         public SubEmpresas SubEmpresas { get; set; }
         public MotivosAusencia MotivosAusencia { get; set; }
+        public int DiasLaboralesSemana { get; set; }
         //public List<SubEmpresasVM> SubEmpresasVM { get; set; }
         //public List<EmpleadosVM> EmpleadosVM { get; set; }
         //public List<MotivosAusenciaVM> MotivosAusenciaVM { get; set; }

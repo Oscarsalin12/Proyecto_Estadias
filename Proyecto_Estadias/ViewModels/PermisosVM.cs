@@ -26,6 +26,7 @@ namespace Proyecto_Estadias.ViewModels
         public string NombreEmpleado { get; set; }
         public string EmpresaNombre { get; set; }
         public int VacacionesDisponibles { get; set; }
+        public int DiasLaboralesSemana { get; set; }
 
         public List<Empresas> Empresas { get; set; }
        

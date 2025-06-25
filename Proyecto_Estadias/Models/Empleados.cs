@@ -30,6 +30,7 @@ namespace Proyecto_Estadias.Models
         public int IdEmpresa { get; set; }
         public int DiasDisponibles { get; set; }
         public int IdDepartamento { get; set; }
+        public int DiasLaboralesPorSemana { get; set; }
     
         public virtual Departamentos Departamentos { get; set; }
         public virtual SubEmpresas SubEmpresas { get; set; }

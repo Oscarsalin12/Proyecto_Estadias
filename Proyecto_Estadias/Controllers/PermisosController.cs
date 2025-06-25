@@ -58,24 +58,13 @@ namespace Proyecto_Estadias.Controllers
 
         [HttpPost]
         public ActionResult CrearPermiso(PermisosVM model)
-
-
         {
             if (ModelState.IsValid)
             {
-                var permiso = new Permisos
-                {
-                    IdEmpleado = model.IdEmpleado,
-                    IdTipoPermiso = model.IdTipoPermiso,
-                    IdEmpresa = model.IdEmpresa,
-                    FechaGeneracion = DateTime.Now,
-                    FechaInicio = model.FechaInicio,
-                    FechaFinal = model.FechaFinal
 
-                };
-                if (permisosServices.CrearPermiso(permiso, out string error))
+                if (permisosServices.CrearPermiso(model, out string error))
                 {
-                    return RedirectToAction("Paginacion");
+                    return RedirectToAction("ListaEmpleadosSubempresa", "Auth", new { idSub = model.IdEmpresa });
                 }
                 else
                 {
@@ -302,7 +291,6 @@ namespace Proyecto_Estadias.Controllers
             var permiso = permisosServices.ObtenerPermisoPorId(idPermiso);
             var empleado = permiso.Empleados;
 
-            // Empresa madre o subempresa
             var empresa = permiso.SubEmpresas?.Empresas?.Nombre ?? permiso.SubEmpresas?.Nombre ?? "N/A";
             var motivo = permiso.MotivosAusencia?.NombreMotivo ?? "N/A";
 
@@ -316,11 +304,9 @@ namespace Proyecto_Estadias.Controllers
                 var boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12);
                 var titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
 
-                // Encabezado dinámico
                 Paragraph header = new Paragraph(empresa.ToUpper(), titleFont);
                 header.Alignment = Element.ALIGN_CENTER;
                 doc.Add(header);
-
 
                 Paragraph subHeader = new Paragraph("AVISO DE AUSENCIA", boldFont);
                 subHeader.Alignment = Element.ALIGN_CENTER;
@@ -344,7 +330,9 @@ namespace Proyecto_Estadias.Controllers
 
                 doc.Add(CreateLabelLine("MOTIVO:", motivo, normalFont));
 
-                int totalDias = ContarDiasHabiles(permiso.FechaInicio, permiso.FechaFinal);
+                // ✅ Días hábiles según el tipo de semana del empleado
+                int diasLaborales = empleado.DiasLaboralesPorSemana > 0 ? empleado.DiasLaboralesPorSemana : 5;
+                int totalDias = ContarDiasHabiles(permiso.FechaInicio, permiso.FechaFinal, diasLaborales);
 
                 doc.Add(CreateLabelLine("DIAS:", totalDias.ToString(), normalFont));
 
@@ -368,6 +356,7 @@ namespace Proyecto_Estadias.Controllers
                 return File(ms.ToArray(), "application/pdf", $"AvisoPermiso_{empleado.Nombre}.pdf");
             }
         }
+
 
 
         // Métodos de apoyo
@@ -397,17 +386,23 @@ namespace Proyecto_Estadias.Controllers
             return cell;
         }
 
-        private int ContarDiasHabiles(DateTime fechaInicio, DateTime fechaFin)
+        private int ContarDiasHabiles(DateTime fechaInicio, DateTime fechaFin, int diasLaboralesPorSemana = 5)
         {
-            int diasHabiles = 0;
-            for (DateTime fecha = fechaInicio; fecha <= fechaFin; fecha = fecha.AddDays(1))
+            int total = 0;
+            for (var date = fechaInicio.Date; date <= fechaFin.Date; date = date.AddDays(1))
             {
-                if (fecha.DayOfWeek != DayOfWeek.Saturday && fecha.DayOfWeek != DayOfWeek.Sunday)
+                if (diasLaboralesPorSemana == 6)
                 {
-                    diasHabiles++;
+                    if (date.DayOfWeek != DayOfWeek.Sunday)
+                        total++;
+                }
+                else
+                {
+                    if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+                        total++;
                 }
             }
-            return diasHabiles;
+            return total;
         }
 
 

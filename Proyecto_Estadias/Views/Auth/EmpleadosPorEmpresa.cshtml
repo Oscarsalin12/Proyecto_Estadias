@@ -121,10 +121,12 @@
                         <th>Fecha de Ingreso</th>
                         <th>Años</th>
                         <th>Meses</th>
+                        <th>Dias que labora</th>
                         <th>Vacaciones</th>
                         <th>Disponibles</th>
                         <th>Departamento</th>
                         <th>Permisos</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -136,11 +138,16 @@
                             <td>@emp.FechaDeIngreso</td>
                             <td>@emp.AniosTrabajados</td>
                             <td>@emp.MesesTrabajados</td>
+                            <td>@emp.DiasLaboralesPorSemana</td>
                             <td>@emp.intDiasVacaciones</td>
                             <td>@emp.DiasDisponibles</td>
                             <td>@emp.NombreDepartamento</td>
                             <td>
                                 @Html.ActionLink("Crear Permiso", "CrearPermiso", "Permisos", new { area = "Empleado", idEmpleado = emp.Id }, new { @class = "btn btn-sm btn-gradient" })
+
+                            </td>
+                            <td>
+                                @Html.ActionLink("Editar empleado", "EditarEmpleado", "Empleados", new { area = "Empleado", id = emp.Id }, new { @class = "btn btn-sm btn-gradient" })
 
                             </td>
                         </tr>

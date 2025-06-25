@@ -97,6 +97,13 @@
             @Html.DropDownListFor(m => m.IdDepartamento, (SelectList)ViewBag.Departamentos, "Seleccione un departamento", new { @class = "form-control" })
             @Html.ValidationMessageFor(m => m.IdDepartamento, "", new { @class = "text-danger" })
         </div>
+        <div class="form-group">
+            <label for="DiasLaboralesPorSemana">Días Laborales por Semana</label>
+            <select class="form-control" name="DiasLaboralesPorSemana" id="DiasLaboralesPorSemana" required>
+                <option value="5">Lunes a Viernes (5 días)</option>
+                <option value="6">Lunes a Sábado (6 días)</option>
+            </select>
+        </div>
 
         <div class="form-group text-center">
             <input type="submit" value="Guardar" class="btn btn-primary" />
