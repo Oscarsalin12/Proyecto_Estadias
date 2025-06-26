@@ -1,4 +1,5 @@
-﻿using Proyecto_Estadias.Filters;
+﻿using PagedList;
+using Proyecto_Estadias.Filters;
 using Proyecto_Estadias.Helpers;
 using Proyecto_Estadias.Infraestructura;
 using Proyecto_Estadias.Models;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
+using PagedList.Mvc;
 
 namespace Proyecto_Estadias.Controllers
 {
@@ -163,7 +165,9 @@ namespace Proyecto_Estadias.Controllers
             return RedirectToAction("ListaEmpleadosSubempresa", new { idSub = id });
 
         }
-        public ActionResult ListaEmpleadosSubempresa(int idSub, int? bus, string busqueda)
+
+
+        public ActionResult ListaEmpleadosSubempresa(int idSub, int? bus, string busqueda, int? page, int pageSize = 5)
         {
           
             if (idSub <= 0)
@@ -204,7 +208,9 @@ namespace Proyecto_Estadias.Controllers
                 IdDepartamento = e.IdDepartamento,
                 NombreEmpresa = e.SubEmpresas.Nombre,
                 NombreDepartamento = e.Departamentos.NombreDep
-            }).ToList();
+            })
+                .OrderBy(e => e.Nombre)
+            .ToPagedList(page ?? 1, pageSize);
 
             ViewBag.SubempresaNombre = authServices.GetNombreSubempresas(idSub);
             ViewBag.IdSub = idSub;
@@ -257,55 +263,7 @@ namespace Proyecto_Estadias.Controllers
             return RedirectToAction("Perfil", "Auth");
         }
         #endregion
-        //[HttpGet]
-        //[Authorize]
-        //public ActionResult BuscarEmpleados(string busqueda, int? idSubEmpresa)
-        //{
-        //    empleadoServices.ActualizarVacacionesYPermisos();
 
-        //    var empleados = db.Empleados
-        //        .Include("SubEmpresas")
-        //        .Include("Departamentos")
-        //        .AsQueryable();
-
-        //    if (idSubEmpresa.HasValue)
-        //        empleados = empleados.Where(e => e.IdEmpresa == idSubEmpresa.Value);
-
-        //    if (!string.IsNullOrWhiteSpace(busqueda))
-        //        empleados = empleados.Where(e => e.Nombre.Contains(busqueda));
-
-        //    var empleadosVM = empleados.Select(e => new EmpleadosVM
-        //    {
-        //        Id = e.Id,
-        //        NumEmpleado = e.NumEmpleado,
-        //        Nombre = e.Nombre,
-        //        FechaDeIngreso = e.FechaIDeIngreso,
-        //        AniosTrabajados = e.AniosTrabajados,
-        //        MesesTrabajados = e.MesesTrabajados,
-        //        intDiasVacaciones = e.intDiasVacaciones,
-        //        DiasDisponibles = e.DiasDisponibles,
-        //        IdEmpresa = e.IdEmpresa,
-        //        IdDepartamento = e.IdDepartamento,
-        //        NombreEmpresa = e.SubEmpresas.Nombre,
-        //        NombreDepartamento = e.Departamentos.NombreDep
-        //    }).ToList();
-
-        //    var model = new EmpleadosPorEmpresaVM
-        //    {
-        //        Busqueda = busqueda,
-        //        IdSubEmpresa = idSubEmpresa,
-        //        Empleados = empleadosVM,
-        //        SubEmpresas = authServices.ObtenerSubEmpresas()
-        //            .Select(s => new SelectListItem
-        //            {
-        //                Value = s.Id.ToString(),
-        //                Text = s.Nombre,
-        //                Selected = idSubEmpresa.HasValue && s.Id == idSubEmpresa.Value
-        //            }).ToList()
-        //    };
-
-        //    return View("EmpleadosPorEmpresa", model);
-        //}
 
 
     }

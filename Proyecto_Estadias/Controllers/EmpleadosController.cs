@@ -8,13 +8,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+
 namespace Proyecto_Estadias.Controllers
 {
     public class EmpleadosController : Controller
     {
         private readonly IEmpleadosServices empleadoServices;
         private readonly IAuthServices authServices;
-        public EmpleadosController()
+        public EmpleadosController() 
         {
             authServices = new AuthServices();
             empleadoServices = new EmpleadoServices();
@@ -95,6 +96,7 @@ namespace Proyecto_Estadias.Controllers
 
 
         #endregion
+
 
 
     }

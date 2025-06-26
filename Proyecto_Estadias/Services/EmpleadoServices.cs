@@ -69,6 +69,7 @@ namespace Proyecto_Estadias.Services
             var empleado = db.Empleados.Find(empleadoActualizado.Id);
             if (empleado != null)
             {
+                empleado.NumEmpleado = empleadoActualizado.NumEmpleado;
                 empleado.Nombre = empleadoActualizado.Nombre;
                 empleado.FechaIDeIngreso = empleadoActualizado.FechaIDeIngreso;
                 empleado.IdEmpresa = empleadoActualizado.IdEmpresa;
@@ -78,6 +79,8 @@ namespace Proyecto_Estadias.Services
                 db.SaveChanges();
             }
         }
+
+
 
         #endregion
 

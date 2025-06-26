@@ -1,4 +1,6 @@
-﻿@model List<Proyecto_Estadias.ViewModels.EmpleadosVM>
+﻿@model PagedList.IPagedList<Proyecto_Estadias.ViewModels.EmpleadosVM>
+@using PagedList.Mvc
+@using PagedList
 
 @{
     ViewBag.Title = "Empleados por Subempresa";
@@ -9,7 +11,7 @@
     var departamentos = ViewBag.Departamentos as SelectList;
     var selectedDept = Request.QueryString["bus"];
 }
-
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
 <style>
     .content-box {
         background-color: white;
@@ -21,7 +23,7 @@
     }
 
     .content-header {
-        background: linear-gradient(to right, #0000ff, #9400d3);
+        background: linear-gradient(to right, #0000ff, #4b0082);
         color: white;
         padding: 15px;
         border-top-left-radius: 15px;
@@ -49,10 +51,6 @@
         border-radius: 8px;
     }
 
-    table th, table td {
-        text-align: center;
-        vertical-align: middle;
-    }
     .btn-gradient {
         background: linear-gradient(to right, #0000ff, #4b0082);
         border: none;
@@ -68,6 +66,45 @@
             color: white;
         }
 
+    table.table {
+        border: 1px solid #dee2e6;
+    }
+
+    table th, table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    table thead {
+        background-color: #343a40; /* Gris claro */
+        color: white;
+        margin-top: 15px;
+        border: none;
+    }
+
+    .pagination {
+        margin-top: 30px;
+    }
+
+        .pagination li {
+            display: inline-block;
+            margin: 0 3px;
+        }
+
+        .pagination a,
+        .pagination span {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .pagination .active span {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
 </style>
 
 <div class="content-box">
@@ -113,15 +150,15 @@
     else
     {
         <div class="table-responsive">
-            <table class="table table-bordered table-striped mt-4">
-                <thead class="thead-dark">
+            <table class="table table-bordered table-striped">
+                <thead>
                     <tr>
                         <th>Num. Empleado</th>
                         <th>Nombre</th>
                         <th>Fecha de Ingreso</th>
                         <th>Años</th>
                         <th>Meses</th>
-                        <th>Dias que labora</th>
+                        <th>Días que labora</th>
                         <th>Vacaciones</th>
                         <th>Disponibles</th>
                         <th>Departamento</th>
@@ -144,11 +181,9 @@
                             <td>@emp.NombreDepartamento</td>
                             <td>
                                 @Html.ActionLink("Crear Permiso", "CrearPermiso", "Permisos", new { area = "Empleado", idEmpleado = emp.Id }, new { @class = "btn btn-sm btn-gradient" })
-
                             </td>
                             <td>
                                 @Html.ActionLink("Editar empleado", "EditarEmpleado", "Empleados", new { area = "Empleado", id = emp.Id }, new { @class = "btn btn-sm btn-gradient" })
-
                             </td>
                         </tr>
                     }
@@ -158,9 +193,30 @@
 
         <div class="text-center mt-4">
             @Html.ActionLink("Reportes", "PaginacionPorEmpresa", "Permisos", new { area = "Empleado", idEmpresa = Model.First().IdEmpresa }, new { @class = "btn btn-gradient" })
-
             @Html.ActionLink("Añadir empleados", "InsertarEmpleado", "Empleados", new { area = "Empleado", idSub = idSub }, new { @class = "btn btn-gradient ml-2" })
+        </div>
 
+        <div class="d-flex justify-content-center mt-4">
+            @Html.PagedListPager(
+                Model,
+                page => Url.Action("ListaEmpleadosSubempresa", new
+                {
+                    idSub = idSub,
+                    bus = Request["bus"],
+                    busqueda = Request["busqueda"],
+                    page = page
+                }),
+                new PagedListRenderOptions
+                {
+                    Display = PagedListDisplayMode.IfNeeded,
+                    MaximumPageNumbersToDisplay = 5,
+                    LinkToPreviousPageFormat = "«",
+                    LinkToNextPageFormat = "»",
+                    UlElementClasses = new[] { "pagination" },
+                    LiElementClasses = new[] { "page-item" },
+                   
+                }
+            )
         </div>
     }
 </div>
