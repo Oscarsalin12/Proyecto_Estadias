@@ -17,10 +17,13 @@
         {
             <div class="col-md-4 mb-4 d-flex align-items-stretch">
                 <div class="card card-company w-100">
-                    <img src="~/Content/imagenes/empresas/@(Model.Empresas[i].Id).jpg"
+                    <img src="@(Model.Empresas[i].Logo != null
+            ? $"data:image/png;base64,{Convert.ToBase64String(Model.Empresas[i].Logo)}"
+            : Url.Content("~/Content/imagenes/empresas/default.jpg"))"
                          class="card-img-top"
                          alt="Imagen de @Model.Empresas[i].Nombre"
                          style="height: 200px; object-fit: cover;" />
+
 
                     <div class="card-body text-center d-flex flex-column">
                         <h5 class="card-title">@Model.Empresas[i].Nombre</h5>

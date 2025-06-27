@@ -348,10 +348,10 @@
     <Content Include="Views\Auth\ListarUsuairos.cshtml" />
     <Content Include="Views\Auth\SeleccionarSubempresa.cshtml" />
     <Content Include="Views\Empleados\InsertarEmpleado.cshtml" />
+    <Content Include="Views\Empresas\InsertarEmpresa.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Empresas\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

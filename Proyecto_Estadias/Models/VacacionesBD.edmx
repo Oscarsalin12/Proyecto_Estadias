@@ -38,7 +38,7 @@
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Rfc" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Direccion" Type="varchar" MaxLength="50" />
-          <Property Name="Logo" Type="varbinary" MaxLength="50" />
+          <Property Name="Logo" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="MotivosAusencia">
           <Key>
@@ -292,7 +292,7 @@
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Rfc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Direccion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Logo" Type="Binary" MaxLength="50" FixedLength="false" />
+          <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" />
           <NavigationProperty Name="UsuarioRol" Relationship="Self.FK__UsuarioRo__IdEmp__4AB81AF0" FromRole="Empresas" ToRole="UsuarioRol" />
           <NavigationProperty Name="SubEmpresas" Relationship="Self.FK_SubEmpresas_Empresas" FromRole="Empresas" ToRole="SubEmpresas" />
         </EntityType>

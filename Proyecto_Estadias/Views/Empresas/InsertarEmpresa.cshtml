@@ -1,0 +1,43 @@
+﻿@model Proyecto_Estadias.Models.Empresas
+
+@{
+    ViewBag.Title = "Insertar Empresa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Registrar nueva empresa</h2>  
+
+    @using (Html.BeginForm("InsertarEmpresa", "Empresas", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.Nombre)
+            @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", placeholder = "Nombre de la empresa" })
+            @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Rfc)
+            @Html.TextBoxFor(m => m.Rfc, new { @class = "form-control", placeholder = "RFC" })
+            @Html.ValidationMessageFor(m => m.Rfc, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Direccion)
+            @Html.TextBoxFor(m => m.Direccion, new { @class = "form-control", placeholder = "Dirección" })
+            @Html.ValidationMessageFor(m => m.Direccion, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <label for="archivoLogo">Logo de la empresa</label>
+            <input type="file" name="archivoLogo" class="form-control-file" />
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Guardar empresa</button>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
