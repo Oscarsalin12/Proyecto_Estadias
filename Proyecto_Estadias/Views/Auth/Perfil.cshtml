@@ -12,6 +12,12 @@
     </div>
     <p class="profile-subtitle">Selecciona una empresa para ver sus empleados</p>
 
+    <div class="text-end mb-4">
+        <a href="@Url.Action("InsertarEmpresa", "Empresas")" class="btn btn-gradient" style="max-width: 200px;">
+            ➕ Agregar Empresa
+        </a>
+    </div>
+
     <div class="row">
         @for (int i = 0; i < Model.Empresas.Count; i++)
         {

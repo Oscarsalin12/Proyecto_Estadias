@@ -12,9 +12,11 @@ namespace Proyecto_Estadias.Controllers
     public class EmpresasController : Controller
     {
         private readonly IEmpresasService empresasService;
+        private readonly IAuthServices authServices;
         public EmpresasController()
         {
             empresasService = new EmpresasService();
+            authServices = new AuthServices();
         }
         [HttpGet]
         public ActionResult InsertarEmpresa()
@@ -27,9 +29,30 @@ namespace Proyecto_Estadias.Controllers
             if (ModelState.IsValid)
             {
                 empresasService.InsertarEmpresa(empresa, archivoLogo);
-                return RedirectToAction("Login", "Auth");  
+                return RedirectToAction("Perfil", "Auth");  
             }
             return View(empresa);
+        }
+
+        [HttpGet]
+        public ActionResult InsertarSubEmpresa()
+        {
+            ViewBag.Empresas = new SelectList(authServices.GetAllEmpresas(),"Id","Nombre");
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult InsertarSubEmpresa(SubEmpresas subEmpresas, HttpPostedFileBase archivoLogo)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Empresas = new SelectList(authServices.GetAllEmpresas(), "Id", "Nombre");
+                return View(subEmpresas);
+            }
+
+           empresasService.InsertarSubEmpresas(subEmpresas, archivoLogo);
+           return RedirectToAction("Perfil", "Auth");
         }
     }
 }

@@ -31,6 +31,19 @@ namespace Proyecto_Estadias.Services
             }
         }
 
+        public void InsertarSubEmpresas(SubEmpresas subEmpresas, HttpPostedFileBase archivoLogo)
+        {
+            if (archivoLogo  != null && archivoLogo.ContentLength > 0)
+            {
+                using(var reader = new System.IO.BinaryReader(archivoLogo.InputStream))
+                {
+                    subEmpresas.Logo = reader.ReadBytes(archivoLogo.ContentLength);
+                }
+                db.SubEmpresas.Add(subEmpresas);
+                db.SaveChanges();
+            }
+        }
+
 
 
     }

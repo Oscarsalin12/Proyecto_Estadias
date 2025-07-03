@@ -9,5 +9,6 @@ namespace Proyecto_Estadias.Infraestructura
     public interface IEmpresasService
     {
         void InsertarEmpresa(Empresas empresas, HttpPostedFileBase archivoLogo);
+        void InsertarSubEmpresas(SubEmpresas subEmpresas, HttpPostedFileBase archivoLogo);
     }
 }

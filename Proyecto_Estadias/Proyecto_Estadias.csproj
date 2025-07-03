@@ -349,6 +349,7 @@
     <Content Include="Views\Auth\SeleccionarSubempresa.cshtml" />
     <Content Include="Views\Empleados\InsertarEmpleado.cshtml" />
     <Content Include="Views\Empresas\InsertarEmpresa.cshtml" />
+    <Content Include="Views\Empresas\InsertarSubEmpresa.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

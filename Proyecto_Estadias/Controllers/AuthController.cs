@@ -162,7 +162,8 @@ namespace Proyecto_Estadias.Controllers
                 return View("SeleccionarSubempresa", subempresas);
 
             }
-            return RedirectToAction("ListaEmpleadosSubempresa", new { idSub = id });
+            return View("SeleccionarSubempresa", subempresas);
+            //return RedirectToAction("ListaEmpleadosSubempresa", new { idSub = id });
 
         }
 

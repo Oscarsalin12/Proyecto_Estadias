@@ -37,8 +37,8 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Rfc" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Direccion" Type="varchar" MaxLength="50" />
-          <Property Name="Logo" Type="varbinary(max)" />
+          <Property Name="Direccion" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Logo" Type="varbinary(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="MotivosAusencia">
           <Key>
@@ -76,7 +76,7 @@
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Rfc" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Direccion" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Logo" Type="varbinary" MaxLength="50" />
+          <Property Name="Logo" Type="varbinary(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="UsuarioRol">
           <Key>
@@ -291,8 +291,8 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Rfc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Direccion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Direccion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
           <NavigationProperty Name="UsuarioRol" Relationship="Self.FK__UsuarioRo__IdEmp__4AB81AF0" FromRole="Empresas" ToRole="UsuarioRol" />
           <NavigationProperty Name="SubEmpresas" Relationship="Self.FK_SubEmpresas_Empresas" FromRole="Empresas" ToRole="SubEmpresas" />
         </EntityType>
@@ -337,7 +337,7 @@
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Rfc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Direccion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Logo" Type="Binary" MaxLength="50" FixedLength="false" />
+          <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
           <NavigationProperty Name="Empleados" Relationship="Self.FK_Empleados_SubEmpresas" FromRole="SubEmpresas" ToRole="Empleados" />
           <NavigationProperty Name="Empresas" Relationship="Self.FK_SubEmpresas_Empresas" FromRole="SubEmpresas" ToRole="Empresas" />
           <NavigationProperty Name="Permisos" Relationship="Self.FK_Permisos_SubEmpresas" FromRole="SubEmpresas" ToRole="Permisos" />
