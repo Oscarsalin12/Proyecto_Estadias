@@ -25,13 +25,20 @@ namespace Proyecto_Estadias.Controllers
 
 
         [HttpGet]
-        public ActionResult InsertarEmpleado()
+        public ActionResult InsertarEmpleado(int idsub)
         {
+        
             var empresas = authServices.ObtenerSubEmpresas();
             var departamentos = authServices.GetDepartamentos();
             ViewBag.Departamentos = new SelectList(departamentos, "Id", "NombreDep");
             ViewBag.Empresas = new SelectList(empresas, "Id", "Nombre");
-            return View();
+
+            var nuevoEmpleado = new Empleados
+            {
+                IdEmpresa = idsub,
+                FechaIDeIngreso = DateTime.Now
+            };
+            return View(nuevoEmpleado);
         }
 
 
@@ -42,6 +49,7 @@ namespace Proyecto_Estadias.Controllers
             if (ModelState.IsValid)
             {
                 empleadoServices.InsertarEmpleados(empleado);
+                TempData["EmpleadoCreado"] = true;
                 return RedirectToAction("ListaEmpleadosSubempresa", "Auth", new { idSub = empleado.IdEmpresa });
             }
             var empresas = authServices.ObtenerSubEmpresas();
@@ -62,6 +70,7 @@ namespace Proyecto_Estadias.Controllers
             var empleado = empleadoServices.ObtenerEmpleadoPorId(id);
             if (empleado == null)
             {
+             TempData["ErrorEmpleado"] = true;
                 return HttpNotFound();
             }
 
@@ -81,6 +90,7 @@ namespace Proyecto_Estadias.Controllers
             if (ModelState.IsValid)
             {
                 empleadoServices.ActualizarEmpleado(empleado);
+                TempData["EmpleadoEditado"] = true;
                 return RedirectToAction("ListaEmpleadosSubempresa","Auth", new { idSub = empleado.IdEmpresa });
 
 

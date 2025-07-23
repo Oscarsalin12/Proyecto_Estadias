@@ -7,34 +7,37 @@
 }
 
 <div class="container profile-container">
-    <div class="profile-header">
-        Bienvenido, @Model.Usuario.Usuario
+    <div class="profile-header text-center">
+        <h2 class="mb-2">Bienvenido, @Model.Usuario.Usuario</h2>
+        <p class="profile-subtitle">Selecciona una empresa para ver sus empleados</p>
     </div>
-    <p class="profile-subtitle">Selecciona una empresa para ver sus empleados</p>
 
     <div class="text-end mb-4">
-        <a href="@Url.Action("InsertarEmpresa", "Empresas")" class="btn btn-gradient" style="max-width: 200px;">
+        <a href="@Url.Action("InsertarEmpresa", "Empresas")" class="btn btn-gradient">
             ➕ Agregar Empresa
         </a>
     </div>
 
-    <div class="row">
-        @for (int i = 0; i < Model.Empresas.Count; i++)
+    <div class="row justify-content-center">
+        @foreach (var empresa in Model.Empresas)
         {
-            <div class="col-md-4 mb-4 d-flex align-items-stretch">
+            <div class="col-lg-4 col-md-6 mb-4 d-flex align-items-stretch">
                 <div class="card card-company w-100">
-                    <img src="@(Model.Empresas[i].Logo != null
-            ? $"data:image/png;base64,{Convert.ToBase64String(Model.Empresas[i].Logo)}"
-            : Url.Content("~/Content/imagenes/empresas/default.jpg"))"
-                         class="card-img-top"
-                         alt="Imagen de @Model.Empresas[i].Nombre"
-                         style="height: 200px; object-fit: cover;" />
-
+                    <img src="@(empresa.Logo != null
+                        ? $"data:image/png;base64,{Convert.ToBase64String(empresa.Logo)}"
+                        : Url.Content("~/Content/imagenes/empresas/default.jpg"))"
+                         alt="Logo de @empresa.Nombre"
+                           style="max-height: 180px; object-fit: contain; padding: 10px;"
+                         class="card-img-top" />
 
                     <div class="card-body text-center d-flex flex-column">
-                        <h5 class="card-title">@Model.Empresas[i].Nombre</h5>
+                        <h5 class="card-title">@empresa.Nombre</h5>
+                        <p class="card-text mb-1"><strong>RFC:</strong> @empresa.Rfc</p>
+                        <p class="card-text mb-3"><strong>Dirección:</strong> @empresa.Direccion</p>
                         <div class="mt-auto">
-                            @Html.ActionLink("👥 Ver empleados", "EmpleadosPorEmpresa", "Auth", new { id = Model.Empresas[i].Id }, new { @class = "btn btn-gradient" })
+                            @Html.ActionLink("Ver Filiales", "SeleccionarSubempresa", "Auth",
+                                new { id = empresa.Id },
+                                new { @class = "btn btn-gradient" })
                         </div>
                     </div>
                 </div>
@@ -43,82 +46,126 @@
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        $(function () {
+                 @if (TempData["UsuarioCreado"] != null)
+     {
+         TempData.Keep("UsuarioCreado"); // esto marca el tempData como leida y no volvera a aparecer
+         @:toastr.success('Usuario Creado exitosamente', 'Éxito');
+         TempData.Remove("UsuarioCreado"); // se elimina despues de mostrarse
+     }
+        });
 
-    <style>
-        body {
-            background: white;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .profile-container {
-            background-color: white;
-            padding: 30px;
-            margin: 40px auto 80px auto;
-            border-radius: 15px;
-            max-width: 960px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        .profile-header {
-            background: linear-gradient(to right, #0000ff, #4b0082);
-            color: white;
-            text-align: center;
-            padding: 20px 15px;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-
-        .profile-subtitle {
-            text-align: center;
-            color: #6c757d;
-            margin-bottom: 30px;
-            font-size: 16px;
-        }
-
-        .card-company {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-            border: none;
-            border-radius: 12px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-
-            .card-company:hover {
-                transform: translateY(-8px);
-                box-shadow: 0 12px 30px rgba(148, 0, 211, 0.4);
+            @if (TempData["ExitoSub"] != null)
+            {
+                TempData.Keep("ExitoSub");
+                @:toastr.success('Sub empresa creada correctamente ', 'Éxito');
+                TempData.Remove("ExitoSub");
             }
 
-            .card-company img {
-                border-top-left-radius: 12px;
-                border-top-right-radius: 12px;
+                @if (TempData["EmpresaCreada"] != null)
+            {
+                TempData.Keep("EmpresaCreada");
+                @:toastr.success('Empresa creada exitosamente', 'Éxito');
+                TempData.Remove("EmpresaCreada");
             }
 
-            .card-company .card-title {
-                color: #222;
-                font-weight: 700;
-                font-size: 20px;
+            @if (TempData["Error404"] != null)
+            {
+                TempData.Keep("Error404");
+                @:toastr.error('Erro inesperado', 'Error');
+                TempData.Remove("Error404");
             }
 
-        .btn-gradient {
-            color: white !important;
-            background: linear-gradient(to right, #0000ff, #4b0082);
-            border: none;
-            padding: 10px 0;
-            font-weight: 600;
-            border-radius: 50px;
+            @if (TempData["ErrorIner"] != null)
+            {
+                TempData.Keep("ErrorIner");
+                @:toastr.error('Error al insertar la SubEmpresa', 'Error');
+                TempData.Remove("ErrorIner");
+            }
+        });
+    </script>
+}
+
+<style>
+    .profile-header {
+      font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    background: linear-gradient(to right, #0000ff, #4b0082);
+    color: white;
+    padding: 20px 15px;
+    border-radius: 15px 15px 10px 10px;
+    margin-bottom: 30px;
+    }
+
+    body {
+        background: #f8f9fa;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .profile-container {
+        max-width: 960px;
+        margin: 40px auto 80px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-header h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    .profile-subtitle {
+        color: whitesmoke;
+        margin-bottom: 20px;
+        font-size: 1rem;
+    }
+
+    .card-company {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: #fff;
+    }
+
+        .card-company:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-company img {
             width: 100%;
-            transition: background 0.3s ease;
+            height: 220px;
+            object-fit: cover;
         }
 
-            .btn-gradient:hover,
-            .btn-gradient:focus {
-                background: linear-gradient(to right, #9400d3, #0000ff);
-                color: white !important;
-                box-shadow: 0 0 10px #9400d3;
-                outline: none;
-            }
+        .card-company .card-title {
+            color: #222;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
 
-    </style>
+    .btn-gradient {
+        background: linear-gradient(to right, #0000ff, #4b0082);
+        color: #fff !important;
+        border: none;
+        border-radius: 50px;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
 
+        .btn-gradient:hover {
+            background: linear-gradient(to right, #4b0082, #0000ff);
+            box-shadow: 0 4px 10px rgba(75, 0, 130, 0.5);
+            color: #fff !important;
+        }
+</style>

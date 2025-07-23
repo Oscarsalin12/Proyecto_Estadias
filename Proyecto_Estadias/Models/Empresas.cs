@@ -17,8 +17,8 @@ namespace Proyecto_Estadias.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Empresas()
         {
-            this.UsuarioRol = new HashSet<UsuarioRol>();
             this.SubEmpresas = new HashSet<SubEmpresas>();
+            this.UsuarioRol = new HashSet<UsuarioRol>();
         }
     
         public int Id { get; set; }
@@ -28,8 +28,8 @@ namespace Proyecto_Estadias.Models
         public byte[] Logo { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UsuarioRol> UsuarioRol { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SubEmpresas> SubEmpresas { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UsuarioRol> UsuarioRol { get; set; }
     }
 }

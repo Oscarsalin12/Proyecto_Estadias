@@ -50,6 +50,7 @@ namespace Proyecto_Estadias.Controllers
             {
                 if (claimManager.SignIn(model, true, returnUrl))
                 {
+                    TempData["LoginExitoso"] = true;
                     return Redirect(returnUrl ?? Url.Action("Perfil", "Auth"));
                 }
                 ModelState.AddModelError("", "Credenciales incorrectas.");
@@ -96,7 +97,8 @@ namespace Proyecto_Estadias.Controllers
 
                 if (creado)
                 {
-                    return RedirectToAction("Login");
+                    TempData["UsuarioCreado"] = true;
+                    return RedirectToAction("Perfil");
                 }
 
                 ModelState.AddModelError("", "No se pudo registrar el usuario. Intente nuevamente.");
@@ -108,6 +110,7 @@ namespace Proyecto_Estadias.Controllers
 
             ViewBag.Roles = new SelectList(authServices.GetAllRoles(), "Id", "Nombre");
             ViewBag.Empresas = new SelectList(authServices.GetAllEmpresas(), "Id", "Nombre");
+       
             return View(usuariosVM);
         }
 
@@ -143,12 +146,12 @@ namespace Proyecto_Estadias.Controllers
         #region metodos de lista por empresa 
 
         [Authorize]
-        public ActionResult EmpleadosPorEmpresa(int id)
+        public ActionResult SeleccionarSubempresa(int id)
         {
             var identity = (ClaimsIdentity)User.Identity;
             var roles = ClaimsHelper.GetRoles(identity);
             bool tieneAcceso = roles.Any(rol => ClaimsHelper.TieneAccesoARolYEmpresa(identity, rol, id));
-         
+           
             // se realiza la verificacion
             if (!tieneAcceso)
                 return new HttpUnauthorizedResult("no tiene acceso a esta empresa");

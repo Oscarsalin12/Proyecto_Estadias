@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using Microsoft.Ajax.Utilities;
 using Proyecto_Estadias.Infraestructura;
 using Proyecto_Estadias.Models;
 using Proyecto_Estadias.Services;
@@ -64,6 +63,7 @@ namespace Proyecto_Estadias.Controllers
 
                 if (permisosServices.CrearPermiso(model, out string error))
                 {
+                    TempData["PermisoCreado"] = true;
                     return RedirectToAction("ListaEmpleadosSubempresa", "Auth", new { idSub = model.IdEmpresa });
                 }
                 else

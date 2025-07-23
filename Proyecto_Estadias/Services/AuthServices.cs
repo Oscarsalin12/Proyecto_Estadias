@@ -288,7 +288,12 @@ namespace Proyecto_Estadias.Services
 
             subempresas.AddRange(db.SubEmpresas
                 .Where(s => s.IdEmpresa_madre == idEmpresa)
-                .Select(s => new SubEmpresasVM { Id = s.Id, Nombre = s.Nombre }));
+                .Select(s => new SubEmpresasVM {
+                    Id = s.Id,
+                    Nombre = s.Nombre,
+                Rfc = s.Rfc,
+                Direccion = s.Direccion,
+                Logo = s.Logo}));
         
 
             return subempresas;

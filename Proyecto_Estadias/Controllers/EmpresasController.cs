@@ -29,6 +29,7 @@ namespace Proyecto_Estadias.Controllers
             if (ModelState.IsValid)
             {
                 empresasService.InsertarEmpresa(empresa, archivoLogo);
+                TempData["EmpresaCreada"] = true;
                 return RedirectToAction("Perfil", "Auth");  
             }
             return View(empresa);
@@ -44,15 +45,27 @@ namespace Proyecto_Estadias.Controllers
         [HttpPost]
         public ActionResult InsertarSubEmpresa(SubEmpresas subEmpresas, HttpPostedFileBase archivoLogo)
         {
-
-            if (!ModelState.IsValid)
+            try
             {
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.Empresas = new SelectList(authServices.GetAllEmpresas(), "Id", "Nombre");
+                    TempData["ErrorIner"] = true;
+                    return View(subEmpresas);
+                }
+
+                empresasService.InsertarSubEmpresas(subEmpresas, archivoLogo);
+
+                TempData["ExitoSub"] = true;
+                return RedirectToAction("Perfil", "Auth");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error404"] = "Ocurrió un error inesperado: " + ex.Message;
                 ViewBag.Empresas = new SelectList(authServices.GetAllEmpresas(), "Id", "Nombre");
                 return View(subEmpresas);
             }
-
-           empresasService.InsertarSubEmpresas(subEmpresas, archivoLogo);
-           return RedirectToAction("Perfil", "Auth");
         }
+
     }
 }

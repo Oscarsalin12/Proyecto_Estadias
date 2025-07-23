@@ -10,22 +10,50 @@
 
     <link href="~/Content/custom-navbar.css" rel="stylesheet" />
     @*<link href="~/Content/fonts-roboto.css" rel="stylesheet" />
-    <link href="~/Content/toastr.min.css" rel="stylesheet" />*@
+        <link href="~/Content/toastr.min.css" rel="stylesheet" />*@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+
 
     @*<script src="~/Scripts/jquery-3.7.1.min.js"></script>*@
     <script src="https://kit.fontawesome.com/5549e90f49.js" crossorigin="anonymous"></script>
     @*<script src="~/Scripts/toastr.min.js"></script>*@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
 </head>
+
 <body>
+    <script>
+    $(function () {
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "4000"
+        };
+
+
+         @if (TempData["LoginExitoso"] != null)
+ {
+     @:toastr.success('Sesión iniciada correctamente', 'Éxito');
+ }
+
+
+
+    });
+    </script>
+
+
     <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
         <div class="container">
             <a class="navbar-brand" href="@Url.Action("Perfil", "Auth")">
                 <img src="~/Imagenes/1.jpg" alt="Logo" height="40" class="me-2" />
-                Mi Aplicación
+                Grupo Juarez y Asosciados 
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -33,14 +61,13 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.Identity.IsAuthenticated && ((System.Security.Claims.ClaimsIdentity)User.Identity).HasClaim("Rol", "AdministradorGeneral"))
                     {
-                        @*<li class="nav-item">@Html.ActionLink("Añadir Usuario", "Account", "Auth", null, new { @class = "nav-link" })</li>*@
                         <li class="nav-item">@Html.ActionLink("Añadir Empleado", "InsertarEmpleado", "Empleados", null, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Crear Permiso", "CrearPermiso", "Permisos", null, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Historial de Reportes", "Paginacion", "Permisos", null, new { @class = "nav-link" })</li>
                     }
-                    else
+                    else if (!User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">@Html.ActionLink("Login", "Login", "Auth", null, new { @class = "nav-link" })</li>
                     }

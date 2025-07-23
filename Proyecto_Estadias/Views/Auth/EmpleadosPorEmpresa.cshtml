@@ -107,6 +107,8 @@
         }
 </style>
 
+@Html.ActionLink("Ver Filiales", "SeleccionarSubempresa", "Auth", new { id = idSub }, new { @class = "btn btn-gradient" })
+
 <div class="content-box">
     <div class="content-header">
         Empleados de @subempresaNombre
@@ -172,7 +174,7 @@
                         <tr>
                             <td>@emp.NumEmpleado</td>
                             <td>@emp.Nombre</td>
-                            <td>@emp.FechaDeIngreso</td>
+                            <td>@emp.FechaDeIngreso.ToShortDateString()</td>
                             <td>@emp.AniosTrabajados</td>
                             <td>@emp.MesesTrabajados</td>
                             <td>@emp.DiasLaboralesPorSemana</td>
@@ -214,9 +216,46 @@
                     LinkToNextPageFormat = "»",
                     UlElementClasses = new[] { "pagination" },
                     LiElementClasses = new[] { "page-item" },
-                   
+
                 }
             )
         </div>
     }
 </div>
+
+@section Scripts{
+    <script>
+        $(function () {
+
+    @if (TempData["PermisoCreado"] != null)
+     {
+        @:toastr.success('permiso Creado exitosamente', 'Éxito');
+     }
+
+
+    @if (TempData["EmpleadoCreado"] != null)
+     {
+       TempData.Keep("EmpleadoCreado");
+       @:toastr.success('el empleado se agrego correctamente', 'Exito');
+       TempData.Remove("EmpleadoCreado");
+     }
+
+    @if (TempData["EmpleadoEditado"] != null)
+     {
+       TempData.Keep("EmpleadoEditado");
+       @:toastr.success('Se actualizo correctamente', 'Exito');
+       TempData.Remove("EmpleadoEditado");
+     }
+  @if (TempData["ErrorEmpleado"] != null)
+   {
+     TempData.Keep("ErrorEmpleado");
+     @:toastr.error('Error al Actualizar a empleado', 'Error');
+     TempData.Remove("ErrorEmpleado");
+   }
+    });
+
+    </script>
+
+
+
+}  

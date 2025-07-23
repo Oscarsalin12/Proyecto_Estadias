@@ -31,7 +31,6 @@
         font-weight: bold;
     }
 
-
     .form-control {
         border-radius: 8px;
     }
@@ -86,3 +85,18 @@
         <div class="alert alert-danger text-center">@ViewBag.Error</div>
     }
 </div>
+
+@section Scripts {
+    <script>
+
+          $(function () {
+            @if (TempData["UsuarioCreado"] != null)
+            {
+                @:toastr.success('Usuario Creado exitosamente', 'Éxito');
+            }
+        }); 
+
+
+    </script>
+    
+    }

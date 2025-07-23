@@ -1,10 +1,14 @@
 ﻿@model PagedList.IPagedList<Proyecto_Estadias.ViewModels.PermisosPdfVM>
 @using PagedList.Mvc
 
+
 @{
     ViewBag.Title = "Listado de Permisos";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+
 }
+
 
 <link href="~/Content/bootstrap.css" rel="stylesheet" />
 <style>
@@ -58,10 +62,14 @@
     }
 </style>
 
+
+
 <div class="page-container">
     <div class="card shadow">
         <div class="card-header">
             Listado de permisos para super administrador
+         
+
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -71,7 +79,6 @@
                             <th>N.Emp</th>
                             <th>Empleado</th>
                             <th>Empresa</th>
-                            <th>Departamento</th>
                             <th>Motivo</th>
                             <th>Generado</th>
                             <th>Inicio</th>
@@ -87,7 +94,6 @@
                                 <td>@p.Empleados.NumEmpleado</td>
                                 <td>@p.Empleados.Nombre</td>
                                 <td>@p.SubEmpresas.Nombre</td>
-                                <td>@p.</td>
                                 <td>@p.MotivosAusencia.NombreMotivo</td>
                                 <td>@p.FechaGeneracion.ToString("dd/MM/yyyy")</td>
                                 <td>@p.FechaInicio.ToString("dd/MM/yyyy")</td>
