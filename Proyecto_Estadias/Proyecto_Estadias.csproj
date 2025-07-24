@@ -243,6 +243,7 @@
     <Compile Include="Services\PermisosService.cs" />
     <Compile Include="ViewModels\AsignarRolVM.cs" />
     <Compile Include="ViewModels\DepartamentosVM.cs" />
+    <Compile Include="ViewModels\EmpleadosLoginVM.cs" />
     <Compile Include="ViewModels\EmpleadosPorEmpresaVM.cs" />
     <Compile Include="ViewModels\EmpleadosVM.cs" />
     <Compile Include="ViewModels\EmpresaVM.cs" />
@@ -356,6 +357,8 @@
     <Content Include="Views\Empleados\InsertarEmpleado.cshtml" />
     <Content Include="Views\Empresas\InsertarEmpresa.cshtml" />
     <Content Include="Views\Empresas\InsertarSubEmpresa.cshtml" />
+    <Content Include="Views\Empleados\LoginEmpleado.cshtml" />
+    <Content Include="Views\Empleados\PerfilEmpleado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

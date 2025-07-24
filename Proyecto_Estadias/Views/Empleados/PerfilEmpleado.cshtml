@@ -1,0 +1,28 @@
+﻿@model Proyecto_Estadias.Models.Empleados
+
+@{
+    ViewBag.Title = "Panel del Empleado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center mb-4">Bienvenido, @Model.Nombre</h2>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Número de empleado:</strong> @Model.NumEmpleado</p>
+                <p><strong>Fecha de ingreso:</strong> @Model.FechaIDeIngreso.ToShortDateString()</p>
+                <p><strong>Días de vacaciones disponibles:</strong> @Model.DiasDisponibles</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Departamento:</strong> @Model.Departamentos.NombreDep</p>
+                <p><strong>Empresa/Subempresa:</strong> @Model.SubEmpresas.Nombre</p>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="@Url.Action("LogoutEmpleado", "Empleados")" class="btn btn-danger">Cerrar Sesión</a>
+        </div>
+    </div>
+</div>

@@ -1,11 +1,10 @@
-﻿using Proyecto_Estadias.Infraestructura;
+﻿
+using Proyecto_Estadias.Infraestructura;
 using Proyecto_Estadias.Models;
 using Proyecto_Estadias.Services;
 using Proyecto_Estadias.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+
 using System.Web.Mvc;
 
 
@@ -104,9 +103,66 @@ namespace Proyecto_Estadias.Controllers
             return View(empleado);
         }
 
+        [HttpGet]
+        public ActionResult LoginEmpleado()
+        {
+        return View();
+        }
+
+        [HttpPost]
+        public ActionResult LoginEmpleado(EmpleadosLoginVM model)
+        {
+            if(!ModelState.IsValid)
+            {
+                ViewBag.Error = "Por favor, ingrese un usuario y contraseña válidos.";
+                return View(model);
+            }
+            var empleado = empleadoServices.LoginEmpleados(model.usuario, model.NumeroEmpleado);
+            if (empleado != null)
+            {
+                Session["EmpleadoId"] = empleado.Id;
+                Session["EmpleadoNombre"] = empleado.UsuarioEmpleado;
+                Session["EmpleadoNum"] = empleado.NumEmpleado;
+
+                TempData["LoginExitoso"] = true;
+                return RedirectToAction("PerfilEmpleado", "Empleados");
+            }
+            else
+            {
+                ViewBag.Error = "Usuario o contraseña incorrectos.";
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult LogoutEmpleado()
+        {
+            Session.Clear();
+            Session.Abandon();
+            TempData["LogoutExitoso"] = true;
+            return RedirectToAction("LoginEmpleado", "Empleados");
+        }
+        [HttpGet]
+        public ActionResult PerfilEmpleado()
+        {
+            if (Session["EmpleadoId"] == null)
+            {
+                return RedirectToAction("LoginEmpleado", "Empleados");
+            }
+
+            int empleadoId = (int)Session["EmpleadoId"];
+            var empleado = empleadoServices.ObtenerEmpleadoPorId(empleadoId);
+
+            if (empleado == null)
+            {
+                TempData["ErrorEmpleado"] = true;
+                return HttpNotFound();
+            }
+
+            return View(empleado);
+        }
 
         #endregion
-
 
 
     }

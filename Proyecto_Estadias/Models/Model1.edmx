@@ -29,6 +29,7 @@
           <Property Name="DiasDisponibles" Type="int" Nullable="false" />
           <Property Name="IdDepartamento" Type="int" Nullable="false" />
           <Property Name="DiasLaboralesPorSemana" Type="int" Nullable="false" />
+          <Property Name="UsuarioEmpleado" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="Empresas">
           <Key>
@@ -283,6 +284,7 @@
           <NavigationProperty Name="Departamentos" Relationship="Self.FK_Empleados_Departamentos" FromRole="Empleados" ToRole="Departamentos" />
           <NavigationProperty Name="SubEmpresas" Relationship="Self.FK_Empleados_Empresas" FromRole="Empleados" ToRole="SubEmpresas" />
           <NavigationProperty Name="Permisos" Relationship="Self.FK_Permisos_Empleados" FromRole="Empleados" ToRole="Permisos" />
+          <Property Name="UsuarioEmpleado" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Empresas">
           <Key>
@@ -538,6 +540,7 @@
           <EntitySetMapping Name="Empleados">
             <EntityTypeMapping TypeName="Vacaciones_BDModel.Empleados">
               <MappingFragment StoreEntitySet="Empleados">
+                <ScalarProperty Name="UsuarioEmpleado" ColumnName="UsuarioEmpleado" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="NumEmpleado" ColumnName="NumEmpleado" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />

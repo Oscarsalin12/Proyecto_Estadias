@@ -62,13 +62,22 @@
     }
 </style>
 
+@Html.ActionLink(
+    "Ver empleados",
+    "ListaEmpleadosSubempresa",
+    "Auth",
+    new { idSub = ViewBag.EmpresaId },
+    new { @class = "btn btn-primary" }
+)
+
+
 
 
 <div class="page-container">
     <div class="card shadow">
         <div class="card-header">
             Listado de permisos para super administrador
-         
+
 
         </div>
         <div class="card-body">
@@ -99,11 +108,11 @@
                                 <td>@p.FechaInicio.ToString("dd/MM/yyyy")</td>
                                 <td>@p.FechaFinal.ToString("dd/MM/yyyy")</td>
                                 <td>
-                                    @Html.ActionLink("Generar PDF", "GenerarPDFEmpleado", "Permisos", new { id = p.IdEmpleado }, new { @class = "btn btn-primary btn-sm" })
+                                    @Html.ActionLink("Historial", "GenerarPDFEmpleado", "Permisos", new { id = p.IdEmpleado }, new { @class = "btn btn-primary btn-sm" })
                                 </td>
                                 <td>
                                     <a href="@Url.Action("GenerarPDFPermiso", "Permisos", new { idPermiso = p.Id })" class="btn btn-success btn-sm" target="_blank">
-                                        🖨️ Imprimir
+                                        Generar Permiso
                                     </a>
                                 </td>
                             </tr>

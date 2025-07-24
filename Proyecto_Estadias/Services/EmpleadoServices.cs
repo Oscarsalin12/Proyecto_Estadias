@@ -61,8 +61,14 @@ namespace Proyecto_Estadias.Services
         #region metodo de actualizacion 
         public Empleados ObtenerEmpleadoPorId(int id)
         {
-            return db.Empleados.Find(id);
+            return db.Empleados
+                .Include("Departamentos")
+                .Include("SubEmpresas")
+                .ToList()
+                .FirstOrDefault(e => e.Id == id);
         }
+
+
 
         public void ActualizarEmpleado(Empleados empleadoActualizado)
         {
@@ -157,8 +163,16 @@ namespace Proyecto_Estadias.Services
         }
 
         #endregion
-
-       
+        
+       public Empleados LoginEmpleados(string usuario, int numeroEmpleado)
+        {
+          
+            if (string.IsNullOrWhiteSpace(usuario))
+            return null; // O lanzar una excepción si prefieres
+            var empleado = db.Empleados.FirstOrDefault(e => e.UsuarioEmpleado == usuario && e.NumEmpleado == numeroEmpleado);
+                return empleado;
+          
+        }
 
     }
 }

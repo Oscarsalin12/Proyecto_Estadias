@@ -13,6 +13,7 @@ namespace Proyecto_Estadias.Infraestructura
         void ActualizarVacacionesYPermisos();
         Empleados GetEmpleadoPorId(int id);
         void InsertarEmpleados(Empleados emp);
+        Empleados LoginEmpleados(string usuario, int contrasena);
         Empleados ObtenerEmpleadoPorId(int id);
     }
 }

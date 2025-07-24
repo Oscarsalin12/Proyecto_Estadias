@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Org.BouncyCastle.Crypto;
+using PagedList;
 using Proyecto_Estadias.Infraestructura;
 using Proyecto_Estadias.Models;
 using Proyecto_Estadias.Services;
@@ -10,11 +12,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
-using PagedList;
-using System.Security.Claims;
 namespace Proyecto_Estadias.Controllers
 {
     public class PermisosController : Controller
@@ -417,6 +418,7 @@ namespace Proyecto_Estadias.Controllers
                 .ToList();
 
             List<PermisosPdfVM> permisosPdfVM = Mapper.Map<List<PermisosPdfVM>>(resultado);
+            ViewBag.EmpresaId = idEmpresa; // o el ID real de la subempresa que quieres regresar
 
             return View("Paginacion", permisosPdfVM.ToPagedList(pageNumber, pageSize));
         }

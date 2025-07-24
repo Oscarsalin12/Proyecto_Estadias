@@ -81,6 +81,12 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(m => m.UsuarioEmpleado)
+            @Html.TextBoxFor(m => m.UsuarioEmpleado, new{ @class = "form-control", placeholder = "Usuario el empleado" })
+            @Html.ValidationMessageFor(m => m.UsuarioEmpleado, "", new {@class = "text-danger"})
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(m => m.FechaIDeIngreso)
             @Html.TextBoxFor(m => m.FechaIDeIngreso, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
             @Html.ValidationMessageFor(m => m.FechaIDeIngreso, "", new { @class = "text-danger" })
