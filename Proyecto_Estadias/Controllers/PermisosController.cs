@@ -78,7 +78,49 @@ namespace Proyecto_Estadias.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public ActionResult SolicitarPermiso(int? idEmpleado)
+        {
+            var model = new PermisosVM
+            {
+                Empleados = permisosServices.ObtenerEmpleados(),
+                MotivosAusencia = permisosServices.ObtenerMotivos(),
+                SubEmpresas = permisosServices.ObtenerEmpresas(),
+                FechaGeneracion = DateTime.Today
+            };
+            if (idEmpleado.HasValue)
+            {
+                var empleado = permisosServices.ObtenerEmpleadoPorId(idEmpleado.Value);
 
+                model.IdEmpleado = empleado.Id;
+                model.IdEmpresa = empleado.IdEmpresa;
+                model.NombreEmpleado = empleado.Nombre;
+                model.EmpresaNombre = empleado.SubEmpresas.Nombre;
+                model.VacacionesDisponibles = empleado.DiasDisponibles;
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult SolicitarPermiso(PermisosVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (permisosServices.CrearSolicitud(model, out string error))
+                {
+                    TempData["SolicitudEnviada"] = true;
+                    return RedirectToAction("PerfilEmpleado", "Empleados");
+                }
+                else
+                {
+                    ModelState.AddModelError("", error);
+                }
+            }
+            model.Empleados = permisosServices.ObtenerEmpleados();
+            model.MotivosAusencia = permisosServices.ObtenerMotivos();
+            model.SubEmpresas = permisosServices.ObtenerEmpresas();
+            return View(model);
+        }
         public JsonResult BuscarEmpleado(string filtro)
         {
             if (string.IsNullOrWhiteSpace(filtro))
@@ -221,9 +263,11 @@ namespace Proyecto_Estadias.Controllers
                 var cellFont = FontFactory.GetFont(FontFactory.HELVETICA, 11, BaseColor.BLACK);
 
                 // Título
-                Paragraph titulo = new Paragraph("Reporte Individual de Permisos", tituloFont);
-                titulo.Alignment = Element.ALIGN_CENTER;
-                titulo.SpacingAfter = 20f;
+                Paragraph titulo = new Paragraph("Reporte Individual de Permisos", tituloFont)
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 20f
+                };
                 doc.Add(titulo);
 
                 // Datos del empleado
@@ -234,32 +278,57 @@ namespace Proyecto_Estadias.Controllers
                 doc.Add(new Paragraph($"Fecha de generación: {DateTime.Now:dd/MM/yyyy}", subTituloFont));
                 doc.Add(new Paragraph(" ")); // Espacio
 
-                // Tabla
-                PdfPTable table = new PdfPTable(4);
-                table.WidthPercentage = 100;
-                table.SetWidths(new float[] { 2f, 3f, 2f, 2f });
+                // Tabla de permisos
+                PdfPTable table = new PdfPTable(5) { WidthPercentage = 100 };
+                table.SetWidths(new float[] { 2f, 3f, 2f, 2f, 1.5f });
 
                 // Encabezados
                 BaseColor azulEncabezado = new BaseColor(0, 122, 204);
-                string[] headers = { "Fecha Generación", "Motivo", "Inicio", "Final" };
+                string[] headers = { "Fecha Generación", "Motivo", "Inicio", "Final", "Días" };
 
                 foreach (var header in headers)
                 {
-                    PdfPCell cell = new PdfPCell(new Phrase(header, headerFont));
-                    cell.BackgroundColor = azulEncabezado;
-                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                    cell.Padding = 5;
+                    PdfPCell cell = new PdfPCell(new Phrase(header, headerFont))
+                    {
+                        BackgroundColor = azulEncabezado,
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        Padding = 5
+                    };
                     table.AddCell(cell);
                 }
 
                 // Filas de contenido
+                int totalDias = 0;
                 foreach (var p in permisos)
                 {
+                    int dias = ContarDiasHabiles(p.FechaInicio, p.FechaFinal);
+                    // Inclusivo
+                    totalDias += dias;
+
                     table.AddCell(new PdfPCell(new Phrase(p.FechaGeneracion.ToString("dd/MM/yyyy"), cellFont)) { Padding = 5 });
                     table.AddCell(new PdfPCell(new Phrase(p.MotivosAusencia?.NombreMotivo ?? "N/A", cellFont)) { Padding = 5 });
                     table.AddCell(new PdfPCell(new Phrase(p.FechaInicio.ToString("dd/MM/yyyy"), cellFont)) { Padding = 5 });
                     table.AddCell(new PdfPCell(new Phrase(p.FechaFinal.ToString("dd/MM/yyyy"), cellFont)) { Padding = 5 });
+                    table.AddCell(new PdfPCell(new Phrase(dias.ToString(), cellFont)) { Padding = 5, HorizontalAlignment = Element.ALIGN_CENTER });
                 }
+
+                // Fila total
+                PdfPCell totalLabelCell = new PdfPCell(new Phrase("Total días tomados", headerFont))
+                {
+                    Colspan = 4,
+                    HorizontalAlignment = Element.ALIGN_RIGHT,
+                    Padding = 5,
+                    BackgroundColor = azulEncabezado
+                };
+                table.AddCell(totalLabelCell);
+
+                PdfPCell totalValueCell = new PdfPCell(new Phrase(totalDias.ToString(), headerFont))
+                {
+                    Padding = 5,
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    BackgroundColor = azulEncabezado
+                };
+                table.AddCell(totalValueCell);
 
                 doc.Add(table);
                 doc.Close();
@@ -267,6 +336,7 @@ namespace Proyecto_Estadias.Controllers
                 return File(ms.ToArray(), "application/pdf", $"ReporteEmpleado_{empleado.Nombre}.pdf");
             }
         }
+
 
 
         #endregion
@@ -292,71 +362,140 @@ namespace Proyecto_Estadias.Controllers
             var permiso = permisosServices.ObtenerPermisoPorId(idPermiso);
             var empleado = permiso.Empleados;
 
-            var empresa = permiso.SubEmpresas?.Empresas?.Nombre ?? permiso.SubEmpresas?.Nombre ?? "N/A";
-            var motivo = permiso.MotivosAusencia?.NombreMotivo ?? "N/A";
+            var empresaObj = permiso.SubEmpresas;
+            string empresa = empresaObj?.Nombre ?? "N/A";
+            string direccion = empresaObj?.Direccion ?? "Dirección no disponible";
+            string rfc = empresaObj?.Rfc ?? "RFC no disponible";
+            byte[] logoBytes = empresaObj?.Logo;
+
+            string motivo = permiso.MotivosAusencia?.NombreMotivo ?? "N/A";
 
             using (MemoryStream ms = new MemoryStream())
             {
-                Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
-                PdfWriter.GetInstance(doc, ms);
+                Document doc = new Document(PageSize.A4, 30, 30, 30, 30);
+                PdfWriter writer = PdfWriter.GetInstance(doc, ms);
                 doc.Open();
 
-                var normalFont = FontFactory.GetFont(FontFactory.HELVETICA, 11);
-                var boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12);
-                var titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+                var normalFont = FontFactory.GetFont(FontFactory.HELVETICA, 9);
+                var boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
+                var titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14);
 
-                Paragraph header = new Paragraph(empresa.ToUpper(), titleFont);
-                header.Alignment = Element.ALIGN_CENTER;
-                doc.Add(header);
+                // Método local para crear una celda con borde
+                PdfPCell BorderedCell(Phrase phrase)
+                {
+                    return new PdfPCell(phrase)
+                    {
+                        Border = Rectangle.BOX,
+                        Padding = 4,
+                        HorizontalAlignment = Element.ALIGN_LEFT,
+                        VerticalAlignment = Element.ALIGN_MIDDLE
+                    };
+                }
 
-                Paragraph subHeader = new Paragraph("AVISO DE AUSENCIA", boldFont);
-                subHeader.Alignment = Element.ALIGN_CENTER;
-                subHeader.SpacingAfter = 15f;
-                doc.Add(subHeader);
+                // Método local para dibujar una copia con borde alrededor
+                void AgregarCopia(float yInicio, float altura)
+                {
+                    PdfContentByte cb = writer.DirectContent;
+                    ColumnText ct = new ColumnText(cb);
+                    ct.SetSimpleColumn(36, yInicio - altura, PageSize.A4.Width - 36, yInicio);
 
-                PdfPTable linea1 = new PdfPTable(3) { WidthPercentage = 100 };
-                linea1.SetWidths(new float[] { 1f, 1f, 1f });
-                linea1.AddCell(CreateCell($"No. Folio.: {permiso.Id}", normalFont));
-                linea1.AddCell(CreateCell($"No. Trab.: {empleado.NumEmpleado}", normalFont));
-                linea1.AddCell(CreateCell($"Fecha Solicitud: {permiso.FechaGeneracion:dd-MMMM-yyyy}", normalFont));
-                doc.Add(linea1);
+                    PdfPTable marco = new PdfPTable(1)
+                    {
+                        WidthPercentage = 100
+                    };
+                    marco.DefaultCell.Border = Rectangle.BOX;
+                    marco.DefaultCell.Padding = 10;
 
-                doc.Add(CreateLabelLine("NOMBRE:", empleado.Nombre, normalFont));
+                    PdfPTable contenido = new PdfPTable(1) { WidthPercentage = 100 };
 
-                PdfPTable linea2 = new PdfPTable(2) { WidthPercentage = 100 };
-                linea2.SetWidths(new float[] { 1f, 1f });
-                linea2.AddCell(CreateLabelLine("DEPARTAMENTO:", empleado.Departamentos?.NombreDep ?? "N/A", normalFont));
-                linea2.AddCell(CreateLabelLine("ENCARGADO:", empleado.Departamentos?.NombreEmcargado ?? "N/A", normalFont));
-                doc.Add(linea2);
+                    // === Encabezado ===
+                    PdfPTable headerTable = new PdfPTable(2) { WidthPercentage = 100 };
+                    headerTable.SetWidths(new float[] { 0.3f, 0.7f });
 
-                doc.Add(CreateLabelLine("MOTIVO:", motivo, normalFont));
+                    if (logoBytes != null)
+                    {
+                        var logo = iTextSharp.text.Image.GetInstance(logoBytes);
+                        logo.ScaleToFit(60, 60);
+                        headerTable.AddCell(new PdfPCell(logo) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_LEFT });
+                    }
+                    else
+                    {
+                        headerTable.AddCell(new PdfPCell(new Phrase("")) { Border = Rectangle.NO_BORDER });
+                    }
 
-                // ✅ Días hábiles según el tipo de semana del empleado
-                int diasLaborales = empleado.DiasLaboralesPorSemana > 0 ? empleado.DiasLaboralesPorSemana : 5;
-                int totalDias = ContarDiasHabiles(permiso.FechaInicio, permiso.FechaFinal, diasLaborales);
+                    PdfPCell empresaCell = new PdfPCell { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT };
+                    empresaCell.AddElement(new Paragraph(empresa, boldFont));
+                    empresaCell.AddElement(new Paragraph(direccion, normalFont));
+                    empresaCell.AddElement(new Paragraph("RFC: " + rfc, normalFont));
+                    headerTable.AddCell(empresaCell);
 
-                doc.Add(CreateLabelLine("DIAS:", totalDias.ToString(), normalFont));
+                    contenido.AddCell(new PdfPCell(headerTable) { Border = Rectangle.NO_BORDER, PaddingBottom = 5 });
 
-                PdfPTable linea3 = new PdfPTable(2) { WidthPercentage = 100 };
-                linea3.SetWidths(new float[] { 1f, 1f });
-                linea3.AddCell(CreateLabelLine("ESTARÁ AUSENTE A PARTIR DEL:", permiso.FechaInicio.ToString("dd-MMMM-yyyy"), normalFont));
-                linea3.AddCell(CreateLabelLine("AL:", permiso.FechaFinal.ToString("dd-MMMM-yyyy"), normalFont));
-                doc.Add(linea3);
+                    // === Título ===
+                    Paragraph titulo = new Paragraph("AVISO DE AUSENCIA", titleFont)
+                    {
+                        Alignment = Element.ALIGN_CENTER,
+                        SpacingAfter = 10f
+                    };
+                    contenido.AddCell(new PdfPCell(titulo) { Border = Rectangle.NO_BORDER });
 
-                doc.Add(CreateLabelLine("OBS.:", $"Restan {permiso.DiasDisponibles} días de vacaciones periodo {DateTime.Now.Year}", normalFont));
+                    // === Datos del permiso con cuadros ===
+                    PdfPTable datosTabla = new PdfPTable(2) { WidthPercentage = 100, SpacingBefore = 10, SpacingAfter = 10 };
+                    datosTabla.SetWidths(new float[] { 1f, 1f });
 
-                doc.Add(new Paragraph("\n\n\n"));
+                    datosTabla.AddCell(BorderedCell(new Phrase($"No. Folio: {permiso.Id}", normalFont)));
+                    datosTabla.AddCell(BorderedCell(new Phrase($"No. Trab: {empleado.NumEmpleado}", normalFont)));
 
-                PdfPTable firmas = new PdfPTable(3) { WidthPercentage = 100 };
-                firmas.AddCell(CreateSignatureCell("RECURSOS HUMANOS"));
-                firmas.AddCell(CreateSignatureCell("ENC. DEPARTAMENTO"));
-                firmas.AddCell(CreateSignatureCell("INTERESADO"));
-                doc.Add(firmas);
+                    datosTabla.AddCell(BorderedCell(new Phrase($"Nombre: {empleado.Nombre}", normalFont)));
+                    datosTabla.AddCell(BorderedCell(new Phrase($"Departamento: {empleado.Departamentos?.NombreDep ?? "N/A"}", normalFont)));
+
+                    datosTabla.AddCell(BorderedCell(new Phrase($"Encargado: {empleado.Departamentos?.NombreEmcargado ?? "N/A"}", normalFont)));
+                    datosTabla.AddCell(BorderedCell(new Phrase($"Motivo: {motivo}", normalFont)));
+
+                    int diasLaborales = empleado.DiasLaboralesPorSemana > 0 ? empleado.DiasLaboralesPorSemana : 5;
+                    int totalDias = ContarDiasHabiles(permiso.FechaInicio, permiso.FechaFinal, diasLaborales);
+                    datosTabla.AddCell(BorderedCell(new Phrase($"Días: {totalDias}", normalFont)));
+                    datosTabla.AddCell(BorderedCell(new Phrase($"Restan: {permiso.DiasDisponibles} días periodo {DateTime.Now.Year}", normalFont)));
+
+                    datosTabla.AddCell(BorderedCell(new Phrase($"Ausente del: {permiso.FechaInicio:dd-MMMM-yyyy}", normalFont)));
+                    datosTabla.AddCell(BorderedCell(new Phrase($"Al: {permiso.FechaFinal:dd-MMMM-yyyy}", normalFont)));
+
+                    contenido.AddCell(new PdfPCell(datosTabla) { Border = Rectangle.NO_BORDER });
+
+                    // === Firmas ===
+                    PdfPTable firmas = new PdfPTable(3) { WidthPercentage = 100, SpacingBefore = 20 };
+                    firmas.AddCell(CreateSignatureCell("RECURSOS HUMANOS"));
+                    firmas.AddCell(CreateSignatureCell("ENC. DEPARTAMENTO"));
+                    firmas.AddCell(CreateSignatureCell("INTERESADO"));
+                    contenido.AddCell(new PdfPCell(firmas) { Border = Rectangle.NO_BORDER, PaddingTop = 10 });
+              
+                    // Pie de copia
+                    Paragraph footer = new Paragraph($"Documento generado automáticamente - {empresa} | RFC: {rfc}", normalFont)
+                    {
+                        Alignment = Element.ALIGN_CENTER,
+                        SpacingBefore = 5f
+                    };
+                    contenido.AddCell(new PdfPCell(footer) { Border = Rectangle.NO_BORDER });
+
+                    marco.AddCell(contenido);
+                    ct.AddElement(marco);
+                    ct.Go();
+                }
+         
+                // Primera copia: mitad superior
+                AgregarCopia(PageSize.A4.Height - 36, (PageSize.A4.Height / 2) - 36);
+
+                // Segunda copia: mitad inferior
+                AgregarCopia((PageSize.A4.Height / 2) - 36, (PageSize.A4.Height / 2) - 36);
 
                 doc.Close();
                 return File(ms.ToArray(), "application/pdf", $"AvisoPermiso_{empleado.Nombre}.pdf");
             }
         }
+
+
+
+
 
 
 
@@ -414,6 +553,7 @@ namespace Proyecto_Estadias.Controllers
             int pageNumber = (page ?? 1);
 
             List<Permisos> resultado = permisosServices.PermisosPorEmpresa(idEmpresa)
+                 .Where(p => p.Estado == "Aprobado")
                 .OrderBy(p => p.FechaGeneracion)
                 .ToList();
 
@@ -423,6 +563,43 @@ namespace Proyecto_Estadias.Controllers
             return View("Paginacion", permisosPdfVM.ToPagedList(pageNumber, pageSize));
         }
 
+
+
+        [HttpGet]
+        public ActionResult CambiarEstado()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult CambiarEstado(int id, string estado)
+        {
+            var permiso = permisosServices.ObtenerPermisoPorId(id); // Debes implementar este método en tu servicio
+
+            if (permisosServices.CambiarEstadoPermiso(id, estado, out string error))
+            {
+                TempData["EstadoActualizado"] = true;
+            }
+            else
+            {
+                TempData["Error"] = error;
+            }
+
+            return RedirectToAction("PermisosPendientes", new { idEmpresa = permiso.IdEmpresa });
+        }
+
+
+        [HttpGet]
+        public ActionResult PermisosPendientes(int idEmpresa, int? page, int pageSize = 5)
+        {
+            int pageNumber = page ?? 1;
+            var pendientes = permisosServices.PermisosPorEmpresa(idEmpresa)
+                .Where(p => p.Estado == "Pendiente")
+                .OrderBy(p => p.FechaGeneracion)
+                .ToList();
+            var vm = Mapper.Map<List<PermisosPdfVM>>(pendientes);
+            ViewBag.EmpresaId = idEmpresa;
+            return View("PermisosPendientes", vm.ToPagedList(pageNumber, pageSize));
+        }
     }
 }
 

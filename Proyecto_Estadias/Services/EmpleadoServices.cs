@@ -118,7 +118,7 @@ namespace Proyecto_Estadias.Services
                 int diasLaborales = (emp.DiasLaboralesPorSemana >= 5 && emp.DiasLaboralesPorSemana <= 6)
                                     ? emp.DiasLaboralesPorSemana : 5;
 
-                var permisos = db.Permisos.Where(p => p.IdEmpleado == emp.Id).ToList();
+                var permisos = db.Permisos.Where(p => p.IdEmpleado == emp.Id && p.Estado ==  "Aprobado").ToList();
 
                 int diasPermisoTomados = permisos.Sum(p =>
                     ContarDiasHabiles(p.FechaInicio, p.FechaFinal, diasLaborales)

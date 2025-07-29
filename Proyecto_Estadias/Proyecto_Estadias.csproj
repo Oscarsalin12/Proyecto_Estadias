@@ -304,6 +304,8 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\toastr.scss" />
+    <Content Include="Content\toastr.less" />
     <EntityDeploy Include="Models\Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model1.Designer.cs</LastGenOutput>
@@ -311,8 +313,6 @@
     <Content Include="Models\Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </Content>
-    <Content Include="Content\toastr.scss" />
-    <Content Include="Content\toastr.less" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -359,6 +359,8 @@
     <Content Include="Views\Empresas\InsertarSubEmpresa.cshtml" />
     <Content Include="Views\Empleados\LoginEmpleado.cshtml" />
     <Content Include="Views\Empleados\PerfilEmpleado.cshtml" />
+    <Content Include="Views\Permisos\SolicitarPermiso.cshtml" />
+    <Content Include="Views\Permisos\PermisosPendientes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

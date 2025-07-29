@@ -9,7 +9,9 @@ namespace Proyecto_Estadias.Infraestructura
 {
     public interface IPermisosServices
     {
+        bool CambiarEstadoPermiso(int idPermiso, string nuevoEstado, out string error);
         bool CrearPermiso(PermisosVM model, out string error);
+        bool CrearSolicitud(PermisosVM model, out string error);
         Empleados ObtenerEmpleadoPorId(int id);
         List<Empleados> ObtenerEmpleados();
         List<SubEmpresas> ObtenerEmpresas();

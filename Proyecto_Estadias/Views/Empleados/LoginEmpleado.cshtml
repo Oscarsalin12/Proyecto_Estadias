@@ -35,18 +35,30 @@
         border-radius: 8px;
     }
 
-    .btn-primary {
+    .btn-login {
         background: linear-gradient(to right, #0000ff, #4b0082);
-        border-color: #6F42C1;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 16px;
+        margin: 10px;
+        width: 150px;
     }
 
-        .btn-primary:hover {
-            background-color: #5a379e;
-            border-color: #5a379e;
+        .btn-login:hover {
+            opacity: 0.9;
         }
 
     .alert-danger {
         margin-top: 15px;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
     }
 </style>
 
@@ -70,12 +82,13 @@
 
             <div class="form-group">
                 @Html.LabelFor(model => model.NumeroEmpleado, "Número de empleado")
-                @Html.PasswordFor(model => model.NumeroEmpleado, new { @class = "form-control", placeholder = "contraseña de empleado" })
+                @Html.PasswordFor(model => model.NumeroEmpleado, new { @class = "form-control", placeholder = "Contraseña de empleado" })
                 @Html.ValidationMessageFor(model => model.NumeroEmpleado, "", new { @class = "text-danger" })
             </div>
 
-            <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+            <div class="btn-container">
+                <button type="submit" class="btn-login">Iniciar sesión</button>
+                <a href="@Url.Action("Index", "Home")" class="btn-login" style="background: linear-gradient(to right, #ff416c, #ff4b2b);">Volver</a>
             </div>
         </div>
     }

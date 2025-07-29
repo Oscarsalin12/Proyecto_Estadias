@@ -79,7 +79,8 @@ namespace Proyecto_Estadias.Services
                 FechaGeneracion = DateTime.Now,
                 FechaInicio = model.FechaInicio,
                 FechaFinal = model.FechaFinal,
-                DiasDisponibles = empleado.DiasDisponibles - diasSolicitados
+                DiasDisponibles = empleado.DiasDisponibles - diasSolicitados,
+                Estado = "Aprobado",
             };
 
             // Descontar solo días hábiles
@@ -176,6 +177,70 @@ namespace Proyecto_Estadias.Services
         }
 
         #endregion
+
+        public bool CrearSolicitud(PermisosVM model, out string error)
+        {
+            error = "";
+
+            var empleado = db.Empleados.FirstOrDefault(e => e.Id == model.IdEmpleado);
+            if (empleado == null)
+            {
+                error = "Empleado no encontrado";
+                return false;
+            }
+
+            int diasSolicitados = ContarDiasHabiles(model.FechaInicio, model.FechaFinal, empleado.DiasLaboralesPorSemana);
+            if (diasSolicitados <= 0)
+            {
+                error = "El rango de fechas no contiene días hábiles válidos";
+                return false;
+            }
+
+            // No descontamos días todavía, hasta que se apruebe
+            var permiso = new Permisos
+            {
+                IdEmpleado = model.IdEmpleado,
+                IdTipoPermiso = model.IdTipoPermiso,
+                IdEmpresa = model.IdEmpresa,
+                FechaGeneracion = DateTime.Now,
+                FechaInicio = model.FechaInicio,
+                FechaFinal = model.FechaFinal,
+                DiasDisponibles = empleado.DiasDisponibles, // todavía sin descontar
+                Estado = "Pendiente"
+            };
+
+            db.Permisos.Add(permiso);
+            db.SaveChanges();
+            return true;
+        }
+
+        public bool CambiarEstadoPermiso(int idPermiso, string nuevoEstado, out string error)
+        {
+            error = "";
+            var permiso = db.Permisos.Include("Empleados").FirstOrDefault(p => p.Id == idPermiso);
+            if (permiso == null)
+            {
+                error = "Permiso no encontrado";
+                return false;
+            }
+
+            if (nuevoEstado == "Aprobado")
+            {
+                int diasSolicitados = ContarDiasHabiles(permiso.FechaInicio, permiso.FechaFinal, permiso.Empleados.DiasLaboralesPorSemana);
+                if (permiso.Empleados.DiasDisponibles < diasSolicitados)
+                {
+                    error = "El empleado no tiene suficientes días disponibles";
+                    return false;
+                }
+
+                permiso.Empleados.DiasDisponibles -= diasSolicitados;
+                permiso.DiasDisponibles = permiso.Empleados.DiasDisponibles;
+            }
+
+            permiso.Estado = nuevoEstado;
+            db.SaveChanges();
+            return true;
+        }
 
 
     }

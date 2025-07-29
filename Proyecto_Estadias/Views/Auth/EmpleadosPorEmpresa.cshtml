@@ -195,6 +195,7 @@
 
         <div class="text-center mt-4">
             @Html.ActionLink("Reportes", "PaginacionPorEmpresa", "Permisos", new { area = "Empleado", idEmpresa = Model.First().IdEmpresa }, new { @class = "btn btn-gradient" })
+            @Html.ActionLink("Solucitudes pendientes", "PermisosPendientes", "Permisos", new { area = "Empleado", idEmpresa = Model.First().IdEmpresa }, new { @class = "btn btn-gradient" })
             @Html.ActionLink("Añadir empleados", "InsertarEmpleado", "Empleados", new { area = "Empleado", idSub = idSub }, new { @class = "btn btn-gradient ml-2" })
         </div>
 

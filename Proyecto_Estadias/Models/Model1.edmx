@@ -38,8 +38,8 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Rfc" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Direccion" Type="varchar" MaxLength="300" Nullable="false" />
-          <Property Name="Logo" Type="varbinary(max)" />
+          <Property Name="Direccion" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Logo" Type="varbinary(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="MotivosAusencia">
           <Key>
@@ -60,6 +60,7 @@
           <Property Name="FechaInicio" Type="date" Nullable="false" />
           <Property Name="FechaFinal" Type="date" Nullable="false" />
           <Property Name="DiasDisponibles" Type="int" Nullable="false" />
+          <Property Name="Estado" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -76,8 +77,8 @@
           <Property Name="IdEmpresa_madre" Type="int" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Rfc" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Direccion" Type="varchar" MaxLength="300" Nullable="false" />
-          <Property Name="Logo" Type="varbinary(max)" />
+          <Property Name="Direccion" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Logo" Type="varbinary(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="UsuarioRol">
           <Key>
@@ -97,6 +98,42 @@
           <Property Name="Usuario" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Contrasenia" Type="varchar" MaxLength="10" Nullable="false" />
         </EntityType>
+        <Association Name="FK__UsuarioRo__IdEmp__4AB81AF0">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsuarioRol">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsuarioRo__IdRol__49C3F6B7">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsuarioRol">
+              <PropertyRef Name="IdRol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UsuarioRo__IdUsu__48CFD27E">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsuarioRol">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Empleados_Departamentos">
           <End Role="Departamentos" Type="Self.Departamentos" Multiplicity="1" />
           <End Role="Empleados" Type="Self.Empleados" Multiplicity="*" />
@@ -109,7 +146,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Empleados_Empresas">
+        <Association Name="FK_Empleados_SubEmpresas">
           <End Role="SubEmpresas" Type="Self.SubEmpresas" Multiplicity="1" />
           <End Role="Empleados" Type="Self.Empleados" Multiplicity="*" />
           <ReferentialConstraint>
@@ -133,18 +170,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Permisos_Empresas">
-          <End Role="SubEmpresas" Type="Self.SubEmpresas" Multiplicity="1" />
-          <End Role="Permisos" Type="Self.Permisos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SubEmpresas">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Permisos">
-              <PropertyRef Name="IdEmpresa" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Permisos_MotivosAusencia">
           <End Role="MotivosAusencia" Type="Self.MotivosAusencia" Multiplicity="1" />
           <End Role="Permisos" Type="Self.Permisos" Multiplicity="*" />
@@ -154,6 +179,18 @@
             </Principal>
             <Dependent Role="Permisos">
               <PropertyRef Name="IdTipoPermiso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Permisos_SubEmpresas">
+          <End Role="SubEmpresas" Type="Self.SubEmpresas" Multiplicity="1" />
+          <End Role="Permisos" Type="Self.Permisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubEmpresas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Permisos">
+              <PropertyRef Name="IdEmpresa" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -169,42 +206,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UsuarioRol_Empresas">
-          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
-          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Empresas">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="UsuarioRol">
-              <PropertyRef Name="IdEmpresa" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UsuarioRol_Roles">
-          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
-          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Roles">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="UsuarioRol">
-              <PropertyRef Name="IdRol" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UsuarioRol_Usuarios">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
-          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="UsuarioRol">
-              <PropertyRef Name="IdUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="Vacaciones_BDModelStoreContainer">
           <EntitySet Name="Departamentos" EntityType="Self.Departamentos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Empleados" EntityType="Self.Empleados" Schema="dbo" store:Type="Tables" />
@@ -215,11 +216,23 @@
           <EntitySet Name="SubEmpresas" EntityType="Self.SubEmpresas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UsuarioRol" EntityType="Self.UsuarioRol" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__UsuarioRo__IdEmp__4AB81AF0" Association="Self.FK__UsuarioRo__IdEmp__4AB81AF0">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsuarioRo__IdRol__49C3F6B7" Association="Self.FK__UsuarioRo__IdRol__49C3F6B7">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UsuarioRo__IdUsu__48CFD27E" Association="Self.FK__UsuarioRo__IdUsu__48CFD27E">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
+          </AssociationSet>
           <AssociationSet Name="FK_Empleados_Departamentos" Association="Self.FK_Empleados_Departamentos">
             <End Role="Departamentos" EntitySet="Departamentos" />
             <End Role="Empleados" EntitySet="Empleados" />
           </AssociationSet>
-          <AssociationSet Name="FK_Empleados_Empresas" Association="Self.FK_Empleados_Empresas">
+          <AssociationSet Name="FK_Empleados_SubEmpresas" Association="Self.FK_Empleados_SubEmpresas">
             <End Role="SubEmpresas" EntitySet="SubEmpresas" />
             <End Role="Empleados" EntitySet="Empleados" />
           </AssociationSet>
@@ -227,29 +240,17 @@
             <End Role="Empleados" EntitySet="Empleados" />
             <End Role="Permisos" EntitySet="Permisos" />
           </AssociationSet>
-          <AssociationSet Name="FK_Permisos_Empresas" Association="Self.FK_Permisos_Empresas">
-            <End Role="SubEmpresas" EntitySet="SubEmpresas" />
-            <End Role="Permisos" EntitySet="Permisos" />
-          </AssociationSet>
           <AssociationSet Name="FK_Permisos_MotivosAusencia" Association="Self.FK_Permisos_MotivosAusencia">
             <End Role="MotivosAusencia" EntitySet="MotivosAusencia" />
+            <End Role="Permisos" EntitySet="Permisos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Permisos_SubEmpresas" Association="Self.FK_Permisos_SubEmpresas">
+            <End Role="SubEmpresas" EntitySet="SubEmpresas" />
             <End Role="Permisos" EntitySet="Permisos" />
           </AssociationSet>
           <AssociationSet Name="FK_SubEmpresas_Empresas" Association="Self.FK_SubEmpresas_Empresas">
             <End Role="Empresas" EntitySet="Empresas" />
             <End Role="SubEmpresas" EntitySet="SubEmpresas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UsuarioRol_Empresas" Association="Self.FK_UsuarioRol_Empresas">
-            <End Role="Empresas" EntitySet="Empresas" />
-            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UsuarioRol_Roles" Association="Self.FK_UsuarioRol_Roles">
-            <End Role="Roles" EntitySet="Roles" />
-            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UsuarioRol_Usuarios" Association="Self.FK_UsuarioRol_Usuarios">
-            <End Role="Usuarios" EntitySet="Usuarios" />
-            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -281,10 +282,10 @@
           <Property Name="DiasDisponibles" Type="Int32" Nullable="false" />
           <Property Name="IdDepartamento" Type="Int32" Nullable="false" />
           <Property Name="DiasLaboralesPorSemana" Type="Int32" Nullable="false" />
+          <Property Name="UsuarioEmpleado" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Departamentos" Relationship="Self.FK_Empleados_Departamentos" FromRole="Empleados" ToRole="Departamentos" />
-          <NavigationProperty Name="SubEmpresas" Relationship="Self.FK_Empleados_Empresas" FromRole="Empleados" ToRole="SubEmpresas" />
+          <NavigationProperty Name="SubEmpresas" Relationship="Self.FK_Empleados_SubEmpresas" FromRole="Empleados" ToRole="SubEmpresas" />
           <NavigationProperty Name="Permisos" Relationship="Self.FK_Permisos_Empleados" FromRole="Empleados" ToRole="Permisos" />
-          <Property Name="UsuarioEmpleado" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Empresas">
           <Key>
@@ -293,10 +294,10 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Rfc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Direccion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Direccion" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <NavigationProperty Name="UsuarioRol" Relationship="Self.FK__UsuarioRo__IdEmp__4AB81AF0" FromRole="Empresas" ToRole="UsuarioRol" />
           <NavigationProperty Name="SubEmpresas" Relationship="Self.FK_SubEmpresas_Empresas" FromRole="Empresas" ToRole="SubEmpresas" />
-          <NavigationProperty Name="UsuarioRol" Relationship="Self.FK_UsuarioRol_Empresas" FromRole="Empresas" ToRole="UsuarioRol" />
         </EntityType>
         <EntityType Name="MotivosAusencia">
           <Key>
@@ -318,9 +319,10 @@
           <Property Name="FechaInicio" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="FechaFinal" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="DiasDisponibles" Type="Int32" Nullable="false" />
+          <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Empleados" Relationship="Self.FK_Permisos_Empleados" FromRole="Permisos" ToRole="Empleados" />
           <NavigationProperty Name="MotivosAusencia" Relationship="Self.FK_Permisos_MotivosAusencia" FromRole="Permisos" ToRole="MotivosAusencia" />
-          <NavigationProperty Name="SubEmpresas" Relationship="Self.FK_Permisos_Empresas" FromRole="Permisos" ToRole="SubEmpresas" />
+          <NavigationProperty Name="SubEmpresas" Relationship="Self.FK_Permisos_SubEmpresas" FromRole="Permisos" ToRole="SubEmpresas" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -328,7 +330,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="UsuarioRol" Relationship="Self.FK_UsuarioRol_Roles" FromRole="Roles" ToRole="UsuarioRol" />
+          <NavigationProperty Name="UsuarioRol" Relationship="Self.FK__UsuarioRo__IdRol__49C3F6B7" FromRole="Roles" ToRole="UsuarioRol" />
         </EntityType>
         <EntityType Name="SubEmpresas">
           <Key>
@@ -338,11 +340,11 @@
           <Property Name="IdEmpresa_madre" Type="Int32" Nullable="false" />
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Rfc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Direccion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <NavigationProperty Name="Empleados" Relationship="Self.FK_Empleados_Empresas" FromRole="SubEmpresas" ToRole="Empleados" />
+          <Property Name="Direccion" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <NavigationProperty Name="Empleados" Relationship="Self.FK_Empleados_SubEmpresas" FromRole="SubEmpresas" ToRole="Empleados" />
           <NavigationProperty Name="Empresas" Relationship="Self.FK_SubEmpresas_Empresas" FromRole="SubEmpresas" ToRole="Empresas" />
-          <NavigationProperty Name="Permisos" Relationship="Self.FK_Permisos_Empresas" FromRole="SubEmpresas" ToRole="Permisos" />
+          <NavigationProperty Name="Permisos" Relationship="Self.FK_Permisos_SubEmpresas" FromRole="SubEmpresas" ToRole="Permisos" />
         </EntityType>
         <EntityType Name="UsuarioRol">
           <Key>
@@ -353,9 +355,9 @@
           <Property Name="IdRol" Type="Int32" Nullable="false" />
           <Property Name="FechaRegistro" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="IdEmpresa" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Empresas" Relationship="Self.FK_UsuarioRol_Empresas" FromRole="UsuarioRol" ToRole="Empresas" />
-          <NavigationProperty Name="Roles" Relationship="Self.FK_UsuarioRol_Roles" FromRole="UsuarioRol" ToRole="Roles" />
-          <NavigationProperty Name="Usuarios" Relationship="Self.FK_UsuarioRol_Usuarios" FromRole="UsuarioRol" ToRole="Usuarios" />
+          <NavigationProperty Name="Empresas" Relationship="Self.FK__UsuarioRo__IdEmp__4AB81AF0" FromRole="UsuarioRol" ToRole="Empresas" />
+          <NavigationProperty Name="Roles" Relationship="Self.FK__UsuarioRo__IdRol__49C3F6B7" FromRole="UsuarioRol" ToRole="Roles" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK__UsuarioRo__IdUsu__48CFD27E" FromRole="UsuarioRol" ToRole="Usuarios" />
         </EntityType>
         <EntityType Name="Usuarios">
           <Key>
@@ -364,7 +366,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Contrasenia" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="UsuarioRol" Relationship="Self.FK_UsuarioRol_Usuarios" FromRole="Usuarios" ToRole="UsuarioRol" />
+          <NavigationProperty Name="UsuarioRol" Relationship="Self.FK__UsuarioRo__IdUsu__48CFD27E" FromRole="Usuarios" ToRole="UsuarioRol" />
         </EntityType>
         <Association Name="FK_Empleados_Departamentos">
           <End Role="Departamentos" Type="Self.Departamentos" Multiplicity="1" />
@@ -378,7 +380,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Empleados_Empresas">
+        <Association Name="FK_Empleados_SubEmpresas">
           <End Role="SubEmpresas" Type="Self.SubEmpresas" Multiplicity="1" />
           <End Role="Empleados" Type="Self.Empleados" Multiplicity="*" />
           <ReferentialConstraint>
@@ -402,6 +404,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__UsuarioRo__IdEmp__4AB81AF0">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UsuarioRol">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SubEmpresas_Empresas">
           <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
           <End Role="SubEmpresas" Type="Self.SubEmpresas" Multiplicity="*" />
@@ -411,18 +425,6 @@
             </Principal>
             <Dependent Role="SubEmpresas">
               <PropertyRef Name="IdEmpresa_madre" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UsuarioRol_Empresas">
-          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
-          <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Empresas">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="UsuarioRol">
-              <PropertyRef Name="IdEmpresa" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -438,7 +440,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Permisos_Empresas">
+        <Association Name="FK_Permisos_SubEmpresas">
           <End Role="SubEmpresas" Type="Self.SubEmpresas" Multiplicity="1" />
           <End Role="Permisos" Type="Self.Permisos" Multiplicity="*" />
           <ReferentialConstraint>
@@ -450,7 +452,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UsuarioRol_Roles">
+        <Association Name="FK__UsuarioRo__IdRol__49C3F6B7">
           <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
           <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
           <ReferentialConstraint>
@@ -462,7 +464,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UsuarioRol_Usuarios">
+        <Association Name="FK__UsuarioRo__IdUsu__48CFD27E">
           <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
           <End Role="UsuarioRol" Type="Self.UsuarioRol" Multiplicity="*" />
           <ReferentialConstraint>
@@ -488,7 +490,7 @@
             <End Role="Departamentos" EntitySet="Departamentos" />
             <End Role="Empleados" EntitySet="Empleados" />
           </AssociationSet>
-          <AssociationSet Name="FK_Empleados_Empresas" Association="Self.FK_Empleados_Empresas">
+          <AssociationSet Name="FK_Empleados_SubEmpresas" Association="Self.FK_Empleados_SubEmpresas">
             <End Role="SubEmpresas" EntitySet="SubEmpresas" />
             <End Role="Empleados" EntitySet="Empleados" />
           </AssociationSet>
@@ -496,27 +498,27 @@
             <End Role="Empleados" EntitySet="Empleados" />
             <End Role="Permisos" EntitySet="Permisos" />
           </AssociationSet>
+          <AssociationSet Name="FK__UsuarioRo__IdEmp__4AB81AF0" Association="Self.FK__UsuarioRo__IdEmp__4AB81AF0">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
+          </AssociationSet>
           <AssociationSet Name="FK_SubEmpresas_Empresas" Association="Self.FK_SubEmpresas_Empresas">
             <End Role="Empresas" EntitySet="Empresas" />
             <End Role="SubEmpresas" EntitySet="SubEmpresas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UsuarioRol_Empresas" Association="Self.FK_UsuarioRol_Empresas">
-            <End Role="Empresas" EntitySet="Empresas" />
-            <End Role="UsuarioRol" EntitySet="UsuarioRol" />
           </AssociationSet>
           <AssociationSet Name="FK_Permisos_MotivosAusencia" Association="Self.FK_Permisos_MotivosAusencia">
             <End Role="MotivosAusencia" EntitySet="MotivosAusencia" />
             <End Role="Permisos" EntitySet="Permisos" />
           </AssociationSet>
-          <AssociationSet Name="FK_Permisos_Empresas" Association="Self.FK_Permisos_Empresas">
+          <AssociationSet Name="FK_Permisos_SubEmpresas" Association="Self.FK_Permisos_SubEmpresas">
             <End Role="SubEmpresas" EntitySet="SubEmpresas" />
             <End Role="Permisos" EntitySet="Permisos" />
           </AssociationSet>
-          <AssociationSet Name="FK_UsuarioRol_Roles" Association="Self.FK_UsuarioRol_Roles">
+          <AssociationSet Name="FK__UsuarioRo__IdRol__49C3F6B7" Association="Self.FK__UsuarioRo__IdRol__49C3F6B7">
             <End Role="Roles" EntitySet="Roles" />
             <End Role="UsuarioRol" EntitySet="UsuarioRol" />
           </AssociationSet>
-          <AssociationSet Name="FK_UsuarioRol_Usuarios" Association="Self.FK_UsuarioRol_Usuarios">
+          <AssociationSet Name="FK__UsuarioRo__IdUsu__48CFD27E" Association="Self.FK__UsuarioRo__IdUsu__48CFD27E">
             <End Role="Usuarios" EntitySet="Usuarios" />
             <End Role="UsuarioRol" EntitySet="UsuarioRol" />
           </AssociationSet>
@@ -540,7 +542,6 @@
           <EntitySetMapping Name="Empleados">
             <EntityTypeMapping TypeName="Vacaciones_BDModel.Empleados">
               <MappingFragment StoreEntitySet="Empleados">
-                <ScalarProperty Name="UsuarioEmpleado" ColumnName="UsuarioEmpleado" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="NumEmpleado" ColumnName="NumEmpleado" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
@@ -552,6 +553,7 @@
                 <ScalarProperty Name="DiasDisponibles" ColumnName="DiasDisponibles" />
                 <ScalarProperty Name="IdDepartamento" ColumnName="IdDepartamento" />
                 <ScalarProperty Name="DiasLaboralesPorSemana" ColumnName="DiasLaboralesPorSemana" />
+                <ScalarProperty Name="UsuarioEmpleado" ColumnName="UsuarioEmpleado" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -585,6 +587,7 @@
                 <ScalarProperty Name="FechaInicio" ColumnName="FechaInicio" />
                 <ScalarProperty Name="FechaFinal" ColumnName="FechaFinal" />
                 <ScalarProperty Name="DiasDisponibles" ColumnName="DiasDisponibles" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
