@@ -69,7 +69,8 @@
                     }
                     else if (!User.Identity.IsAuthenticated)
                     {
-                        <li class="nav-item">@Html.ActionLink("Login", "Login", "Auth", null, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Administradores", "Login", "Auth", null, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Empleados", "LoginEmpleado", "Empleados", null, new { @class = "nav-link" })</li>
                     }
                 </ul>
 

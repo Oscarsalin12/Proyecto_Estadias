@@ -102,7 +102,7 @@
 
         <div class="form-group text-center mt-4">
             <input type="submit" value="Guardar" class="btn btn-primary" />
-            @Html.ActionLink("Cancelar", "ListaEmpleadosSubempresa", new { idSub = Model.IdEmpresa }, new { @class = "btn btn-default ml-2" })
+            @Html.ActionLink("Cancelar", "ListaEmpleadosSubempresa","Auth" , new { idSub = Model.IdEmpresa }, new { @class = "btn btn-default ml-2" })
         </div>
     }
 </div>

@@ -113,7 +113,9 @@
 
         <div class="form-group text-center">
             <input type="submit" value="Guardar" class="btn btn-primary" />
-            @Html.ActionLink("Cancelar", "Perfil", "Auth", null, new { @class = "btn btn-default" })
+            @Html.ActionLink(
+              "Ver empleados","ListaEmpleadosSubempresa","Auth",new { idSub = ViewBag.EmpresaId }, new { @class = "btn btn-primary" }
+ )
         </div>
     }
 </div>

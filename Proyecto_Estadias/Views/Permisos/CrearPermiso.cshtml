@@ -65,17 +65,12 @@
     {
         @Html.AntiForgeryToken()
 
-        <div class="form-group mt-3">
-            <label>Buscar empleado por Nombre o Número</label>
-            <input type="text" id="busquedaEmpleado" class="form-control"
-                   placeholder="Ej. Juan o 123"
-                   autocomplete="off"
-                   value="@Model.NombreEmpleado"
-                   @(Model.IdEmpleado > 0 ? "readonly" : "") />
+<div class="form-group mt-3">
+    <p class="form-control-plaintext"><strong>@Model.NombreEmpleado</strong></p>
 
-            @Html.HiddenFor(m => m.IdEmpleado)
-            @Html.ValidationMessageFor(m => m.IdEmpleado, "", new { @class = "text-danger" })
-        </div>
+    @Html.HiddenFor(m => m.IdEmpleado)
+    @Html.ValidationMessageFor(m => m.IdEmpleado, "", new { @class = "text-danger" })
+</div>
 
         <div id="datosEmpleado" class="mb-3">
             @Html.HiddenFor(m => m.IdEmpresa)
@@ -109,6 +104,13 @@
 
         <div class="form-group text-center">
             <button type="submit" class="btn btn-primary">Guardar Permiso</button>
+            @Html.ActionLink(
+    "Ver empleados",
+    "ListaEmpleadosSubempresa",
+    "Auth",
+    new { idSub = ViewBag.EmpresaId },
+    new { @class = "btn btn-primary" }
+)
         </div>
     }
 </div>

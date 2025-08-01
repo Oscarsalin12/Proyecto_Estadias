@@ -1,26 +1,17 @@
 ﻿using AutoMapper;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using Org.BouncyCastle.Crypto;
 using PagedList;
 using Proyecto_Estadias.Infraestructura;
 using Proyecto_Estadias.Models;
 using Proyecto_Estadias.Services;
 using Proyecto_Estadias.ViewModels;
 using System;
-using System.Web;
-using Org.BouncyCastle.Math.EC.Rfc8032;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
-using System.Collections.Generic;
 using System.Web.Mvc;
-using System.Web.UI;
-using PagedList.Mvc;
-using System.Linq;
-using Org.BouncyCastle.Crypto;
+
 namespace Proyecto_Estadias.Controllers
 {
     public class PermisosController : Controller
@@ -58,6 +49,7 @@ namespace Proyecto_Estadias.Controllers
                 model.EmpresaNombre = empleado.SubEmpresas.Nombre;
                 model.VacacionesDisponibles = empleado.DiasDisponibles;
             }
+            ViewBag.EmpresaId = model.IdEmpresa;
             return View(model);
         }
 
@@ -149,19 +141,11 @@ namespace Proyecto_Estadias.Controllers
         }
         #endregion
 
-
         #region metodo para permisos para empleado individual 
 
 
 
         #endregion
-
-        // no aplica 
-        //public ActionResult Reporte()
-        //{
-        //    var permisos = db.Permisos.Include("Empresas").Include("Empleados").Include("MotivosAusencia").ToList();
-        //    return View(permisos);
-        //}
 
         #region generar pdf
         public FileResult GenerarPDF(int idEmpresa)
@@ -268,7 +252,9 @@ namespace Proyecto_Estadias.Controllers
                 doc.Add(table);
                 doc.Close();
                 ViewBag.EmpresaId = idEmpresa;
-                return File(ms.ToArray(), "application/pdf", $"Reporte_Permisos_Empresa_{empresa?.Nombre ?? "Empresa"}.pdf");
+                Response.AppendHeader("Content-Disposition", "inline; filename=Reporte_Permisos_Empresa_" + (empresa?.Nombre ?? "Empresa") + ".pdf");
+                return File(ms.ToArray(), "application/pdf");
+
             }
         }
 
@@ -422,7 +408,9 @@ namespace Proyecto_Estadias.Controllers
                 doc.Add(table);
                 doc.Close();
 
-                return File(ms.ToArray(), "application/pdf", $"ReporteEmpleado_{empleado.Nombre}.pdf");
+                Response.AppendHeader("Content-Disposition", "inline; filename=ReporteEmpleado_" + empleado.Nombre + ".pdf");
+                return File(ms.ToArray(), "application/pdf");
+
             }
         }
 
@@ -431,14 +419,13 @@ namespace Proyecto_Estadias.Controllers
 
         #endregion
 
-
         #region listado de permisos generales 
         [HttpGet]
         public ActionResult Paginacion(int? page, int pageSize = 5)
         { 
             int pageNumber = (page ?? 1); //Pagina por defecto 
             List<Permisos> resultado = permisosServices.PermisosAll()
-                .OrderBy(p => p.FechaGeneracion).ToList(); //Ordenamiento por fecha 
+                .OrderByDescending(p => p.FechaGeneracion).ToList(); //Ordenamiento por fecha 
             //Se aplica paginacon paginacion
             List<PermisosPdfVM> permisosPdfVM = Mapper.Map<List<PermisosPdfVM>>(resultado);
 
@@ -579,7 +566,9 @@ namespace Proyecto_Estadias.Controllers
                 AgregarCopia((PageSize.A4.Height / 2) - 36, (PageSize.A4.Height / 2) - 36);
 
                 doc.Close();
-                return File(ms.ToArray(), "application/pdf", $"AvisoPermiso_{empleado.Nombre}.pdf");
+                Response.AppendHeader("Content-Disposition", "inline; filename=AvisoPermiso_" + empleado.Nombre + ".pdf");
+                return File(ms.ToArray(), "application/pdf");
+
             }
         }
 
@@ -667,7 +656,7 @@ namespace Proyecto_Estadias.Controllers
             }
 
             var resultado = permisos
-                .OrderBy(p => p.FechaGeneracion)
+                .OrderByDescending(p => p.FechaGeneracion)
                 .ToList();
 
             var permisosPdfVM = Mapper.Map<List<PermisosPdfVM>>(resultado);
@@ -724,7 +713,7 @@ namespace Proyecto_Estadias.Controllers
             int pageNumber = page ?? 1;
             var permisos = permisosServices.ObtenerPermisosConDetalles()
                 .Where(p => p.IdEmpleado == idEmpleado)
-                .OrderBy(p => p.FechaGeneracion)
+                .OrderByDescending(p => p.FechaGeneracion)
                 .ToList();
             var vm = Mapper.Map<List<PermisosPdfVM>>(permisos);
             ViewBag.EmpleadoId = idEmpleado;

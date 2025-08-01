@@ -31,12 +31,14 @@ namespace Proyecto_Estadias.Controllers
             var departamentos = authServices.GetDepartamentos();
             ViewBag.Departamentos = new SelectList(departamentos, "Id", "NombreDep");
             ViewBag.Empresas = new SelectList(empresas, "Id", "Nombre");
-
+            
             var nuevoEmpleado = new Empleados
             {
                 IdEmpresa = idsub,
                 FechaIDeIngreso = DateTime.Now
+
             };
+            ViewBag.EmpresaId = nuevoEmpleado.IdEmpresa;
             return View(nuevoEmpleado);
         }
 
@@ -53,6 +55,7 @@ namespace Proyecto_Estadias.Controllers
             }
             var empresas = authServices.ObtenerSubEmpresas();
             var departamentos = authServices.GetDepartamentos();
+            ViewBag.EmpresaId = empleado.IdEmpresa;
             ViewBag.Departamentos = new SelectList(departamentos, "Id", "NombreDep");
             ViewBag.Empresas = new SelectList(empresas, "Id", "Nombre");
             return View(empleado);
@@ -77,7 +80,7 @@ namespace Proyecto_Estadias.Controllers
             var departamentos = authServices.GetDepartamentos();
             ViewBag.Departamentos = new SelectList(departamentos, "Id", "NombreDep");
             ViewBag.Empresas = new SelectList(empresas, "Id", "Nombre");
-
+            ViewBag.EmpresaId = empleado.IdEmpresa;
             return View(empleado);
         }
 
@@ -99,7 +102,7 @@ namespace Proyecto_Estadias.Controllers
             var departamentos = authServices.GetDepartamentos();
             ViewBag.Departamentos = new SelectList(departamentos, "Id", "NombreDep");
             ViewBag.Empresas = new SelectList(empresas, "Id", "Nombre");
-
+            ViewBag.EmpresaId = empleado.IdEmpresa;
             return View(empleado);
         }
 

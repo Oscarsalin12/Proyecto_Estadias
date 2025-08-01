@@ -82,6 +82,7 @@
                             <th>Empleado</th>
                             <th>Empresa</th>
                             <th>Motivo</th>
+                            <th>Fecha de Generacion</th>
                             <th>Inicio</th>
                             <th>Final</th>
                             <th>Estado</th>
@@ -95,6 +96,7 @@
                                 <td>@p.Empleados.Nombre</td>
                                 <td>@p.SubEmpresas.Nombre</td>
                                 <td>@p.MotivosAusencia.NombreMotivo</td>
+                                <td>@p.FechaGeneracion.ToShortDateString()</td>
                                 <td>@p.FechaInicio.ToString("dd/MM/yyyy")</td>
                                 <td>@p.FechaFinal.ToString("dd/MM/yyyy")</td>
                                 <td>

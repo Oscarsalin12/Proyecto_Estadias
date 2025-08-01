@@ -90,13 +90,13 @@
                     <div class="col-md-4">
                         <label>Nombre del empleado</label>
                         @Html.TextBox("nombre", Request["nombre"] ?? "", new { @class = "form-control", placeholder = "Buscar por nombre" })
-                    </div>     <div class="text-end">
-                        <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
-                        <a href="@Url.Action("PaginacionPorEmpresa", "Permisos", new { idEmpresa = ViewBag.EmpresaId })" class="btn btn-secondary btn-sm">Limpiar</a>
                     </div>
-                    }
                 </div>
-           
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
+                    <a href="@Url.Action("PaginacionPorEmpresa", "Permisos", new { idEmpresa = ViewBag.EmpresaId })" class="btn btn-secondary btn-sm">Limpiar</a>
+                </div>
+            }
 
             <hr />
 
