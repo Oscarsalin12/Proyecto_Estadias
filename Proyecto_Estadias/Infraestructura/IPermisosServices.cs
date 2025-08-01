@@ -19,6 +19,8 @@ namespace Proyecto_Estadias.Infraestructura
         PermisosPdfVM ObtenerPermisoPorId(int idPermiso);
         List<Permisos> ObtenerPermisosConDetalles();
         Tuple<Empleados, List<Permisos>> ObtenerPermisosPorEmpleados(int idEmpleado);
+        Tuple<Empleados, List<Permisos>> ObtenerPermisosPorEmpleadosA(int idEmpleado);
+        List<Permisos> ObtenerPermisosPorEmpresa(int idEmpresa);
         List<Permisos> PermisosAll();
         List<Permisos> PermisosPorEmpresa(int idEmpresa);
     }

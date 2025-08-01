@@ -107,6 +107,9 @@
         <a href="@Url.Action("SolicitarPermiso", "Permisos", new { idEmpleado = Model.Id })"
            class="btn-primary-custom">Solicitar Permiso</a>
 
+        <a href="@Url.Action("PermisosEmpleados", "Permisos", new { idEmpleado = Model.Id })"
+           class="btn-primary-custom">Permisos Solicitados</a>
+
         @* Botón de cerrar sesión *@
         <a href="@Url.Action("LogoutEmpleado", "Empleados")" class="btn-logout">Cerrar Sesión</a>
     </div>

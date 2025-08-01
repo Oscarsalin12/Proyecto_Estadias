@@ -361,6 +361,7 @@
     <Content Include="Views\Empleados\PerfilEmpleado.cshtml" />
     <Content Include="Views\Permisos\SolicitarPermiso.cshtml" />
     <Content Include="Views\Permisos\PermisosPendientes.cshtml" />
+    <Content Include="Views\Permisos\PermisosEmpleados.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

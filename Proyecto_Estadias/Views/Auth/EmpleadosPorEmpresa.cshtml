@@ -124,9 +124,6 @@
                 @Html.DropDownList("bus", new SelectList(departamentos, "Value", "Text", selectedDept),
                     "Todos", new { @class = "form-control" })
             </div>
-            <div class="col-sm-3">
-                <button type="submit" class="btn btn-primary">Filtrar</button>
-            </div>
         </div>
 
         <div class="form-group row mt-3">
@@ -134,11 +131,14 @@
             <div class="col-sm-5">
                 @Html.TextBox("busqueda", null, new { @class = "form-control", placeholder = "Nombre del empleado" })
             </div>
-            <div class="col-sm-3">
-                <input type="submit" value="Buscar" class="btn btn-outline-secondary" />
-            </div>
+        </div>
+
+        <div class="text-end mt-3">
+            <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
+            <a href="@Url.Action("ListaEmpleadosSubempresa", "Auth", new { area = "Auth", idSub = idSub })" class="btn btn-secondary btn-sm">Limpiar</a>
         </div>
     }
+
 
     <hr />
 

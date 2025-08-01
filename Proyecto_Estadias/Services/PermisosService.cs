@@ -42,10 +42,32 @@ namespace Proyecto_Estadias.Services
         #region motodo de permisos
         public Empleados ObtenerEmpleadoPorId(int id)
         {
-            return db.Empleados.Include("SubEmpresas").FirstOrDefault(e => e.Id == id);
+            var permiso = db.Permisos
+            .Include("SubEmpresas.Empresas") // Muy importante para cargar Empresa dentro de SubEmpresas
+            .Include("Empleados.Departamentos")
+            .Include("MotivosAusencia")
+            .Where(p => p.Estado == "Aprobado");
+            return db.Empleados.FirstOrDefault(e => e.Id == id);
+
         }
 
-  
+
+        public Tuple<Empleados, List<Permisos>> ObtenerPermisosPorEmpleadosA(int idEmpleado)
+        {
+            var empleado = db.Empleados
+                .Include("SubEmpresas.Empresas")
+                .Include("Departamentos")
+                .FirstOrDefault(e => e.Id == idEmpleado);
+
+            var permisosAprobados = db.Permisos
+                .Include("MotivosAusencia")
+                .Where(p => p.IdEmpleado == idEmpleado && p.Estado == "Aprobado")
+                .ToList();
+
+            return Tuple.Create(empleado, permisosAprobados);
+        }
+
+
         public bool CrearPermiso(PermisosVM model, out string error)
         {
             error = "";
@@ -242,6 +264,15 @@ namespace Proyecto_Estadias.Services
             return true;
         }
 
+        public List<Permisos> ObtenerPermisosPorEmpresa(int idEmpresa)
+        {
+            return db.Permisos
+                .Include("SubEmpresas.Empresas")
+                .Include("Empleados")
+                .Include("MotivosAusencia")
+                .Where(p => p.Estado == "Aprobado" && p.SubEmpresas.IdEmpresa_madre == idEmpresa)
+                .ToList();
+        }
 
     }
 }
