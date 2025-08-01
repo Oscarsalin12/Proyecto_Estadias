@@ -141,7 +141,14 @@
             </div>
 
             <div class="text-center">
-                @Html.ActionLink("📥 Generar Reporte General", "GenerarPDF", "Permisos", new { idEmpresa = ViewBag.EmpresaId }, new { @class = "btn btn-dark btn-sm" })
+                @Html.ActionLink("📥 Generar Reporte General", "GenerarPDF", "Permisos", new
+          {
+              idEmpresa = ViewBag.EmpresaId,
+              nombre = Request["nombre"],
+              departamento = Request["departamento"],
+              motivo = Request["motivo"]
+          }, new { @class = "btn btn-dark btn-sm", target = "_blank" })
+
             </div>
 
             <div class="pagination-container">

@@ -274,5 +274,27 @@ namespace Proyecto_Estadias.Services
                 .ToList();
         }
 
+        public List<Permisos> ObtenerPermisosPorEmpresaConFiltros(int idEmpresa, string nombre, int? departamento, int? motivo)
+        {
+            var query = db.Permisos
+                .Include(p => p.Empleados.Departamentos)
+                .Include(p => p.MotivosAusencia)
+                .Include(p => p.SubEmpresas.Empresas)
+                .Where(p => p.SubEmpresas.IdEmpresa_madre == idEmpresa && p.Estado == "Aprobado");
+
+            if (!string.IsNullOrEmpty(nombre))
+                query = query.Where(p => p.Empleados.Nombre.Contains(nombre));
+
+            if (departamento.HasValue && departamento != 0)
+                query = query.Where(p => p.Empleados.IdDepartamento == departamento.Value);
+
+            if (motivo.HasValue && motivo != 0)
+                query = query.Where(p => p.IdTipoPermiso == motivo.Value);
+
+            return query.ToList();
+        }
+
+
+
     }
 }

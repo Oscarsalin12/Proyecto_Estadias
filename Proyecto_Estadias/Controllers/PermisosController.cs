@@ -148,9 +148,9 @@ namespace Proyecto_Estadias.Controllers
         #endregion
 
         #region generar pdf
-        public FileResult GenerarPDF(int idEmpresa)
+        public FileResult GenerarPDF(int idEmpresa, string nombre = null, int? departamento = null, int? motivo = null)
         {
-            var permisos = permisosServices.ObtenerPermisosPorEmpresa(idEmpresa); // Solo aprobados
+            var permisos = permisosServices.ObtenerPermisosPorEmpresaConFiltros(idEmpresa, nombre, departamento, motivo); // Solo aprobados
             var empresa = permisos.FirstOrDefault()?.SubEmpresas?.Empresas;
 
             using (MemoryStream ms = new MemoryStream())
@@ -165,7 +165,7 @@ namespace Proyecto_Estadias.Controllers
                 var encabezadoFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.WHITE);
                 var celdaFont = FontFactory.GetFont(FontFactory.HELVETICA, 11, BaseColor.BLACK);
 
-                // Cabecera: Logo, Nombre, RFC, Dirección
+                // Cabecera con logo y datos de empresa
                 if (empresa?.Logo != null)
                 {
                     iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(empresa.Logo);
@@ -219,7 +219,7 @@ namespace Proyecto_Estadias.Controllers
 
                 foreach (var p in permisos)
                 {
-                    int diasLaborales = p.Empleados?.DiasLaboralesPorSemana ?? 5;
+                    int diasLaborales = p.Empleados?.DiasLaboralesPorSemana ?? 5; // Por defecto 5 si es null
                     int diasTomados = ContarDiasHabiles(p.FechaInicio, p.FechaFinal, diasLaborales);
                     totalDias += diasTomados;
 
@@ -251,12 +251,11 @@ namespace Proyecto_Estadias.Controllers
 
                 doc.Add(table);
                 doc.Close();
-                ViewBag.EmpresaId = idEmpresa;
                 Response.AppendHeader("Content-Disposition", "inline; filename=Reporte_Permisos_Empresa_" + (empresa?.Nombre ?? "Empresa") + ".pdf");
                 return File(ms.ToArray(), "application/pdf");
-
             }
         }
+
 
 
         [HttpGet]

@@ -21,6 +21,7 @@ namespace Proyecto_Estadias.Infraestructura
         Tuple<Empleados, List<Permisos>> ObtenerPermisosPorEmpleados(int idEmpleado);
         Tuple<Empleados, List<Permisos>> ObtenerPermisosPorEmpleadosA(int idEmpleado);
         List<Permisos> ObtenerPermisosPorEmpresa(int idEmpresa);
+        List<Permisos> ObtenerPermisosPorEmpresaConFiltros(int idEmpresa, string nombre, int? departamento, int? motivo);
         List<Permisos> PermisosAll();
         List<Permisos> PermisosPorEmpresa(int idEmpresa);
     }
