@@ -32,6 +32,8 @@ namespace Proyecto_Estadias.Models
         public int IdDepartamento { get; set; }
         public int DiasLaboralesPorSemana { get; set; }
         public string UsuarioEmpleado { get; set; }
+        public int HorasPorDia { get; set; }
+        public int HorasRestantesDelDia { get; set; }
     
         public virtual Departamentos Departamentos { get; set; }
         public virtual SubEmpresas SubEmpresas { get; set; }

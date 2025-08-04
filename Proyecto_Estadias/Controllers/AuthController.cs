@@ -208,6 +208,7 @@ namespace Proyecto_Estadias.Controllers
                 MesesTrabajados = e.MesesTrabajados,
                 DiasLaboralesPorSemana = e.DiasLaboralesPorSemana,
                 intDiasVacaciones = e.intDiasVacaciones,
+                HorasRestantesDelDia = e.HorasRestantesDelDia,
                 DiasDisponibles = e.DiasDisponibles,
                 IdEmpresa = e.IdEmpresa,
                 IdDepartamento = e.IdDepartamento,

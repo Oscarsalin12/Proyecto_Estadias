@@ -54,6 +54,10 @@
         margin: 0;
         font-size: 16px;
     }
+
+    #horasField {
+        display: none;
+    }
 </style>
 
 <div class="permiso-container">
@@ -65,12 +69,11 @@
     {
         @Html.AntiForgeryToken()
 
-<div class="form-group mt-3">
-    <p class="form-control-plaintext"><strong>@Model.NombreEmpleado</strong></p>
-
-    @Html.HiddenFor(m => m.IdEmpleado)
-    @Html.ValidationMessageFor(m => m.IdEmpleado, "", new { @class = "text-danger" })
-</div>
+        <div class="form-group mt-3">
+            <p class="form-control-plaintext"><strong>@Model.NombreEmpleado</strong></p>
+            @Html.HiddenFor(m => m.IdEmpleado)
+            @Html.ValidationMessageFor(m => m.IdEmpleado, "", new { @class = "text-danger" })
+        </div>
 
         <div id="datosEmpleado" class="mb-3">
             @Html.HiddenFor(m => m.IdEmpresa)
@@ -102,15 +105,21 @@
             @Html.ValidationMessageFor(m => m.FechaFinal, "", new { @class = "text-danger" })
         </div>
 
+        <!-- Campo oculto que solo aparece para ciertos tipos de permiso -->
+        <div class="form-group" id="horasField">
+            <label for="CantidadHorasSolicitadas">Cantidad de horas solicitadas</label>
+            <input type="number" class="form-control" id="CantidadHorasSolicitadas" name="CantidadHorasSolicitadas" min="1" />
+        </div>
+
         <div class="form-group text-center">
             <button type="submit" class="btn btn-primary">Guardar Permiso</button>
             @Html.ActionLink(
-    "Ver empleados",
-    "ListaEmpleadosSubempresa",
-    "Auth",
-    new { idSub = ViewBag.EmpresaId },
-    new { @class = "btn btn-primary" }
-)
+                "Ver empleados",
+                "ListaEmpleadosSubempresa",
+                "Auth",
+                new { idSub = ViewBag.EmpresaId },
+                new { @class = "btn btn-primary" }
+            )
         </div>
     }
 </div>
@@ -122,37 +131,47 @@
 
     <script>
         $(function () {
-            if (!$('#busquedaEmpleado').prop('readonly')) {
-                $('#busquedaEmpleado').autocomplete({
-                    source: function (request, response) {
-                        $.ajax({
-                            url: '@Url.Action("BuscarEmpleado", "Permisos")',
-                            data: { filtro: request.term },
-                            success: function (data) {
-                                if (data) {
-                                    response([{
-                                        label: data.nombre + " (" + data.numEmpleado + ")",
-                                        value: data.nombre,
-                                        id: data.id,
-                                        empresa: data.empresa,
-                                        vacaciones: data.vacaciones,
-                                        empresaId: data.empresaId
-                                    }]);
-                                } else {
-                                    response([]);
-                                }
+            const idTipoVacacionesPorHoras = 3; // Reemplaza con el ID real de tu tipo de permiso "por horas"
+
+            $('#IdTipoPermiso').on('change', function () {
+                const selected = parseInt($(this).val());
+                if (selected === idTipoVacacionesPorHoras) {
+                    $('#horasField').slideDown();
+                } else {
+                    $('#horasField').slideUp();
+                    $('#CantidadHorasSolicitadas').val('');
+                }
+            });
+
+            $('#busquedaEmpleado').autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("BuscarEmpleado", "Permisos")',
+                        data: { filtro: request.term },
+                        success: function (data) {
+                            if (data) {
+                                response([{
+                                    label: data.nombre + " (" + data.numEmpleado + ")",
+                                    value: data.nombre,
+                                    id: data.id,
+                                    empresa: data.empresa,
+                                    vacaciones: data.vacaciones,
+                                    empresaId: data.empresaId
+                                }]);
+                            } else {
+                                response([]);
                             }
-                        });
-                    },
-                    minLength: 2,
-                    select: function (event, ui) {
-                        $('#IdEmpleado').val(ui.item.id);
-                        $('#empresa').text(ui.item.empresa);
-                        $('#vacaciones').text(ui.item.vacaciones);
-                        $('#IdEmpresa').val(ui.item.empresaId);
-                    }
-                });
-            }
+                        }
+                    });
+                },
+                minLength: 2,
+                select: function (event, ui) {
+                    $('#IdEmpleado').val(ui.item.id);
+                    $('#empresa').text(ui.item.empresa);
+                    $('#vacaciones').text(ui.item.vacaciones);
+                    $('#IdEmpresa').val(ui.item.empresaId);
+                }
+            });
         });
     </script>
 }

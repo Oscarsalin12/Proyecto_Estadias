@@ -21,7 +21,8 @@ namespace Proyecto_Estadias.ViewModels
         public int DiasDisponibles { get; set; }
         public int IdDepartamento { get; set; }
         public int DiasLaboralesPorSemana { get; set; } // 5 o 6
-
+        public int HorasPorDia { get; set; }
+        public int HorasRestantesDelDia { get; set; }
         public string NombreEmpresa { get; set; }
         public string NombreDepartamento { get; set; }
         public List<DepartamentosVM> DepatamentosVM { get; set; } 

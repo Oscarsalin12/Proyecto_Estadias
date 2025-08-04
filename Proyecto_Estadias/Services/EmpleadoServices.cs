@@ -38,16 +38,23 @@ namespace Proyecto_Estadias.Services
 
             int diasVacaciones = CalcularDiasVacaciones(anios);
 
-            // Asignar valores calculados al objeto
             emp.AniosTrabajados = anios;
             emp.MesesTrabajados = meses;
             emp.intDiasVacaciones = diasVacaciones;
             emp.DiasDisponibles = diasVacaciones;
 
-            // Insertar en la base de datos
+            // ✅ Asignar horas por día según la jornada
+            if (emp.DiasLaboralesPorSemana == 5)
+                emp.HorasPorDia = 9;
+            else if (emp.DiasLaboralesPorSemana == 6)
+                emp.HorasPorDia = 8;
+            else
+                emp.HorasPorDia = 0; // Valor por defecto por si acaso
+
             db.Empleados.Add(emp);
             db.SaveChanges();
         }
+
 
         private int CalcularDiasVacaciones(int anios)
         {
