@@ -98,7 +98,6 @@ namespace Proyecto_Estadias.Services
         #endregion
 
         #region metodo para calculo de vaciones 
-
         public void ActualizarVacacionesYPermisos()
         {
             var empleados = db.Empleados.ToList();
@@ -110,37 +109,66 @@ namespace Proyecto_Estadias.Services
 
                 int anios = hoy.Year - fechaIngreso.Year;
                 int meses = hoy.Month - fechaIngreso.Month;
-
-                if (hoy.Day < fechaIngreso.Day)
-                    meses--;
-
-                if (meses < 0)
-                {
-                    anios--;
-                    meses += 12;
-                }
+                if (hoy.Day < fechaIngreso.Day) meses--;
+                if (meses < 0) { anios--; meses += 12; }
 
                 int diasBase = CalcularDiasVacaciones(anios);
-
                 int diasLaborales = (emp.DiasLaboralesPorSemana >= 5 && emp.DiasLaboralesPorSemana <= 6)
                                     ? emp.DiasLaboralesPorSemana : 5;
+                int horasPorDia = emp.HorasPorDia > 0 ? emp.HorasPorDia : 8;
 
-                var permisos = db.Permisos.Where(p => p.IdEmpleado == emp.Id && p.Estado ==  "Aprobado").ToList();
+                var permisos = db.Permisos
+                                 .Where(p => p.IdEmpleado == emp.Id && p.Estado == "Aprobado")
+                                 .OrderBy(p => p.FechaInicio)
+                                 .ToList();
 
-                int diasPermisoTomados = permisos.Sum(p =>
-                    ContarDiasHabiles(p.FechaInicio, p.FechaFinal, diasLaborales)
-                );
+                int diasTomados = 0;
+                int horasRestantes = horasPorDia;
 
-                int diasDisponibles = Math.Max(diasBase - diasPermisoTomados, 0);
+                foreach (var permiso in permisos)
+                {
+                    bool esPorTiempo = permiso.IdTipoPermiso == 3; // Asegúrate que 3 es el ID correcto para "vacaciones por tiempo"
+
+                    if (esPorTiempo)
+                    {
+                        int horasSolicitadas = permiso.CantidadHorasSolicitadas ;
+
+                        if (horasSolicitadas <= 0)
+                            continue;
+
+                        if (horasRestantes < horasSolicitadas)
+                        {
+                            // Descontar un día y reiniciar horas del día
+                            diasTomados++;
+                            horasRestantes = horasPorDia;
+                        }
+
+                        horasRestantes -= horasSolicitadas;
+
+                        // Asegurar que no quede en negativo
+                        if (horasRestantes < 0)
+                            horasRestantes = 0;
+                    }
+                    else
+                    {
+                        // Permiso por días
+                        diasTomados += ContarDiasHabiles(permiso.FechaInicio, permiso.FechaFinal, diasLaborales);
+                    }
+                }
+
+                int diasDisponibles = Math.Max(diasBase - diasTomados, 0);
 
                 emp.AniosTrabajados = anios;
                 emp.MesesTrabajados = meses;
                 emp.intDiasVacaciones = diasBase;
                 emp.DiasDisponibles = diasDisponibles;
+                emp.HorasRestantesDelDia = horasRestantes;
             }
 
             db.SaveChanges();
         }
+
+
 
 
 
@@ -156,7 +184,7 @@ namespace Proyecto_Estadias.Services
                         total++;
                 }
                 else
-                {
+                    {
                     if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
                         total++;
                 }

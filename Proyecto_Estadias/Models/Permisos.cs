@@ -23,6 +23,7 @@ namespace Proyecto_Estadias.Models
         public System.DateTime FechaFinal { get; set; }
         public int DiasDisponibles { get; set; }
         public string Estado { get; set; }
+        public int CantidadHorasSolicitadas { get; set; }
     
         public virtual Empleados Empleados { get; set; }
         public virtual MotivosAusencia MotivosAusencia { get; set; }

@@ -48,6 +48,7 @@ namespace Proyecto_Estadias.Controllers
                 model.NombreEmpleado = empleado.Nombre;
                 model.EmpresaNombre = empleado.SubEmpresas.Nombre;
                 model.VacacionesDisponibles = empleado.DiasDisponibles;
+                model.HorasDisponibles = empleado.HorasRestantesDelDia;
             }
             ViewBag.EmpresaId = model.IdEmpresa;
             return View(model);
@@ -94,6 +95,7 @@ namespace Proyecto_Estadias.Controllers
                 model.NombreEmpleado = empleado.Nombre;
                 model.EmpresaNombre = empleado.SubEmpresas.Nombre;
                 model.VacacionesDisponibles = empleado.DiasDisponibles;
+                model.HorasDisponibles = empleado.HorasRestantesDelDia;
             }
             return View(model);
         }

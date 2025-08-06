@@ -28,6 +28,7 @@ namespace Proyecto_Estadias.ViewModels
         public int VacacionesDisponibles { get; set; }
         public int DiasLaboralesSemana { get; set; }
         public int? CantidadHorasSolicitadas { get; set; }
+        public int HorasDisponibles { get; set; }
         public List<Empresas> Empresas { get; set; }
        
         public List<Empleados> Empleados { get; set; }

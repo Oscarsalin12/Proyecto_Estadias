@@ -86,11 +86,8 @@ namespace Proyecto_Estadias.Services
                 return false;
             }
 
-            // Determinar si el permiso es por tiempo (en horas)
-            bool esVacacionesPorTiempo = tipoPermiso.NombreMotivo.Trim().ToLower() == "vacaciones por tiempo";
+            bool esVacacionesPorTiempo = tipoPermiso.NombreMotivo.Trim() == "Vacaciones por tiempo";
 
-            // ==============================
-            // 🕒 PERMISOS POR HORAS
             if (esVacacionesPorTiempo)
             {
                 int horasSolicitadas = model.CantidadHorasSolicitadas ?? 0;
@@ -102,12 +99,11 @@ namespace Proyecto_Estadias.Services
 
                 int horasDisponibles = empleado.HorasRestantesDelDia;
 
-                // Si no tiene horas disponibles, intentamos convertir un día en horas
+                // Si las horas no alcanzan, intentamos convertir un día en horas
                 if (horasDisponibles < horasSolicitadas)
                 {
                     int horasFaltantes = horasSolicitadas - horasDisponibles;
 
-                    // Verificamos si tiene al menos un día para convertir
                     if (empleado.DiasDisponibles > 0)
                     {
                         empleado.DiasDisponibles -= 1;
@@ -115,22 +111,19 @@ namespace Proyecto_Estadias.Services
                     }
                     else
                     {
-                        error = "El empleado no tiene suficientes horas ni días disponibles.";
+                        error = "No tiene días disponibles para convertir en horas.";
                         return false;
                     }
 
-                    // Si aún no alcanza después de convertir un día
                     if (horasDisponibles < horasSolicitadas)
                     {
-                        error = "Aún después de convertir un día, las horas no son suficientes.";
+                        error = "Aún después de convertir un día, no tiene horas suficientes.";
                         return false;
                     }
                 }
 
-                // Ahora ya tenemos suficientes horas para descontar
                 empleado.HorasRestantesDelDia = horasDisponibles - horasSolicitadas;
 
-                // Creamos el permiso
                 var permiso = new Permisos
                 {
                     IdEmpleado = model.IdEmpleado,
@@ -140,18 +133,18 @@ namespace Proyecto_Estadias.Services
                     FechaInicio = model.FechaInicio,
                     FechaFinal = model.FechaFinal,
                     DiasDisponibles = empleado.DiasDisponibles,
+                    CantidadHorasSolicitadas = model.CantidadHorasSolicitadas.Value,
                     Estado = "Aprobado"
                 };
 
                 db.Permisos.Add(permiso);
+                db.Entry(empleado).State = EntityState.Modified; // 👈 Importante
                 db.SaveChanges();
                 return true;
             }
 
 
-            // ==============================
-            // 📆 PERMISOS NORMALES (por días hábiles)
-            // ==============================
+            // CASO NORMAL: permisos por días
             int diasSolicitados = ContarDiasHabiles(model.FechaInicio, model.FechaFinal, empleado.DiasLaboralesPorSemana);
             if (diasSolicitados <= 0)
             {
@@ -283,6 +276,65 @@ namespace Proyecto_Estadias.Services
                 return false;
             }
 
+            var tipoPermiso = db.MotivosAusencia.FirstOrDefault(m => m.Id == model.IdTipoPermiso);
+            if (tipoPermiso == null)
+            {
+                error = "Motivo de permiso no encontrado";
+                return false;
+            }
+
+            bool esVacacionesPorTiempo = tipoPermiso.NombreMotivo.Trim() == "Vacaciones por tiempo";
+
+            if (esVacacionesPorTiempo)
+            {
+                int horasSolicitadas = model.CantidadHorasSolicitadas ?? 0;
+                if (horasSolicitadas <= 0)
+                {
+                    error = "Debe ingresar la cantidad de horas a descontar.";
+                    return false;
+                }
+
+                int horasDisponibles = empleado.HorasRestantesDelDia;
+
+                // Simulamos conversión solo para validar la solicitud
+                if (horasDisponibles < horasSolicitadas)
+                {
+                    if (empleado.DiasDisponibles > 0)
+                    {
+                        horasDisponibles += empleado.HorasPorDia; // convertimos 1 día
+                    }
+                    else
+                    {
+                        error = "No tiene días disponibles para convertir en horas.";
+                        return false;
+                    }
+
+                    if (horasDisponibles < horasSolicitadas)
+                    {
+                        error = "Aún después de convertir un día, no tiene horas suficientes.";
+                        return false;
+                    }
+                }
+
+                var permiso = new Permisos
+                {
+                    IdEmpleado = model.IdEmpleado,
+                    IdTipoPermiso = model.IdTipoPermiso,
+                    IdEmpresa = model.IdEmpresa,
+                    FechaGeneracion = DateTime.Now,
+                    FechaInicio = model.FechaInicio,
+                    FechaFinal = model.FechaFinal,
+                    DiasDisponibles = empleado.DiasDisponibles, // aún no descontado
+                    CantidadHorasSolicitadas = model.CantidadHorasSolicitadas.Value,
+                    Estado = "Pendiente"
+                };
+
+                db.Permisos.Add(permiso);
+                db.SaveChanges();
+                return true;
+            }
+
+            // CASO NORMAL: permisos por días
             int diasSolicitados = ContarDiasHabiles(model.FechaInicio, model.FechaFinal, empleado.DiasLaboralesPorSemana);
             if (diasSolicitados <= 0)
             {
@@ -290,8 +342,13 @@ namespace Proyecto_Estadias.Services
                 return false;
             }
 
-            // No descontamos días todavía, hasta que se apruebe
-            var permiso = new Permisos
+            if (empleado.DiasDisponibles < diasSolicitados)
+            {
+                error = "El empleado no tiene suficientes días disponibles";
+                return false;
+            }
+
+            var permisoNormal = new Permisos
             {
                 IdEmpleado = model.IdEmpleado,
                 IdTipoPermiso = model.IdTipoPermiso,
@@ -299,14 +356,15 @@ namespace Proyecto_Estadias.Services
                 FechaGeneracion = DateTime.Now,
                 FechaInicio = model.FechaInicio,
                 FechaFinal = model.FechaFinal,
-                DiasDisponibles = empleado.DiasDisponibles, // todavía sin descontar
+                DiasDisponibles = empleado.DiasDisponibles,
                 Estado = "Pendiente"
             };
 
-            db.Permisos.Add(permiso);
+            db.Permisos.Add(permisoNormal);
             db.SaveChanges();
             return true;
         }
+
 
         public bool CambiarEstadoPermiso(int idPermiso, string nuevoEstado, out string error)
         {
