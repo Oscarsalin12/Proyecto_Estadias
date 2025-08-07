@@ -11,6 +11,7 @@
     var departamentos = ViewBag.Departamentos as SelectList;
     var selectedDept = Request.QueryString["bus"];
 }
+
 <link href="~/Content/bootstrap.css" rel="stylesheet" />
 <style>
     .content-box {
@@ -18,8 +19,9 @@
         padding: 30px;
         margin: 40px auto;
         border-radius: 15px;
-        max-width: 1100px;
+        max-width: 1400px; /* Ajuste aquí */
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        overflow-x: auto; /* Importante para scroll si se excede el ancho */
     }
 
     .content-header {
@@ -76,7 +78,7 @@
     }
 
     table thead {
-        background-color: #343a40; /* Gris claro */
+        background-color: #343a40;
         color: white;
         margin-top: 15px;
         border: none;
@@ -105,6 +107,11 @@
             color: white;
             border-color: #007bff;
         }
+
+    .table-responsive {
+        overflow-x: auto;
+        width: 100%;
+    }
 </style>
 
 @Html.ActionLink("Ver Filiales", "SeleccionarSubempresa", "Auth", new { id = idSub }, new { @class = "btn btn-gradient" })
@@ -139,7 +146,6 @@
         </div>
     }
 
-
     <hr />
 
     @if (!Model.Any())
@@ -152,7 +158,7 @@
     else
     {
         <div class="table-responsive">
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered table-striped w-100">
                 <thead>
                     <tr>
                         <th>Num. Empleado</th>
@@ -162,7 +168,7 @@
                         <th>Meses</th>
                         <th>Días que labora</th>
                         <th>Vacaciones</th>
-                        <th>horas disponibles</th>
+                        <th>Horas disponibles</th>
                         <th>Disponibles</th>
                         <th>Departamento</th>
                         <th>Permisos</th>
@@ -197,7 +203,7 @@
 
         <div class="text-center mt-4">
             @Html.ActionLink("Reportes", "PaginacionPorEmpresa", "Permisos", new { area = "Empleado", idEmpresa = Model.First().IdEmpresa }, new { @class = "btn btn-gradient" })
-            @Html.ActionLink("Solucitudes pendientes", "PermisosPendientes", "Permisos", new { area = "Empleado", idEmpresa = Model.First().IdEmpresa }, new { @class = "btn btn-gradient" })
+            @Html.ActionLink("Solicitudes pendientes", "PermisosPendientes", "Permisos", new { area = "Empleado", idEmpresa = Model.First().IdEmpresa }, new { @class = "btn btn-gradient" })
             @Html.ActionLink("Añadir empleados", "InsertarEmpleado", "Empleados", new { area = "Empleado", idSub = idSub }, new { @class = "btn btn-gradient ml-2" })
         </div>
 
@@ -219,46 +225,40 @@
                     LinkToNextPageFormat = "»",
                     UlElementClasses = new[] { "pagination" },
                     LiElementClasses = new[] { "page-item" },
-
                 }
             )
         </div>
     }
 </div>
 
-@section Scripts{
+@section Scripts {
     <script>
         $(function () {
+            @if (TempData["PermisoCreado"] != null)
+            {
+                @:toastr.success('Permiso creado exitosamente', 'Éxito');
+            }
 
-    @if (TempData["PermisoCreado"] != null)
-     {
-        @:toastr.success('permiso Creado exitosamente', 'Éxito');
-     }
+            @if (TempData["EmpleadoCreado"] != null)
+            {
+                TempData.Keep("EmpleadoCreado");
+                @:toastr.success('El empleado se agregó correctamente', 'Éxito');
+                TempData.Remove("EmpleadoCreado");
+            }
 
+            @if (TempData["EmpleadoEditado"] != null)
+            {
+                TempData.Keep("EmpleadoEditado");
+                @:toastr.success('Se actualizó correctamente', 'Éxito');
+                TempData.Remove("EmpleadoEditado");
+            }
 
-    @if (TempData["EmpleadoCreado"] != null)
-     {
-       TempData.Keep("EmpleadoCreado");
-       @:toastr.success('el empleado se agrego correctamente', 'Exito');
-       TempData.Remove("EmpleadoCreado");
-     }
-
-    @if (TempData["EmpleadoEditado"] != null)
-     {
-       TempData.Keep("EmpleadoEditado");
-       @:toastr.success('Se actualizo correctamente', 'Exito');
-       TempData.Remove("EmpleadoEditado");
-     }
-  @if (TempData["ErrorEmpleado"] != null)
-   {
-     TempData.Keep("ErrorEmpleado");
-     @:toastr.error('Error al Actualizar a empleado', 'Error');
-     TempData.Remove("ErrorEmpleado");
-   }
-    });
-
+            @if (TempData["ErrorEmpleado"] != null)
+            {
+                TempData.Keep("ErrorEmpleado");
+                @:toastr.error('Error al actualizar al empleado', 'Error');
+                TempData.Remove("ErrorEmpleado");
+            }
+        });
     </script>
-
-
-
-}  
+}

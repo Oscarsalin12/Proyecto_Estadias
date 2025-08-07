@@ -24,6 +24,7 @@ namespace Proyecto_Estadias.Models
         public int DiasDisponibles { get; set; }
         public string Estado { get; set; }
         public int CantidadHorasSolicitadas { get; set; }
+        public int HorasDisponibles { get; set; }
     
         public virtual Empleados Empleados { get; set; }
         public virtual MotivosAusencia MotivosAusencia { get; set; }

@@ -134,6 +134,7 @@ namespace Proyecto_Estadias.Services
                     FechaFinal = model.FechaFinal,
                     DiasDisponibles = empleado.DiasDisponibles,
                     CantidadHorasSolicitadas = model.CantidadHorasSolicitadas.Value,
+                    HorasDisponibles = empleado.HorasRestantesDelDia,
                     Estado = "Aprobado"
                 };
 
@@ -167,6 +168,7 @@ namespace Proyecto_Estadias.Services
                 FechaInicio = model.FechaInicio,
                 FechaFinal = model.FechaFinal,
                 DiasDisponibles = empleado.DiasDisponibles - diasSolicitados,
+
                 Estado = "Aprobado"
             };
 
@@ -245,9 +247,11 @@ namespace Proyecto_Estadias.Services
                 Empleados = permiso.Empleados,
                 SubEmpresas = permiso.SubEmpresas,
                 MotivosAusencia = permiso.MotivosAusencia,
-                DiasDisponibles = permiso.DiasDisponibles
-                
-    };
+                DiasDisponibles = permiso.DiasDisponibles,
+                CantidadHorasSolicitadas = permiso.CantidadHorasSolicitadas,
+                HorasDisponibles = permiso.HorasDisponibles,
+
+            };
 
             return result;
         }
@@ -326,6 +330,7 @@ namespace Proyecto_Estadias.Services
                     FechaFinal = model.FechaFinal,
                     DiasDisponibles = empleado.DiasDisponibles, // aún no descontado
                     CantidadHorasSolicitadas = model.CantidadHorasSolicitadas.Value,
+                    HorasDisponibles = empleado.HorasRestantesDelDia, // aún no descontado
                     Estado = "Pendiente"
                 };
 

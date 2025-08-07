@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Proyecto_Estadias.ViewModels
 {
-    public class PermisosPdfVM
+    public class PermisosPdfVM                                                          
     {
         public int Id { get; set; }
         public int IdEmpleado { get; set; }
@@ -23,6 +23,8 @@ namespace Proyecto_Estadias.ViewModels
         public MotivosAusencia MotivosAusencia { get; set; }
         public int DiasLaboralesSemana { get; set; }
         public string Estado { get; set; }
+        public int? CantidadHorasSolicitadas { get; set; }
+        public int? HorasDisponibles { get; set; }
         //public List<SubEmpresasVM> SubEmpresasVM { get; set; }
         //public List<EmpleadosVM> EmpleadosVM { get; set; }
         //public List<MotivosAusenciaVM> MotivosAusenciaVM { get; set; }

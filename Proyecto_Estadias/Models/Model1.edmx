@@ -64,6 +64,7 @@
           <Property Name="DiasDisponibles" Type="int" Nullable="false" />
           <Property Name="Estado" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="CantidadHorasSolicitadas" Type="int" Nullable="false" />
+          <Property Name="HorasDisponibles" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -329,6 +330,7 @@
           <NavigationProperty Name="MotivosAusencia" Relationship="Self.FK_Permisos_MotivosAusencia" FromRole="Permisos" ToRole="MotivosAusencia" />
           <NavigationProperty Name="SubEmpresas" Relationship="Self.FK_Permisos_SubEmpresas" FromRole="Permisos" ToRole="SubEmpresas" />
           <Property Name="CantidadHorasSolicitadas" Type="Int32" Nullable="false" />
+          <Property Name="HorasDisponibles" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -587,6 +589,7 @@
           <EntitySetMapping Name="Permisos">
             <EntityTypeMapping TypeName="Vacaciones_BDModel.Permisos">
               <MappingFragment StoreEntitySet="Permisos">
+                <ScalarProperty Name="HorasDisponibles" ColumnName="HorasDisponibles" />
                 <ScalarProperty Name="CantidadHorasSolicitadas" ColumnName="CantidadHorasSolicitadas" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="IdEmpleado" ColumnName="IdEmpleado" />
