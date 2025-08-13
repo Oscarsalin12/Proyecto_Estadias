@@ -10,6 +10,7 @@ namespace Proyecto_Estadias.Infraestructura
     public interface IAuthServices
     {
         bool AsignarRolEmpresa(int idUsuario, int idRol, int idEmpresa);
+        bool CambiarContrasenia(string nombreUsuario, string viejaContrasenia, string nuevaContrasenia);
         List<Empresas> GetAllEmpresas();
         List<Roles> GetAllRoles();
         List<Departamentos> GetDepartamentos();

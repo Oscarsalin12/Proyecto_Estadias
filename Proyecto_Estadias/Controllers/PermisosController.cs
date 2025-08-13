@@ -603,7 +603,7 @@ namespace Proyecto_Estadias.Controllers
                     firmas.AddCell(CreateSignatureCell("INTERESADO"));
                     contenido.AddCell(new PdfPCell(firmas) { Border = Rectangle.NO_BORDER, PaddingTop = 10 });
 
-                    Paragraph footer = new Paragraph($"Documento generado automáticamente - {empresa} | RFC: {rfc}", normalFont)
+                    Paragraph footer = new Paragraph($"Documento Elaborado para RH", normalFont)
                     {
                         Alignment = Element.ALIGN_CENTER,
                         SpacingBefore = 5f

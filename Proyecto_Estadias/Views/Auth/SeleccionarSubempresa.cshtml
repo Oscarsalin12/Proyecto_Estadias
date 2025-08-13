@@ -7,9 +7,12 @@
 <div class="container subempresa-container">
     <h2 class="subempresa-header">@ViewBag.EmpresaMadre - Subempresas</h2>
 
-    <a href="@Url.Action("InsertarSubEmpresa", "Empresas")" class="btn btn-gradient btn-nueva-subempresa">
+    <a href="@Url.Action("InsertarSubEmpresa", "Empresas", new { idEmpresaMadre = ViewBag.EmpresaId })"
+       class="btn btn-gradient btn-nueva-subempresa mb-3">
         + Registrar Subempresa
     </a>
+
+
 
     <div class="row">
         @foreach (var sub in Model)

@@ -1,4 +1,5 @@
-﻿using Proyecto_Estadias.Filters;
+﻿
+using Proyecto_Estadias.Filters;
 using Proyecto_Estadias.Infraestructura;
 using Proyecto_Estadias.Models;
 using Proyecto_Estadias.ViewModels;
@@ -305,7 +306,24 @@ namespace Proyecto_Estadias.Services
               
                 ?? "Nombre no encontrado";
         }
-
+        public bool CambiarContrasenia(string nombreUsuario,string viejaContrasenia, string nuevaContrasenia)
+        {
+            bool respuesta = false; // Variable booleana inicializada en falso            
+            Usuarios usuario = db.Usuarios.FirstOrDefault(u => u.Usuario == nombreUsuario && u.Contrasenia == viejaContrasenia);
+            var transaccion = db.Database.BeginTransaction(); // Inicia transaccion para base de datos
+            if(usuario != null)
+            {
+                usuario.Contrasenia = nuevaContrasenia; // Asigna la nueva contraseña al usuario
+                this.db.SaveChanges(); // Guarda los cambios en la base de datos
+                respuesta = true; // Cambia la respuesta a verdadero
+                transaccion.Commit();
+            }
+            else
+            {
+               transaccion.Rollback(); // Si no se encuentra el usuario, revierte la transacción
+            }
+            return respuesta;
+        }
 
     }
 }

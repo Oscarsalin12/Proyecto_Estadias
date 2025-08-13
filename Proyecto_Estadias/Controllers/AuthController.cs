@@ -270,9 +270,38 @@ namespace Proyecto_Estadias.Controllers
         }
         #endregion
 
+        [HttpGet]
+        [Authorize()]
+        public ActionResult CambiarContrasena()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            return RedirectToAction("Login");
+        }
+
+        [HttpPost]
+        [Authorize()]
+        public ActionResult CambiarContrasena(string viejaContrasenia, string nuevaContrasenia)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (!viejaContrasenia.Equals(nuevaContrasenia))
+                {
+                    if (authServices.CambiarContrasenia(User.Identity.Name, viejaContrasenia, nuevaContrasenia))
+                    {
+                        TempData["ContrasenaCambiada"] = true;
+                        return RedirectToAction("Login");
+                    }
+                return View();
+                }
+            }
+            return View();
+         }
 
 
-    }
+     }
 }
     
 

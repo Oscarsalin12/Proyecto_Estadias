@@ -1,4 +1,5 @@
-﻿using Proyecto_Estadias.Infraestructura;
+﻿using Org.BouncyCastle.Crypto;
+using Proyecto_Estadias.Infraestructura;
 using Proyecto_Estadias.Models;
 using Proyecto_Estadias.Services;
 using System;
@@ -36,11 +37,21 @@ namespace Proyecto_Estadias.Controllers
         }
 
         [HttpGet]
-        public ActionResult InsertarSubEmpresa()
+        public ActionResult InsertarSubEmpresa(int? idEmpresaMadre)
         {
-            ViewBag.Empresas = new SelectList(authServices.GetAllEmpresas(),"Id","Nombre");
-            return View();
+            ViewBag.Empresas = new SelectList(authServices.GetAllEmpresas(), "Id", "Nombre", idEmpresaMadre);
+           
+            var model = new SubEmpresas();
+
+            if (idEmpresaMadre.HasValue)
+            {
+                model.IdEmpresa_madre = idEmpresaMadre.Value;
+              
+            }
+            ViewBag.IdSub = idEmpresaMadre;
+            return View(model);
         }
+
 
         [HttpPost]
         public ActionResult InsertarSubEmpresa(SubEmpresas subEmpresas, HttpPostedFileBase archivoLogo)
