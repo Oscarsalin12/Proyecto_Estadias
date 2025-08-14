@@ -300,7 +300,34 @@ namespace Proyecto_Estadias.Controllers
             return View();
          }
 
+        [HttpGet]
+        [Authorize(Roles = "AdministadorGeneral")]
+        public ActionResult CambiarContraseniaU()
+        { 
+              if (User.Identity.IsAuthenticated)
+            {
+                return View();
+    }
+            return RedirectToAction("Login");
+}
 
+[HttpPost]
+        [Authorize(Roles = "AdministadorGeneral")]
+        public ActionResult CambiarContraseniaU(string nombreUsuario, string viejaContrasenia, string nuevaContrasenia)
+        {
+         
+                if (!viejaContrasenia.Equals(nuevaContrasenia))
+                {
+                    if (authServices.CambiarContrasenia(nombreUsuario, viejaContrasenia, nuevaContrasenia))
+                    {
+                        TempData["ContrasenaCambiada"] = true;
+                        return RedirectToAction("Perfil");
+                    }
+                }
+                return View();
+            
+            
+        }
      }
 }
     

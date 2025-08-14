@@ -362,6 +362,7 @@
     <Content Include="Views\Permisos\PermisosPendientes.cshtml" />
     <Content Include="Views\Permisos\PermisosEmpleados.cshtml" />
     <Content Include="Views\Auth\CambiarContrasena.cshtml" />
+    <Content Include="Views\Auth\CambiarContraseniaU.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

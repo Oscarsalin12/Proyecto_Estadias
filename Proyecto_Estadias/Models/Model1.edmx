@@ -83,6 +83,7 @@
           <Property Name="Rfc" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Direccion" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="Logo" Type="varbinary(max)" Nullable="false" />
+          <Property Name="Sucursal" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="UsuarioRol">
           <Key>
@@ -353,6 +354,7 @@
           <NavigationProperty Name="Empleados" Relationship="Self.FK_Empleados_SubEmpresas" FromRole="SubEmpresas" ToRole="Empleados" />
           <NavigationProperty Name="Empresas" Relationship="Self.FK_SubEmpresas_Empresas" FromRole="SubEmpresas" ToRole="Empresas" />
           <NavigationProperty Name="Permisos" Relationship="Self.FK_Permisos_SubEmpresas" FromRole="SubEmpresas" ToRole="Permisos" />
+          <Property Name="Sucursal" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="UsuarioRol">
           <Key>
@@ -614,6 +616,7 @@
           <EntitySetMapping Name="SubEmpresas">
             <EntityTypeMapping TypeName="Vacaciones_BDModel.SubEmpresas">
               <MappingFragment StoreEntitySet="SubEmpresas">
+                <ScalarProperty Name="Sucursal" ColumnName="Sucursal" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="IdEmpresa_madre" ColumnName="IdEmpresa_madre" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />

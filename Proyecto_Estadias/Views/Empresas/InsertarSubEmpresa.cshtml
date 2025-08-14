@@ -4,6 +4,7 @@
     ViewBag.Title = "Insertar SubEmpresas";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var idSub = ViewBag.IdSub;
+
 }
 
 <link href="~/Content/bootstrap.css" rel="stylesheet" />
@@ -75,6 +76,13 @@
             @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
         </div>
 
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Sucursal)
+            @Html.TextBoxFor(m => m.Sucursal, new { @class = "form-control", placeholder = "Nombre de la Surcursal" })
+            @Html.ValidationMessageFor(m => m.Sucursal, "", new { @class = "text-danger" })
+        </div>
+
         <div class="form-group">
             @Html.LabelFor(m => m.Rfc)
             @Html.TextBoxFor(m => m.Rfc, new { @class = "form-control", placeholder = "RFC" })
@@ -89,9 +97,22 @@
 
         <div class="form-group">
             @Html.LabelFor(m => m.IdEmpresa_madre, "Empresa Madre")
-            @Html.DropDownListFor(m => m.IdEmpresa_madre, (SelectList)ViewBag.Empresas, "-- Selecciona una empresa madre --", new { @class = "form-control" })
+
+            @if (Model.IdEmpresa_madre > 0)
+            {
+                @Html.DropDownListFor(m => m.IdEmpresa_madre, (SelectList)ViewBag.Empresas,
+                    new { @class = "form-control", disabled = "disabled" })
+                @Html.HiddenFor(m => m.IdEmpresa_madre) <!-- Para enviar el valor al POST -->
+            }
+            else
+            {
+                @Html.DropDownListFor(m => m.IdEmpresa_madre, (SelectList)ViewBag.Empresas,
+                    "-- Selecciona una empresa madre --", new { @class = "form-control" })
+            }
             @Html.ValidationMessageFor(m => m.IdEmpresa_madre, "", new { @class = "text-danger" })
         </div>
+
+
 
         <div class="form-group">
             <label for="archivoLogo">Logo de la empresa</label>

@@ -27,6 +27,7 @@ namespace Proyecto_Estadias.Models
         public string Rfc { get; set; }
         public string Direccion { get; set; }
         public byte[] Logo { get; set; }
+        public string Sucursal { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Empleados> Empleados { get; set; }

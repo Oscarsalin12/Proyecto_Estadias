@@ -46,9 +46,10 @@ namespace Proyecto_Estadias.Controllers
             if (idEmpresaMadre.HasValue)
             {
                 model.IdEmpresa_madre = idEmpresaMadre.Value;
-              
+                         
             }
             ViewBag.IdSub = idEmpresaMadre;
+         
             return View(model);
         }
 
