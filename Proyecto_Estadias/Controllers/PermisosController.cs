@@ -284,7 +284,7 @@ namespace Proyecto_Estadias.Controllers
                 return File(ms.ToArray(), "application/pdf");
             }
         }
-
+     
 
 
 
@@ -461,7 +461,7 @@ namespace Proyecto_Estadias.Controllers
         }
 
 
-
+        
 
         #endregion
 
