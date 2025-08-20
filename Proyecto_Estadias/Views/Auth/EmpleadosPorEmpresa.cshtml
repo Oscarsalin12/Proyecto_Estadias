@@ -116,6 +116,10 @@
 
 @Html.ActionLink("Ver Filiales", "SeleccionarSubempresa", "Auth", new { id = idSub }, new { @class = "btn btn-gradient" })
 
+
+
+     @Html.ActionLink("Ver Bajas", "ListaEmpleadosDadosDeBaja", "Auth", new { idSub = idSub },new {@class="btn btn-gradient"})
+
 <div class="content-box">
     <div class="content-header">
         Empleados de @subempresaNombre

@@ -224,7 +224,51 @@ namespace Proyecto_Estadias.Controllers
             return View("EmpleadosPorEmpresa", empleadosVM);
         }
 
+        public ActionResult ListaEmpleadosDadosDeBaja(int idSub, int? bus, string busqueda, int? page, int pageSize = 5)
+        {
+            if (idSub <= 0)
+            {
+                return HttpNotFound("ID de subempresa no válido");
+            }
 
+
+            var empleadosQuery = db.Empleados
+                .Include("SubEmpresas")
+                .Include("Departamentos")
+                .Where(e => e.IdEmpresa == idSub && e.Estado == "Inactivo");
+
+            if (!String.IsNullOrEmpty(busqueda))
+            {
+                empleadosQuery = empleadosQuery.Where(e => e.Nombre.Contains(busqueda));
+            }
+
+            if (bus.HasValue && bus.Value > 0)
+            {
+                empleadosQuery = empleadosQuery.Where(e => e.IdDepartamento == bus.Value);
+            }
+
+            var empleadosVM = empleadosQuery.Select(e => new EmpleadosVM
+            {
+                Id = e.Id,
+                NumEmpleado = e.NumEmpleado,
+                Nombre = e.Nombre,
+                FechaDeIngreso = e.FechaIDeIngreso,
+                IdEmpresa = e.IdEmpresa,
+                IdDepartamento = e.IdDepartamento,
+                NombreEmpresa = e.SubEmpresas.Nombre,
+                NombreDepartamento = e.Departamentos.NombreDep
+            })
+                .OrderBy(e => e.Nombre)
+
+            .ToPagedList(page ?? 1, pageSize);
+
+            ViewBag.SubempresaNombre = authServices.GetNombreSubempresas(idSub);
+            ViewBag.IdSub = idSub;
+
+            ViewBag.Departamentos = new SelectList(db.Departamentos, "Id", "NombreDep");
+
+            return View(empleadosVM);
+        }
 
         #endregion
 
