@@ -125,7 +125,7 @@ namespace Proyecto_Estadias.Controllers
             var identity = (ClaimsIdentity)User.Identity;
             var empresasPermitidas = ClaimsHelper.GetEmpresas(identity);
             var roles = ClaimsHelper.GetRoles(identity);
-
+             
 
             var usuarioNombre = User.Identity.Name;
             var usuario = authServices.GetUsuarioConRelaciones(usuarioNombre);

@@ -747,6 +747,27 @@ namespace Proyecto_Estadias.Controllers
             return RedirectToAction("PermisosPendientes", new { idEmpresa = permiso.IdEmpresa });
         }
 
+        [HttpGet]
+        public ActionResult CambiarEstadopag()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult CambiarEstadopag(int id, string estado)
+        {
+            var permiso = permisosServices.ObtenerPermisoPorId(id); // Debes implementar este método en tu servicio
+
+            if (permisosServices.CambiarEstadoPermiso(id, estado, out string error))
+            {
+                TempData["EstadoActualizado"] = true;
+            }
+            else
+            {
+                TempData["Error"] = error;
+            }
+
+            return RedirectToAction("PermisosPendientes", new { idEmpresa = permiso.IdEmpresa });
+        }
 
         [HttpGet]
         public ActionResult PermisosPendientes(int idEmpresa, int? page, int pageSize = 5)

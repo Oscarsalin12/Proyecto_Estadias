@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "Listado de Permisos";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var empresaId = ViewBag.EmpresaId;
 }
 
 <link href="~/Content/bootstrap.css" rel="stylesheet" />
@@ -26,7 +27,11 @@
     .btn-sm {
         border-radius: 8px;
     }
-
+    .btn-reject {
+        background: #dc3545;
+        color: white;
+        border: none;
+    }
     .btn-primary {
         background: linear-gradient(to right, #0000ff, #4b0082);
         border: none;
@@ -81,6 +86,7 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <label>Departamento</label>
+                   +
                         @Html.DropDownList("departamento", ViewBag.Departamentos as SelectList, "Todos", new { @class = "form-control" })
                     </div>
                     <div class="col-md-4">
@@ -113,6 +119,7 @@
                             <th>Final</th>
                             <th>Generales</th>
                             <th>Individual</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="tablaPermisos">
@@ -133,7 +140,17 @@
                                     <a href="@Url.Action("GenerarPDFPermiso", "Permisos", new { idPermiso = p.Id })" class="btn btn-success btn-sm" target="_blank">
                                         Generar Permiso
                                     </a>
-                                </td>
+                                <td>
+                                    @using (Html.BeginForm("CambiarEstadopag", "Permisos", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        @Html.Hidden("id", p.Id)
+                                        <input type="hidden" name="idEmpresa" value="@empresaId" />
+                                        <button type="submit" name="estado" value="Rechazado" class="btn btn-sm btn-reject">Descartar</button>
+                                    }
+                                </td> 
+                                
                             </tr>
                         }
                     </tbody>
