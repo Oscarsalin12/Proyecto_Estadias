@@ -50,7 +50,7 @@ namespace Proyecto_Estadias.Services
                 emp.HorasPorDia = 8;
             else
                 emp.HorasPorDia = 0; // Valor por defecto por si acaso
-
+            emp.Estado = "Activo"; // Asignar estado por defecto
             db.Empleados.Add(emp);
             db.SaveChanges();
         }
@@ -99,6 +99,8 @@ namespace Proyecto_Estadias.Services
                 empleado.IdEmpresa = empleadoActualizado.IdEmpresa;
                 empleado.IdDepartamento = empleadoActualizado.IdDepartamento;
                 empleado.DiasLaboralesPorSemana = empleadoActualizado.DiasLaboralesPorSemana;
+                empleado.UsuarioEmpleado = empleadoActualizado.UsuarioEmpleado;
+             empleado.Estado = empleadoActualizado.Estado;
 
                 db.SaveChanges();
             }

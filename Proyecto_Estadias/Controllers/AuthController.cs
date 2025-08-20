@@ -174,19 +174,16 @@ namespace Proyecto_Estadias.Controllers
 
         public ActionResult ListaEmpleadosSubempresa(int idSub, int? bus, string busqueda, int? page, int pageSize = 5)
         {
-          
             if (idSub <= 0)
             {
                 return HttpNotFound("ID de subempresa no válido");
             }
-
-
             empleadoServices.ActualizarVacacionesYPermisos();
 
             var empleadosQuery = db.Empleados
                 .Include("SubEmpresas")
                 .Include("Departamentos")
-                .Where(e => e.IdEmpresa == idSub);
+                .Where(e => e.IdEmpresa == idSub && e.Estado == "Activo");
 
             if (!String.IsNullOrEmpty(busqueda))
             {
@@ -216,6 +213,7 @@ namespace Proyecto_Estadias.Controllers
                 NombreDepartamento = e.Departamentos.NombreDep
             })
                 .OrderBy(e => e.Nombre)
+               
             .ToPagedList(page ?? 1, pageSize);
 
             ViewBag.SubempresaNombre = authServices.GetNombreSubempresas(idSub);
