@@ -73,56 +73,49 @@ namespace Proyecto_Estadias.Services
             error = "";
 
             var empleado = db.Empleados.FirstOrDefault(e => e.Id == model.IdEmpleado);
-            if (empleado == null)
-            {
-                error = "Empleado no encontrado";
-                return false;
-            }
+            if (empleado == null) {error = "Empleado no encontrado";return false;}
 
             var tipoPermiso = db.MotivosAusencia.FirstOrDefault(m => m.Id == model.IdTipoPermiso);
-            if (tipoPermiso == null)
-            {
-                error = "Motivo de permiso no encontrado";
-                return false;
-            }
+            if (tipoPermiso == null){error = "Motivo de permiso no encontrado"; return false;}
 
-            bool esVacacionesPorTiempo = tipoPermiso.NombreMotivo.Trim() == "Vacaciones por tiempo";
+            bool descuentaHoras = tipoPermiso.BitDescuentoHoras == true;
+            bool descuentaDias = tipoPermiso.BitDescuentoDias == true;
 
-            if (esVacacionesPorTiempo)
+            int horasSolicitadas = 0;
+            int diasSolicitados = 0;
+
+            if (descuentaHoras)
             {
-                int horasSolicitadas = model.CantidadHorasSolicitadas ?? 0;
-                if (horasSolicitadas <= 0)
-                {
-                    error = "Debe ingresar la cantidad de horas a descontar.";
-                    return false;
-                }
+                 horasSolicitadas = model.CantidadHorasSolicitadas ?? 0;
+                if (horasSolicitadas <= 0) {error = "Debe ingresar la cantidad de horas a descontar."; return false;}
 
                 int horasDisponibles = empleado.HorasRestantesDelDia;
 
                 // Si las horas no alcanzan, intentamos convertir un día en horas
                 if (horasDisponibles < horasSolicitadas)
                 {
-                    int horasFaltantes = horasSolicitadas - horasDisponibles;
-
                     if (empleado.DiasDisponibles > 0)
                     {
                         empleado.DiasDisponibles -= 1;
-                        horasDisponibles += empleado.HorasPorDia;
+                        horasDisponibles += (empleado.HorasPorDia > 0 ? empleado.HorasPorDia : 8);
                     }
-                    else
-                    {
-                        error = "No tiene días disponibles para convertir en horas.";
-                        return false;
-                    }
+                    else { error = "No tiene días disponibles para convertir en horas."; return false; }
 
-                    if (horasDisponibles < horasSolicitadas)
-                    {
-                        error = "Aún después de convertir un día, no tiene horas suficientes.";
-                        return false;
-                    }
+                    if (horasDisponibles < horasSolicitadas) { error = "Aún después de convertir un día, no tiene horas suficientes."; return false; }
                 }
-
                 empleado.HorasRestantesDelDia = horasDisponibles - horasSolicitadas;
+                } 
+
+                else if(descuentaDias)
+                {
+                    diasSolicitados = ContarDiasHabiles(model.FechaInicio, model.FechaFinal, empleado.DiasLaboralesPorSemana);
+                    if(diasSolicitados <= 0)
+                    {
+                        error = "El rango de fechas no contiene días hábiles válidos";
+                        return false;
+                    }
+                    empleado.DiasDisponibles -= diasSolicitados;
+                }
 
                 var permiso = new Permisos
                 {
@@ -133,7 +126,7 @@ namespace Proyecto_Estadias.Services
                     FechaInicio = model.FechaInicio,
                     FechaFinal = model.FechaFinal,
                     DiasDisponibles = empleado.DiasDisponibles,
-                    CantidadHorasSolicitadas = model.CantidadHorasSolicitadas.Value,
+                    CantidadHorasSolicitadas = descuentaHoras ? horasSolicitadas :0,
                     HorasDisponibles = empleado.HorasRestantesDelDia,
                     Estado = "Aprobado"
                 };
@@ -142,44 +135,10 @@ namespace Proyecto_Estadias.Services
                 db.Entry(empleado).State = EntityState.Modified; // 👈 Importante
                 db.SaveChanges();
                 return true;
-            }
+          }
+        
 
-
-            // CASO NORMAL: permisos por días
-            int diasSolicitados = ContarDiasHabiles(model.FechaInicio, model.FechaFinal, empleado.DiasLaboralesPorSemana);
-            if (diasSolicitados <= 0)
-            {
-                error = "El rango de fechas no contiene días hábiles válidos";
-                return false;
-            }
-
-            if (empleado.DiasDisponibles < diasSolicitados)
-            {
-                error = "El empleado no tiene suficientes días disponibles";
-                return false;
-            }
-
-            var permisoNormal = new Permisos
-            {
-                IdEmpleado = model.IdEmpleado,
-                IdTipoPermiso = model.IdTipoPermiso,
-                IdEmpresa = model.IdEmpresa,
-                FechaGeneracion = DateTime.Now,
-                FechaInicio = model.FechaInicio,
-                FechaFinal = model.FechaFinal,
-                DiasDisponibles = empleado.DiasDisponibles - diasSolicitados,
-
-                Estado = "Aprobado"
-            };
-
-            empleado.DiasDisponibles -= diasSolicitados;
-
-            db.Permisos.Add(permisoNormal);
-            db.SaveChanges();
-            return true;
-        }
-
-
+        
         private int ContarDiasHabiles(DateTime fechaInicio, DateTime fechaFin, int diasLaboralesPorSemana)
         {
             int total = 0;
@@ -274,86 +233,36 @@ namespace Proyecto_Estadias.Services
             error = "";
 
             var empleado = db.Empleados.FirstOrDefault(e => e.Id == model.IdEmpleado);
-            if (empleado == null)
-            {
-                error = "Empleado no encontrado";
-                return false;
-            }
+            if (empleado == null) { error = "Empleado no encontrado"; return false; }
 
             var tipoPermiso = db.MotivosAusencia.FirstOrDefault(m => m.Id == model.IdTipoPermiso);
-            if (tipoPermiso == null)
-            {
-                error = "Motivo de permiso no encontrado";
-                return false;
-            }
+            if (tipoPermiso == null) { error = "Motivo de permiso no encontrado"; return false; }
 
-            bool esVacacionesPorTiempo = tipoPermiso.NombreMotivo.Trim() == "Vacaciones por tiempo";
+            bool descuentaHoras = tipoPermiso.BitDescuentoHoras == true;
+            bool descuentaDias = tipoPermiso.BitDescuentoDias == true;
 
-            if (esVacacionesPorTiempo)
+            if (descuentaHoras)
             {
                 int horasSolicitadas = model.CantidadHorasSolicitadas ?? 0;
-                if (horasSolicitadas <= 0)
-                {
-                    error = "Debe ingresar la cantidad de horas a descontar.";
-                    return false;
-                }
+                if (horasSolicitadas <= 0) { error = "Debe ingresar la cantidad de horas a descontar."; return false; }
 
                 int horasDisponibles = empleado.HorasRestantesDelDia;
-
-                // Simulamos conversión solo para validar la solicitud
                 if (horasDisponibles < horasSolicitadas)
                 {
-                    if (empleado.DiasDisponibles > 0)
-                    {
-                        horasDisponibles += empleado.HorasPorDia; // convertimos 1 día
-                    }
-                    else
-                    {
-                        error = "No tiene días disponibles para convertir en horas.";
-                        return false;
-                    }
+                    if (empleado.DiasDisponibles > 0) { horasDisponibles += (empleado.HorasPorDia > 0 ? empleado.HorasPorDia : 8); }
+                    else { error = "No tiene días disponibles para convertir en horas."; return false; }
 
-                    if (horasDisponibles < horasSolicitadas)
-                    {
-                        error = "Aún después de convertir un día, no tiene horas suficientes.";
-                        return false;
-                    }
+                    if (horasDisponibles < horasSolicitadas) { error = "Aún después de convertir un día, no tiene horas suficientes."; return false; }
                 }
-
-                var permiso = new Permisos
-                {
-                    IdEmpleado = model.IdEmpleado,
-                    IdTipoPermiso = model.IdTipoPermiso,
-                    IdEmpresa = model.IdEmpresa,
-                    FechaGeneracion = DateTime.Now,
-                    FechaInicio = model.FechaInicio,
-                    FechaFinal = model.FechaFinal,
-                    DiasDisponibles = empleado.DiasDisponibles, // aún no descontado
-                    CantidadHorasSolicitadas = model.CantidadHorasSolicitadas.Value,
-                    HorasDisponibles = empleado.HorasRestantesDelDia, // aún no descontado
-                    Estado = "Pendiente"
-                };
-
-                db.Permisos.Add(permiso);
-                db.SaveChanges();
-                return true;
             }
-
-            // CASO NORMAL: permisos por días
-            int diasSolicitados = ContarDiasHabiles(model.FechaInicio, model.FechaFinal, empleado.DiasLaboralesPorSemana);
-            if (diasSolicitados <= 0)
+            else if (descuentaDias)
             {
-                error = "El rango de fechas no contiene días hábiles válidos";
-                return false;
+                int diasSolicitados = ContarDiasHabiles(model.FechaInicio, model.FechaFinal, empleado.DiasLaboralesPorSemana);
+                if (diasSolicitados <= 0) { error = "El rango de fechas no contiene días hábiles válidos"; return false; }
+                if (empleado.DiasDisponibles < diasSolicitados) { error = "El empleado no tiene suficientes días disponibles"; return false; }
             }
 
-            if (empleado.DiasDisponibles < diasSolicitados)
-            {
-                error = "El empleado no tiene suficientes días disponibles";
-                return false;
-            }
-
-            var permisoNormal = new Permisos
+            var permiso = new Permisos
             {
                 IdEmpleado = model.IdEmpleado,
                 IdTipoPermiso = model.IdTipoPermiso,
@@ -361,37 +270,59 @@ namespace Proyecto_Estadias.Services
                 FechaGeneracion = DateTime.Now,
                 FechaInicio = model.FechaInicio,
                 FechaFinal = model.FechaFinal,
-                DiasDisponibles = empleado.DiasDisponibles,
+                DiasDisponibles = empleado.DiasDisponibles, // Aún no descontado
+                CantidadHorasSolicitadas = descuentaHoras ? (model.CantidadHorasSolicitadas ?? 0) : 0,
+                HorasDisponibles = empleado.HorasRestantesDelDia, // Aún no descontado
                 Estado = "Pendiente"
             };
 
-            db.Permisos.Add(permisoNormal);
+            db.Permisos.Add(permiso);
             db.SaveChanges();
             return true;
         }
 
 
+
         public bool CambiarEstadoPermiso(int idPermiso, string nuevoEstado, out string error)
         {
             error = "";
-            var permiso = db.Permisos.Include("Empleados").FirstOrDefault(p => p.Id == idPermiso);
-            if (permiso == null)
-            {
-                error = "Permiso no encontrado";
-                return false;
-            }
+            // IMPORTANTE: Incluimos MotivosAusencia para poder leer los Bits
+            var permiso = db.Permisos.Include("Empleados").Include("MotivosAusencia").FirstOrDefault(p => p.Id == idPermiso);
+            if (permiso == null) { error = "Permiso no encontrado"; return false; }
 
             if (nuevoEstado == "Aprobado")
             {
-                int diasSolicitados = ContarDiasHabiles(permiso.FechaInicio, permiso.FechaFinal, permiso.Empleados.DiasLaboralesPorSemana);
-                if (permiso.Empleados.DiasDisponibles < diasSolicitados)
+                bool descuentaHoras = permiso.MotivosAusencia.BitDescuentoHoras == true;
+                bool descuentaDias = permiso.MotivosAusencia.BitDescuentoDias == true;
+
+                if (descuentaHoras)
                 {
-                    error = "El empleado no tiene suficientes días disponibles";
-                    return false;
+                    int horasSolicitadas = permiso.CantidadHorasSolicitadas;
+                    int horasDisponibles = permiso.Empleados.HorasRestantesDelDia;
+
+                    if (horasDisponibles < horasSolicitadas)
+                    {
+                        if (permiso.Empleados.DiasDisponibles > 0)
+                        {
+                            permiso.Empleados.DiasDisponibles -= 1;
+                            horasDisponibles += (permiso.Empleados.HorasPorDia > 0 ? permiso.Empleados.HorasPorDia : 8);
+                        }
+                        else { error = "El empleado ya no tiene días disponibles."; return false; }
+
+                        if (horasDisponibles < horasSolicitadas) { error = "Aún convirtiendo un día, no alcanzan las horas."; return false; }
+                    }
+                    permiso.Empleados.HorasRestantesDelDia = horasDisponibles - horasSolicitadas;
+                }
+                else if (descuentaDias)
+                {
+                    int diasSolicitados = ContarDiasHabiles(permiso.FechaInicio, permiso.FechaFinal, permiso.Empleados.DiasLaboralesPorSemana);
+                    if (permiso.Empleados.DiasDisponibles < diasSolicitados) { error = "El empleado no tiene suficientes días disponibles"; return false; }
+                    permiso.Empleados.DiasDisponibles -= diasSolicitados;
                 }
 
-                permiso.Empleados.DiasDisponibles -= diasSolicitados;
+                // Actualizamos el registro histórico del permiso con los saldos que le quedaron
                 permiso.DiasDisponibles = permiso.Empleados.DiasDisponibles;
+                permiso.HorasDisponibles = permiso.Empleados.HorasRestantesDelDia;
             }
 
             permiso.Estado = nuevoEstado;

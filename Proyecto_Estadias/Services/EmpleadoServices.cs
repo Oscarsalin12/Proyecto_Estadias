@@ -131,42 +131,39 @@ namespace Proyecto_Estadias.Services
                 int horasPorDia = emp.HorasPorDia > 0 ? emp.HorasPorDia : 8;
 
                 var permisos = db.Permisos
+                                 .Include("MotivosAusencia")
                                  .Where(p => p.IdEmpleado == emp.Id && p.Estado == "Aprobado")
                                  .OrderBy(p => p.FechaInicio)
                                  .ToList();
 
                 int diasTomados = 0;
-                int horasRestantes = horasPorDia;
+                int totalHorasTomadas = 0;
 
                 foreach (var permiso in permisos)
                 {
-                    bool esPorTiempo = permiso.IdTipoPermiso == 3; // Asegúrate que 3 es el ID correcto para "vacaciones por tiempo"
-
-                    if (esPorTiempo)
+                    if (permiso.MotivosAusencia.BitDescuentoHoras == true)
                     {
-                        int horasSolicitadas = permiso.CantidadHorasSolicitadas ;
-
-                        if (horasSolicitadas <= 0)
-                            continue;
-
-                        if (horasRestantes < horasSolicitadas)
-                        {
-                            // Descontar un día y reiniciar horas del día
-                            diasTomados++;
-                            horasRestantes = horasPorDia;
-                        }
-
-                        horasRestantes -= horasSolicitadas;
-
-                        // Asegurar que no quede en negativo
-                        if (horasRestantes < 0)
-                            horasRestantes = 0;
+                        totalHorasTomadas += permiso.CantidadHorasSolicitadas;
                     }
-                    else
+                    else if (permiso.MotivosAusencia.BitDescuentoDias == true)
                     {
-                        // Permiso por días
                         diasTomados += ContarDiasHabiles(permiso.FechaInicio, permiso.FechaFinal, diasLaborales);
                     }
+                }
+
+                // CORRECCIÓN MATEMÁTICA
+                int diasPorHoras = totalHorasTomadas / horasPorDia;
+                int horasSueltas = totalHorasTomadas % horasPorDia;
+
+                // Sumamos los días exactos que se armaron con la acumulación de horas
+                diasTomados += diasPorHoras;
+                int horasRestantes = horasPorDia;
+
+                // Si sobran horas sueltas (ej. tomó 5 horas), rompemos SOLO UN (1) día
+                if (horasSueltas > 0)
+                {
+                    diasTomados += 1;
+                    horasRestantes = horasPorDia - horasSueltas;
                 }
 
                 int diasDisponibles = Math.Max(diasBase - diasTomados, 0);
@@ -222,5 +219,23 @@ namespace Proyecto_Estadias.Services
           
         }
 
+
+        public IQueryable<Empleados> FiltrarEmpleados(int idSub, string estado, string busqueda, int? idDepartamento)
+        {
+            var query= db.Empleados
+                .Include("Departamentos")
+                .Include("SubEmpresas")
+                .Where(e => e.IdEmpresa == idSub && e.Estado == estado);
+            if(!string.IsNullOrEmpty(busqueda))
+            {
+                query = query.Where(e => e.Nombre.Contains(busqueda) || e.NumEmpleado.ToString().Contains(busqueda));
+            }
+            if(idDepartamento.HasValue && idDepartamento.Value > 0 )
+            {
+                query = query.Where(e => e.IdDepartamento == idDepartamento.Value);
+            }
+
+            return query;
+        }
     }
 }

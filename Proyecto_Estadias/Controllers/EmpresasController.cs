@@ -22,6 +22,10 @@ namespace Proyecto_Estadias.Controllers
         [HttpGet]
         public ActionResult InsertarEmpresa()
         {
+            if (Request.IsAjaxRequest()) // Verifica si es una llamada asíncrona
+            {
+                return PartialView("_InsertarEmpresaPartial"); // Crea esta vista parcial
+            }
             return View();
         }
         [HttpPost]
@@ -31,54 +35,58 @@ namespace Proyecto_Estadias.Controllers
             {
                 empresasService.InsertarEmpresa(empresa, archivoLogo);
                 TempData["EmpresaCreada"] = true;
-                return RedirectToAction("Perfil", "Auth");  
+
+                if (Request.IsAjaxRequest())
+                {
+                    return new HttpStatusCodeResult(200); // Éxito para Fetch
+                }
+                return RedirectToAction("Perfil", "Auth");
+            }
+
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_InsertarEmpresaPartial", empresa); // Devuelve errores de validación al modal
             }
             return View(empresa);
         }
 
         [HttpGet]
-        public ActionResult InsertarSubEmpresa(int? idEmpresaMadre)
+        public ActionResult InsertarSubEmpresa(int idEmpresaMadre)
         {
-            ViewBag.Empresas = new SelectList(authServices.GetAllEmpresas(), "Id", "Nombre", idEmpresaMadre);
-           
-            var model = new SubEmpresas();
-
-            if (idEmpresaMadre.HasValue)
+            // Solo inicializamos el modelo con el ID recibido del botón
+            var modelo = new Proyecto_Estadias.Models.SubEmpresas
             {
-                model.IdEmpresa_madre = idEmpresaMadre.Value;
+                IdEmpresa_madre = idEmpresaMadre
+            };
 
-                         
-            }
-            ViewBag.IdSub = idEmpresaMadre;
-         
-            return View(model);
+            // Si no quieres consultar la base, puedes pasar un texto fijo o dejarlo vacío
+            ViewBag.NombreEmpresaMadre = "Registro para Empresa ID: " + idEmpresaMadre;
+
+            return PartialView("_InsertarSubEmpresaPartial", modelo);
         }
-
 
         [HttpPost]
-        public ActionResult InsertarSubEmpresa(SubEmpresas subEmpresas, HttpPostedFileBase archivoLogo)
+        public ActionResult InsertarSubEmpresa(SubEmpresas subEmpresa, HttpPostedFileBase archivoLogo)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    ViewBag.Empresas = new SelectList(authServices.GetAllEmpresas(), "Id", "Nombre");
-                    TempData["ErrorIner"] = true;
-                    return View(subEmpresas);
-                }
-
-                empresasService.InsertarSubEmpresas(subEmpresas, archivoLogo);
-
+                // Tu lógica de servicio para insertar
+                empresasService.InsertarSubEmpresas(subEmpresa, archivoLogo);
                 TempData["ExitoSub"] = true;
-                return RedirectToAction("Perfil", "Auth");
-            }
-            catch (Exception ex)
-            {
-                TempData["Error404"] = "Ocurrió un error inesperado: " + ex.Message;
-                ViewBag.Empresas = new SelectList(authServices.GetAllEmpresas(), "Id", "Nombre");
-                return View(subEmpresas);
-            }
-        }
 
+                if (Request.IsAjaxRequest())
+                {
+                    return new HttpStatusCodeResult(200);
+                }
+                return RedirectToAction("SeleccionarSubempresa", "Auth", new { id = subEmpresa.IdEmpresa_madre });
+            }
+
+            if (Request.IsAjaxRequest())
+            {
+                ViewBag.IdMadre = subEmpresa.IdEmpresa_madre;
+                return PartialView("_InsertarSubEmpresaPartial", subEmpresa);
+            }
+            return View(subEmpresa);
+        }
     }
 }

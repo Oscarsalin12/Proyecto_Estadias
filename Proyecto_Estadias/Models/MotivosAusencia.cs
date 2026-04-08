@@ -22,6 +22,8 @@ namespace Proyecto_Estadias.Models
     
         public int Id { get; set; }
         public string NombreMotivo { get; set; }
+        public bool BitDescuentoDias { get; set; }
+        public bool BitDescuentoHoras { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Permisos> Permisos { get; set; }

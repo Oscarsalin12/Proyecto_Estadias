@@ -1,4 +1,4 @@
-﻿@model Proyecto_Estadias.Models.SubEmpresas
+﻿@*@model Proyecto_Estadias.Models.SubEmpresas
 
 @{
     ViewBag.Title = "Insertar SubEmpresas";
@@ -102,7 +102,7 @@
             {
                 @Html.DropDownListFor(m => m.IdEmpresa_madre, (SelectList)ViewBag.Empresas,
                     new { @class = "form-control", disabled = "disabled" })
-                @Html.HiddenFor(m => m.IdEmpresa_madre) <!-- Para enviar el valor al POST -->
+                @Html.HiddenFor(m => m.IdEmpresa_madre)  Para enviar el valor al POST 
             }
             else
             {
@@ -128,4 +128,4 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-}
+}*@

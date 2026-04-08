@@ -28,7 +28,7 @@ namespace Proyecto_Estadias.Controllers
 
         [HttpGet]
 
-        public ActionResult CrearPermiso(int? idEmpleado = null)
+        public ActionResult CrearPermiso(int? idEmpleado)
         {
             var model = new PermisosVM
             {
@@ -36,44 +36,43 @@ namespace Proyecto_Estadias.Controllers
                 MotivosAusencia = permisosServices.ObtenerMotivos(),
                 SubEmpresas = permisosServices.ObtenerEmpresas(),
                 FechaGeneracion = DateTime.Today,
-               
+                FechaInicio = DateTime.Today,
+                FechaFinal = DateTime.Today
             };
 
             if (idEmpleado.HasValue)
             {
                 var empleado = permisosServices.ObtenerEmpleadoPorId(idEmpleado.Value);
-
-                model.IdEmpleado = empleado.Id;
-                model.IdEmpresa = empleado.IdEmpresa;
-                model.NombreEmpleado = empleado.Nombre;
-                model.EmpresaNombre = empleado.SubEmpresas.Nombre;
-                model.VacacionesDisponibles = empleado.DiasDisponibles;
-                model.HorasDisponibles = empleado.HorasRestantesDelDia;
+                if (empleado != null)
+                {
+                    model.IdEmpleado = empleado.Id;
+                    model.IdEmpresa = empleado.IdEmpresa;
+                    model.NombreEmpleado = empleado.Nombre;
+                    model.EmpresaNombre = empleado.SubEmpresas?.Nombre;
+                    model.VacacionesDisponibles = empleado.DiasDisponibles;
+                    model.HorasDisponibles = empleado.HorasRestantesDelDia;
+                }
             }
             ViewBag.EmpresaId = model.IdEmpresa;
-            return View(model);
+            return PartialView("_FormularioPermiso",model);
         }
 
         [HttpPost]
-        public ActionResult CrearPermiso(PermisosVM model)
+        public JsonResult CrearPermiso(PermisosVM model)
         {
             if (ModelState.IsValid)
             {
 
                 if (permisosServices.CrearPermiso(model, out string error))
                 {
-                    TempData["PermisoCreado"] = true;
-                    return RedirectToAction("ListaEmpleadosSubempresa", "Auth", new { idSub = model.IdEmpresa });
+                    return Json(new { success = true, message = "Permiso registrado Exitosamente" });
                 }
                 else
                 {
-                    ModelState.AddModelError("", error);
+                    return Json(new { success = false, message = error });
                 }
             }
-            model.Empleados = permisosServices.ObtenerEmpleados();
-            model.MotivosAusencia = permisosServices.ObtenerMotivos();
-            model.SubEmpresas = permisosServices.ObtenerEmpresas();
-            return View(model);
+            return Json(new { success = false, message = "Por favor, verifique los datos ingresados." });
         }
 
         [HttpGet]
@@ -86,16 +85,20 @@ namespace Proyecto_Estadias.Controllers
                 SubEmpresas = permisosServices.ObtenerEmpresas(),
                 FechaGeneracion = DateTime.Today
             };
+
             if (idEmpleado.HasValue)
             {
                 var empleado = permisosServices.ObtenerEmpleadoPorId(idEmpleado.Value);
 
-                model.IdEmpleado = empleado.Id;
-                model.IdEmpresa = empleado.IdEmpresa;
-                model.NombreEmpleado = empleado.Nombre;
-                model.EmpresaNombre = empleado.SubEmpresas.Nombre;
-                model.VacacionesDisponibles = empleado.DiasDisponibles;
-                model.HorasDisponibles = empleado.HorasRestantesDelDia;
+                if (empleado != null)
+                {
+                    model.IdEmpleado = empleado.Id;
+                    model.IdEmpresa = empleado.IdEmpresa;
+                    model.NombreEmpleado = empleado.Nombre;
+                    model.EmpresaNombre = empleado.SubEmpresas?.Nombre;
+                    model.VacacionesDisponibles = empleado.DiasDisponibles;
+                    model.HorasDisponibles = empleado.HorasRestantesDelDia;
+                }
             }
             return View(model);
         }
@@ -115,16 +118,27 @@ namespace Proyecto_Estadias.Controllers
                     ModelState.AddModelError("", error);
                 }
             }
+
+            // Recargamos listas en caso de error para que la vista no se caiga
             model.Empleados = permisosServices.ObtenerEmpleados();
             model.MotivosAusencia = permisosServices.ObtenerMotivos();
             model.SubEmpresas = permisosServices.ObtenerEmpresas();
+
             return View(model);
         }
+
+        // =========================================================================
+        // Buscar Empleado (Para autocompletado si lo sigues usando en otras vistas)
+        // =========================================================================
+
+        [HttpGet]
         public JsonResult BuscarEmpleado(string filtro)
         {
             if (string.IsNullOrWhiteSpace(filtro))
                 return Json(null, JsonRequestBehavior.AllowGet);
 
+            // Ojo: Si ya inyectaste el db directo aquí, está bien, pero lo ideal sería 
+            // usar permisosServices.ObtenerEmpleadoPorFiltro(filtro) en el futuro.
             var empleado = db.Empleados.Include("SubEmpresas")
                 .FirstOrDefault(e => e.Nombre.Contains(filtro) || e.NumEmpleado.ToString() == filtro);
 
@@ -570,29 +584,40 @@ namespace Proyecto_Estadias.Controllers
                     datosTabla.AddCell(BorderedCell(new Phrase($"Encargado: {empleado.Departamentos?.NombreEmcargado ?? "N/A"}", normalFont)));
                     datosTabla.AddCell(BorderedCell(new Phrase($"Motivo: {motivo}", normalFont)));
 
+                    // -------------------------------------------------------------
+                    // LÓGICA DINÁMICA: Determina qué mostrar según los BITS del motivo
+                    // -------------------------------------------------------------
+                    bool descuentaHoras = permiso.MotivosAusencia?.BitDescuentoHoras == true;
+                    bool descuentaDias = permiso.MotivosAusencia?.BitDescuentoDias == true;
                     int diasLaborales = empleado.DiasLaboralesPorSemana > 0 ? empleado.DiasLaboralesPorSemana : 5;
-                    int totalDias = ContarDiasHabiles(permiso.FechaInicio, permiso.FechaFinal, diasLaborales);
-                    datosTabla.AddCell(BorderedCell(new Phrase($"Días: {totalDias}", normalFont)));
-                    datosTabla.AddCell(BorderedCell(new Phrase($"Restan: {permiso.DiasDisponibles} días periodo {DateTime.Now.Year}", normalFont)));
 
-                    datosTabla.AddCell(BorderedCell(new Phrase($"Ausente del: {permiso.FechaInicio:dd-MMMM-yyyy}", normalFont)));
-                    datosTabla.AddCell(BorderedCell(new Phrase($"Al: {permiso.FechaFinal:dd-MMMM-yyyy}", normalFont)));
-
-                    // Si el motivo es "Vacaciones por tiempo", agregar detalle de horas
-                    if (motivo.Equals("Vacaciones por tiempo", StringComparison.OrdinalIgnoreCase))
+                    if (descuentaHoras)
                     {
+                        // Si es por horas, cambiamos los textos de las celdas a formato de horas
                         int horasTomadas = permiso.CantidadHorasSolicitadas ?? 0;
                         int horasRestantes = permiso.HorasDisponibles ?? 0;
 
-                        PdfPCell celdaHoras = new PdfPCell(new Phrase($"Toma {horasTomadas} horas y le restan {horasRestantes} horas.", boldFont))
-                        {
-                            Border = Rectangle.BOX,
-                            Padding = 5,
-                            Colspan = 2,
-                            BackgroundColor = new BaseColor(240, 240, 240)
-                        };
-                        datosTabla.AddCell(celdaHoras);
+                        datosTabla.AddCell(BorderedCell(new Phrase($"Horas solicitadas: {horasTomadas}", boldFont)));
+                        datosTabla.AddCell(BorderedCell(new Phrase($"Restan: {horasRestantes} horas disponibles", boldFont)));
                     }
+                    else if (descuentaDias)
+                    {
+                        // Si es por días, mostramos formato de días
+                        int totalDias = ContarDiasHabiles(permiso.FechaInicio, permiso.FechaFinal, diasLaborales);
+                        datosTabla.AddCell(BorderedCell(new Phrase($"Días solicitados: {totalDias}", normalFont)));
+                        datosTabla.AddCell(BorderedCell(new Phrase($"Restan: {permiso.DiasDisponibles} días del periodo actual", normalFont)));
+                    }
+                    else
+                    {
+                        // Si NO descuenta ni días ni horas (ej. Falta justificada, luto)
+                        int totalDias = ContarDiasHabiles(permiso.FechaInicio, permiso.FechaFinal, diasLaborales);
+                        datosTabla.AddCell(BorderedCell(new Phrase($"Días ausente: {totalDias}", normalFont)));
+                        datosTabla.AddCell(BorderedCell(new Phrase("Sin descuento de vacaciones", normalFont)));
+                    }
+                    // -------------------------------------------------------------
+
+                    datosTabla.AddCell(BorderedCell(new Phrase($"Ausente del: {permiso.FechaInicio:dd-MMMM-yyyy}", normalFont)));
+                    datosTabla.AddCell(BorderedCell(new Phrase($"Al: {permiso.FechaFinal:dd-MMMM-yyyy}", normalFont)));
 
                     contenido.AddCell(new PdfPCell(datosTabla) { Border = Rectangle.NO_BORDER });
 
@@ -625,7 +650,6 @@ namespace Proyecto_Estadias.Controllers
                 return File(ms.ToArray(), "application/pdf");
             }
         }
-
 
 
 
@@ -766,7 +790,7 @@ namespace Proyecto_Estadias.Controllers
                 TempData["Error"] = error;
             }
 
-            return RedirectToAction("PermisosPendientes", new { idEmpresa = permiso.IdEmpresa });
+            return RedirectToAction("PaginacionPorEmpresa", new { idEmpresa = permiso.IdEmpresa });
         }
 
         [HttpGet]

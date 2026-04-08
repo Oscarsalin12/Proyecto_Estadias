@@ -19,6 +19,7 @@ namespace Proyecto_Estadias.Models
         {
             this.Empleados = new HashSet<Empleados>();
             this.Permisos = new HashSet<Permisos>();
+            this.UsuariosEmpresas = new HashSet<UsuariosEmpresas>();
         }
     
         public int Id { get; set; }
@@ -34,5 +35,7 @@ namespace Proyecto_Estadias.Models
         public virtual Empresas Empresas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Permisos> Permisos { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UsuariosEmpresas> UsuariosEmpresas { get; set; }
     }
 }

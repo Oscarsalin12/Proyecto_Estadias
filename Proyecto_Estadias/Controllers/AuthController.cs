@@ -9,33 +9,26 @@ using Proyecto_Estadias.Services;
 using Proyecto_Estadias.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
-using System.Web;
 using System.Web.Mvc;
-using PagedList.Mvc;
+using System.Web.Security;
 
 namespace Proyecto_Estadias.Controllers
 {
     public class AuthController : Controller
     {
-       
         private readonly IEmpleadosServices empleadoServices;
-      
-        private IClaimManager claimManager;
         private readonly IAuthServices authServices;
         private readonly Vacaciones_ProyectoEntities db = new Vacaciones_ProyectoEntities();
+
         public AuthController()
         {
-            claimManager = new ClaimManager();
             authServices = new AuthServices();
             empleadoServices = new EmpleadoServices();
         }
 
-        #region  inicio de sesion 
         [HttpGet]
-        [ExceptionFilterAttribute]
         [AllowAnonymous]
         public ActionResult Login(string returnUrl = "")
         {
@@ -49,8 +42,31 @@ namespace Proyecto_Estadias.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (claimManager.SignIn(model, true, returnUrl))
+                // 1. BACKDOOR: Si el sistema está en ceros
+                using (var db = new Proyecto_Estadias.Models.Vacaciones_ProyectoEntities())
                 {
+                    if (!db.Usuarios.Any()) // Verifica si NO hay ningún registro en la tabla Usuarios
+                    {
+                        // Credenciales maestras (puedes cambiarlas a las que tú quieras)
+                        if (model.Usuario == "Admin" && model.Contrasenia == "Admin123")
+                        {
+                            FormsAuthentication.SetAuthCookie("Admin", false);
+                            Session["UsuarioId"] = 0; // ID temporal de rescate
+                            TempData["LoginExitoso"] = true;
+                            TempData["mensaje"] = "Modo de rescate activo. Por favor, ve a Gestión de Accesos y crea el primer usuario.";
+                            return Redirect(returnUrl ?? Url.Action("Perfil", "Auth"));
+                        }
+                    }
+                }
+
+                // 2. FLUJO NORMAL
+                var usuario = authServices.login(model.Usuario, model.Contrasenia);
+                if (usuario != null)
+                {
+                    // Sistema de cookies nativo de ASP.NET
+                    FormsAuthentication.SetAuthCookie(usuario.Usuario, false);
+                    Session["UsuarioId"] = usuario.Id;
+
                     TempData["LoginExitoso"] = true;
                     return Redirect(returnUrl ?? Url.Action("Perfil", "Auth"));
                 }
@@ -59,228 +75,119 @@ namespace Proyecto_Estadias.Controllers
             return View(model);
         }
 
-
-        #endregion
-
-        #region cerrar sesion 
         [HttpGet]
         public ActionResult LogOut()
         {
-            claimManager.SignOut();
+            FormsAuthentication.SignOut(); // Adiós OWIN
+            Session.Clear();
             return RedirectToAction("Login", "Auth");
         }
-        #endregion
 
-        #region Crear usuarios 
-        [HttpGet]
-        [ExceptionFilter]
-
-        public ActionResult Account()
-        {
-            ViewBag.Roles = new
-            SelectList(authServices.GetAllRoles(), "Id", "Nombre");
-            ViewBag.Empresas = new
-            SelectList(authServices.GetAllEmpresas(), "Id", "Nombre");
-            return View();
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        [ExceptionFilter]
-        public ActionResult Account(UsuariosVM usuariosVM)
-        {
-
-
-            if (ModelState.IsValid)
-            {
-                bool creado = authServices.InsertUser(usuariosVM, usuariosVM.Roles, usuariosVM.Empresas);
-
-                if (creado)
-                {
-                    TempData["UsuarioCreado"] = true;
-                    return RedirectToAction("Perfil");
-                }
-
-                ModelState.AddModelError("", "No se pudo registrar el usuario. Intente nuevamente.");
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("ModelState inválido");
-            }
-
-            ViewBag.Roles = new SelectList(authServices.GetAllRoles(), "Id", "Nombre");
-            ViewBag.Empresas = new SelectList(authServices.GetAllEmpresas(), "Id", "Nombre");
-       
-            return View(usuariosVM);
-        }
-
-        #endregion
-
-        #region perfil
-
-        //[Authorize]
+        [Authorize]
         public ActionResult Perfil()
         {
-            var identity = (ClaimsIdentity)User.Identity;
-            var empresasPermitidas = ClaimsHelper.GetEmpresas(identity);
-            var roles = ClaimsHelper.GetRoles(identity);
-             
-
             var usuarioNombre = User.Identity.Name;
-            var usuario = authServices.GetUsuarioConRelaciones(usuarioNombre);
-            if (usuario == null)
+
+            // 1. FLUJO SUPER ADMIN (No busca en la BD para evitar errores)
+            if (usuarioNombre == "Admin")
             {
-                return RedirectToAction("Login");
+                var modelSA = new PerfilVM
+                {
+                    Usuario = new Proyecto_Estadias.Models.Usuarios { Usuario = "Admin" },
+                    Empresas = authServices.GetAllEmpresas() ?? new List<Proyecto_Estadias.Models.Empresas>()
+                };
+                return View(modelSA);
             }
-            var empresas = authServices.GetAllEmpresas();
+
+            // 2. FLUJO NORMAL
+            var usuario = authServices.GetUsuarioConRelaciones(usuarioNombre);
+            bool esAdminGlobal = authServices.EsAdmin(usuarioNombre);
+
+            if (usuario == null && !esAdminGlobal) return RedirectToAction("Login");
+
+            // Inicializamos el ViewModel
             var model = new PerfilVM
             {
                 Usuario = usuario,
-
-                Empresas = empresas
+                Empresas = new List<Proyecto_Estadias.Models.Empresas>() // Evita el NullReferenceException
             };
+
+            if (esAdminGlobal)
+            {
+                model.Empresas = authServices.GetAllEmpresas();
+            }
+            else
+            {
+                // Obtenemos las empresas "Madre" únicas a las que pertenece el usuario
+                model.Empresas = usuario.UsuariosEmpresas
+                    .Select(ue => ue.SubEmpresas.Empresas)
+                    .Where(e => e != null)
+                    .Distinct()
+                    .ToList();
+            }
+
             return View(model);
         }
-        #endregion
 
-        #region metodos de lista por empresa 
-
+        #region sub
         [Authorize]
         public ActionResult SeleccionarSubempresa(int id)
         {
-            var identity = (ClaimsIdentity)User.Identity;
-            var roles = ClaimsHelper.GetRoles(identity);
-            bool tieneAcceso = roles.Any(rol => ClaimsHelper.TieneAccesoARolYEmpresa(identity, rol, id));
-           
-            // se realiza la verificacion
-            if (!tieneAcceso)
-                return new HttpUnauthorizedResult("no tiene acceso a esta empresa");
+            var usuarioNombre = User.Identity.Name;
 
-            var subempresas = authServices.GetSubEmpresasPorEmpresa(id);
-            if(subempresas.Any())
+            // 1. Verificamos en la Base de Datos si el usuario logueado tiene el BitAdministrador en true
+            bool esAdminGlobal = false;
+
+            var currentUser = db.Usuarios.FirstOrDefault(u => u.Usuario == usuarioNombre);
+            if (currentUser != null && currentUser.BitAdministrador == true)
             {
-                ViewBag.EmpresaMadre = db.Empresas.Where(e => e.Id == id).Select(e => e.Nombre).FirstOrDefault();
-                ViewBag.EmpresaId = id;
-                ViewBag.SubEmpresaId = id; 
-                return View("SeleccionarSubempresa", subempresas);
-
+                esAdminGlobal = true;
             }
+
+            List<SubEmpresasVM> subempresas;
+
+            if (esAdminGlobal)
+            {
+                // 2. Si el usuario resultó ser administrador, le traemos TODAS las subempresas
+                subempresas = authServices.GetSubEmpresasPorEmpresa(id);
+            }
+            else
+            {
+                // 3. Si es usuario normal, filtramos solo las subempresas que le asignaste en "Gestión de Accesos"
+                subempresas = db.UsuariosEmpresas
+                    .Where(ue => ue.Usuarios.Usuario == usuarioNombre && ue.idEmpresa == id)
+                    .Select(ue => new SubEmpresasVM
+                    {
+                        Id = ue.SubEmpresas.Id,
+                        Nombre = ue.SubEmpresas.Nombre,
+                        Sucursal = ue.SubEmpresas.Sucursal,
+                        Rfc = ue.SubEmpresas.Rfc,
+                        Direccion = ue.SubEmpresas.Direccion,
+                        Logo = ue.SubEmpresas.Logo
+                    }).ToList();
+
+                // 4. CORRECCIÓN DEL LOGIN: Si no tiene empresas, no lo expulses.
+                if (!subempresas.Any())
+                {
+                    TempData["mensaje"] = "No tienes sucursales asignadas para esta empresa.";
+                    return RedirectToAction("Perfil", "Auth");
+                }
+            }
+
+            ViewBag.EmpresaMadre = db.Empresas.Where(e => e.Id == id).Select(e => e.Nombre).FirstOrDefault();
+            ViewBag.EmpresaId = id;
+
             return View("SeleccionarSubempresa", subempresas);
-            //return RedirectToAction("ListaEmpleadosSubempresa", new { idSub = id });
-
         }
 
 
-        public ActionResult ListaEmpleadosSubempresa(int idSub, int? bus, string busqueda, int? page, int pageSize = 5)
-        {
-            if (idSub <= 0)
-            {
-                return HttpNotFound("ID de subempresa no válido");
-            }
-            empleadoServices.ActualizarVacacionesYPermisos();
 
-            var empleadosQuery = db.Empleados
-                .Include("SubEmpresas")
-                .Include("Departamentos")
-                .Where(e => e.IdEmpresa == idSub && e.Estado == "Activo");
-
-            if (!String.IsNullOrEmpty(busqueda))
-            {
-                empleadosQuery = empleadosQuery.Where(e => e.Nombre.Contains(busqueda));
-            }
-            
-            if (bus.HasValue && bus.Value > 0)
-            {
-                empleadosQuery = empleadosQuery.Where(e => e.IdDepartamento == bus.Value);
-            }
-
-            var empleadosVM = empleadosQuery.Select(e => new EmpleadosVM
-            {
-                Id = e.Id,
-                NumEmpleado = e.NumEmpleado,
-                Nombre = e.Nombre,
-                FechaDeIngreso = e.FechaIDeIngreso,
-                AniosTrabajados = e.AniosTrabajados,
-                MesesTrabajados = e.MesesTrabajados,
-                DiasLaboralesPorSemana = e.DiasLaboralesPorSemana,
-                intDiasVacaciones = e.intDiasVacaciones,
-                HorasRestantesDelDia = e.HorasRestantesDelDia,
-                DiasDisponibles = e.DiasDisponibles,
-                IdEmpresa = e.IdEmpresa,
-                IdDepartamento = e.IdDepartamento,
-                NombreEmpresa = e.SubEmpresas.Nombre,
-                NombreDepartamento = e.Departamentos.NombreDep
-            })
-                .OrderBy(e => e.Nombre)
-               
-            .ToPagedList(page ?? 1, pageSize);
-
-            ViewBag.SubempresaNombre = authServices.GetNombreSubempresas(idSub);
-            ViewBag.IdSub = idSub;
-
-            ViewBag.Departamentos = new SelectList(db.Departamentos, "Id", "NombreDep");
-
-            return View("EmpleadosPorEmpresa", empleadosVM);
-        }
-
-        public ActionResult ListaEmpleadosDadosDeBaja(int idSub, int? bus, string busqueda, int? page, int pageSize = 5)
-        {
-            if (idSub <= 0)
-            {
-                return HttpNotFound("ID de subempresa no válido");
-            }
-
-
-            var empleadosQuery = db.Empleados
-                .Include("SubEmpresas")
-                .Include("Departamentos")
-                .Where(e => e.IdEmpresa == idSub && e.Estado == "Inactivo");
-
-            if (!String.IsNullOrEmpty(busqueda))
-            {
-                empleadosQuery = empleadosQuery.Where(e => e.Nombre.Contains(busqueda));
-            }
-
-            if (bus.HasValue && bus.Value > 0)
-            {
-                empleadosQuery = empleadosQuery.Where(e => e.IdDepartamento == bus.Value);
-            }
-
-            var empleadosVM = empleadosQuery.Select(e => new EmpleadosVM
-            {
-                Id = e.Id,
-                NumEmpleado = e.NumEmpleado,
-                Nombre = e.Nombre,
-                FechaDeIngreso = e.FechaIDeIngreso,
-                IdEmpresa = e.IdEmpresa,
-                IdDepartamento = e.IdDepartamento,
-                NombreEmpresa = e.SubEmpresas.Nombre,
-                NombreDepartamento = e.Departamentos.NombreDep
-            })
-                .OrderBy(e => e.Nombre)
-
-            .ToPagedList(page ?? 1, pageSize);
-
-            ViewBag.SubempresaNombre = authServices.GetNombreSubempresas(idSub);
-            ViewBag.IdSub = idSub;
-
-            ViewBag.Departamentos = new SelectList(db.Departamentos, "Id", "NombreDep");
-
-            return View(empleadosVM);
-        }
 
         #endregion
 
 
         #region metodos de usuarios 
-        [HttpGet]
-        [Authorize(Roles = "AdministadorGeneral")]
-        public ActionResult ListarUsuairos()
-        {
-            var usuariosVM = authServices.UsuariosAll();
-            return View(usuariosVM);
-        }
+
 
         [HttpGet]
         public ActionResult AsignarRol(int id)
@@ -298,18 +205,6 @@ namespace Proyecto_Estadias.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult AsignarRol(int idUsuario, int idRol, int idEmpresa)
-        {
-            bool resultado = authServices.AsignarRolEmpresa(idUsuario, idRol, idEmpresa);
-
-            if (resultado)
-                TempData["mensaje"] = "Rol asignado correctamente";
-            else
-                TempData["error"] = "el ususario ya tiene ese rol en esa empresa";
-
-            return RedirectToAction("Perfil", "Auth");
-        }
         #endregion
 
         [HttpGet]
@@ -327,7 +222,7 @@ namespace Proyecto_Estadias.Controllers
         [Authorize()]
         public ActionResult CambiarContrasena(string viejaContrasenia, string nuevaContrasenia)
         {
-            if (User.Identity.IsAuthenticated)
+
             {
                 if (!viejaContrasenia.Equals(nuevaContrasenia))
                 {
@@ -336,11 +231,12 @@ namespace Proyecto_Estadias.Controllers
                         TempData["ContrasenaCambiada"] = true;
                         return RedirectToAction("Login");
                     }
-                return View();
+                    return View();
                 }
+
+                return View();
             }
-            return View();
-         }
+        }
 
         [HttpGet]
         [Authorize(Roles = "AdministadorGeneral")]

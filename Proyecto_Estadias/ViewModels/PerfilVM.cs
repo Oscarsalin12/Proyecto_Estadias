@@ -12,6 +12,7 @@ namespace Proyecto_Estadias.ViewModels
        
         public Empleados Empleado { get;set; }
         public List<Empresas> Empresas { get; set; }
+        public List<SubEmpresas> SubEmpresas { get; set; }
         public Dictionary<int, List<EmpleadosVM>> EmpleadosPorEmpresa {  get; set; }
     }
 }

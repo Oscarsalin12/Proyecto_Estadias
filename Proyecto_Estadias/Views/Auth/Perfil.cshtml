@@ -1,9 +1,33 @@
 ﻿@model Proyecto_Estadias.ViewModels.PerfilVM
 @using Proyecto_Estadias.Helpers
+@using Proyecto_Estadias.Models
 @{
     ViewBag.Title = "Perfil";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var identity = (System.Security.Claims.ClaimsIdentity)User.Identity;
+
+    // LÓGICA PARA VERIFICAR SI ES ADMIN
+    bool esAdministrador = false;
+    if (User.Identity.IsAuthenticated)
+    {
+        // Si es la cuenta maestra, le damos permiso de todo
+        if (User.Identity.Name == "Admin")
+        {
+            esAdministrador = true;
+        }
+        else
+        {
+            // Si es un usuario normal, buscamos en la BD
+            using (var db = new Proyecto_Estadias.Models.Vacaciones_ProyectoEntities())
+            {
+                var currentUser = db.Usuarios.FirstOrDefault(u => u.Usuario == User.Identity.Name);
+                if (currentUser != null && currentUser.BitAdministrador == true)
+                {
+                    esAdministrador = true;
+                }
+            }
+        }
+    }
 }
 
 <div class="container profile-container">
@@ -12,11 +36,15 @@
         <p class="profile-subtitle">Selecciona una empresa para ver sus SubEmpresas</p>
     </div>
 
-    <div class="text-end mb-4">
-        <a href="@Url.Action("InsertarEmpresa", "Empresas")" class="btn btn-gradient">
-            ➕ Agregar Empresa
-        </a>
-    </div>
+    @* AQUÍ APLICAMOS LA RESTRICCIÓN DEL BOTÓN *@
+    @if (esAdministrador)
+    {
+        <div class="text-center mb-4">
+            <button type="button" class="btn btn-gradient" onclick="cargarFormulario('@Url.Action("InsertarEmpresa", "Empresas")', 'Nueva Empresa')">
+                ➕ Agregar Empresa
+            </button>
+        </div>
+    }
 
     <div class="row justify-content-center">
         @foreach (var empresa in Model.Empresas)
@@ -27,7 +55,7 @@
                         ? $"data:image/png;base64,{Convert.ToBase64String(empresa.Logo)}"
                         : Url.Content("~/Content/imagenes/empresas/default.jpg"))"
                          alt="Logo de @empresa.Nombre"
-                           style="max-height: 180px; object-fit: contain; padding: 10px;"
+                         style="max-height: 180px; object-fit: contain; padding: 10px;"
                          class="card-img-top" />
 
                     <div class="card-body text-center d-flex flex-column">
@@ -43,46 +71,87 @@
                 </div>
             </div>
         }
+        <div class="modal fade" id="modalGeneral" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitulo">Formulario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modalCuerpo">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        $(function () {
-                 @if (TempData["UsuarioCreado"] != null)
-     {
-         TempData.Keep("UsuarioCreado"); // esto marca el tempData como leida y no volvera a aparecer
-         @:toastr.success('Usuario Creado exitosamente', 'Éxito');
-         TempData.Remove("UsuarioCreado"); // se elimina despues de mostrarse
-     }
+        // Función para cargar el modal
+        async function cargarFormulario(url, titulo) {
+            const modalElement = document.getElementById('modalGeneral');
+            const modal = new bootstrap.Modal(modalElement);
+            const cuerpo = document.getElementById('modalCuerpo');
+
+            document.getElementById('modalTitulo').innerText = titulo;
+            cuerpo.innerHTML = '<div class="text-center"><div class="spinner-border text-primary"></div></div>';
+
+            modal.show();
+
+            try {
+                const respuesta = await fetch(url, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' } // Asegura que ASP.NET detecte IsAjaxRequest
+                });
+                if (!respuesta.ok) throw new Error("Error al cargar");
+                cuerpo.innerHTML = await respuesta.text();
+            } catch (error) {
+                cuerpo.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Manejador de formularios dinámicos
+        document.addEventListener('submit', async (e) => {
+            if (e.target.id === 'formGenerico') {
+                e.preventDefault();
+                const btn = e.target.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Guardando...';
+
+                try {
+                    const formData = new FormData(e.target);
+                    const res = await fetch(e.target.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+
+                    if (res.ok) {
+                        // Si el controlador devuelve 200 OK
+                        location.reload();
+                    } else {
+                        // Si hay error de validación (400), volvemos a inyectar la parcial con errores
+                        const htmlError = await res.text();
+                        document.getElementById('modalCuerpo').innerHTML = htmlError;
+                    }
+                } catch (error) {
+                    toastr.error('Error de conexión con el servidor');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Guardar';
+                }
+            }
         });
 
-            @if (TempData["ExitoSub"] != null)
-            {
-                TempData.Keep("ExitoSub");
-                @:toastr.success('Sub empresa creada correctamente ', 'Éxito');
-                TempData.Remove("ExitoSub");
-            }
-
-                @if (TempData["EmpresaCreada"] != null)
-            {
-                TempData.Keep("EmpresaCreada");
+        // Notificaciones Toastr (Al cargar la página)
+        $(document).ready(function() {
+            @if (TempData["EmpresaCreada"] != null) {
                 @:toastr.success('Empresa creada exitosamente', 'Éxito');
-                TempData.Remove("EmpresaCreada");
             }
-
-            @if (TempData["Error404"] != null)
-            {
-                TempData.Keep("Error404");
-                @:toastr.error('Erro inesperado', 'Error');
-                TempData.Remove("Error404");
-            }
-
-            @if (TempData["ErrorIner"] != null)
-            {
-                TempData.Keep("ErrorIner");
-                @:toastr.error('Error al insertar la SubEmpresa', 'Error');
-                TempData.Remove("ErrorIner");
+            @if (TempData["ExitoSub"] != null) {
+                @:toastr.success('Subempresa creada correctamente', 'Éxito');
             }
         });
     </script>
@@ -90,14 +159,14 @@
 
 <style>
     .profile-header {
-      font-size: 28px;
-    font-weight: 700;
-    text-align: center;
-    background: linear-gradient(to right, #0000ff, #4b0082);
-    color: white;
-    padding: 20px 15px;
-    border-radius: 15px 15px 10px 10px;
-    margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 700;
+        text-align: center;
+        background: linear-gradient(to right, #0000ff, #4b0082);
+        color: white;
+        padding: 20px 15px;
+        border-radius: 15px 15px 10px 10px;
+        margin-bottom: 30px;
     }
 
     body {

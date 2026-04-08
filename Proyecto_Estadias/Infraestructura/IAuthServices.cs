@@ -9,10 +9,12 @@ namespace Proyecto_Estadias.Infraestructura
 {
     public interface IAuthServices
     {
-        bool AsignarRolEmpresa(int idUsuario, int idRol, int idEmpresa);
+   
         bool CambiarContrasenia(string nombreUsuario, string viejaContrasenia, string nuevaContrasenia);
+        bool EsAdmin(string nombreusuario);
         List<Empresas> GetAllEmpresas();
         List<Roles> GetAllRoles();
+        List<SubEmpresas> GetAllSubEmpresas();
         List<Departamentos> GetDepartamentos();
         List<Empleados> GetEmpleados(int idEmpresa);
         List<EmpleadosVM> GetEmpleadosPorEmpresaYSubempresa(int idEmpresa);
@@ -21,8 +23,7 @@ namespace Proyecto_Estadias.Infraestructura
         string GetSubEmpresasNombre(int idEmpresa_madre);
         List<SubEmpresasVM> GetSubEmpresasPorEmpresa(int idEmpresa);
         Usuarios GetUsuarioConRelaciones(string nombreusuario);
-        bool InsertUser(Usuarios usuarios);
-        bool InsertUser(UsuariosVM usuariosVM, List<int> roles, List<int> empresas);
+       
 
 
         #region Lista de empleados
@@ -34,6 +35,6 @@ namespace Proyecto_Estadias.Infraestructura
         #endregion
         Usuarios login(string nombreusuario, string contrasenia);
         List<SubEmpresas> ObtenerSubEmpresas();
-        List<UsuariosVM> UsuariosAll();
+      
     }
 }

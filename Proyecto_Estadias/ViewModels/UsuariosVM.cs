@@ -12,7 +12,7 @@ namespace Proyecto_Estadias.ViewModels
         public string Usuario { get; set; }
         public string Contrasenia { get; set; }
 
-
+        public bool BitAdministrador { get; set; }
         public List<int> Roles { get; set; } = new List<int>();
         public List<int> Empresas { get; set; } = new List<int>();
        

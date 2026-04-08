@@ -1,10 +1,11 @@
 ﻿
+using PagedList;
 using Proyecto_Estadias.Infraestructura;
 using Proyecto_Estadias.Models;
 using Proyecto_Estadias.Services;
 using Proyecto_Estadias.ViewModels;
 using System;
-
+using System.Linq;
 using System.Web.Mvc;
 
 
@@ -20,91 +21,72 @@ namespace Proyecto_Estadias.Controllers
             empleadoServices = new EmpleadoServices();
         }
 
-        #region metodos para insertar empleado
+        #region Métodos CRUD SPA (Fetch API)
 
-
+        // GET: Formulario de Creación
         [HttpGet]
         public ActionResult InsertarEmpleado(int idsub)
         {
-        
-            var empresas = authServices.ObtenerSubEmpresas();
-            var departamentos = authServices.GetDepartamentos();
-            ViewBag.Departamentos = new SelectList(departamentos, "Id", "NombreDep");
-            ViewBag.Empresas = new SelectList(empresas, "Id", "Nombre");
-            
+            ViewBag.Departamentos = new SelectList(authServices.GetDepartamentos(), "Id", "NombreDep");
+
             var nuevoEmpleado = new Empleados
             {
                 IdEmpresa = idsub,
-                FechaIDeIngreso = DateTime.Now
-
+                FechaIDeIngreso = DateTime.Now,
+                Estado = "Activo"
             };
-            ViewBag.EmpresaId = nuevoEmpleado.IdEmpresa;
-            return View(nuevoEmpleado);
+
+            // Retornamos la vista parcial
+            return PartialView("_FormularioEmpleado", nuevoEmpleado);
         }
 
-
-
+        // POST: Guardar Nuevo Empleado
         [HttpPost]
-        public ActionResult InsertarEmpleado(Empleados empleado)
+        public JsonResult InsertarEmpleado(Empleados empleado)
         {
             if (ModelState.IsValid)
             {
                 empleadoServices.InsertarEmpleados(empleado);
-                TempData["EmpleadoCreado"] = true;
-                return RedirectToAction("ListaEmpleadosSubempresa", "Auth", new { idSub = empleado.IdEmpresa });
+                return Json(new { success = true, message = "Empleado agregado correctamente" });
             }
-            var empresas = authServices.ObtenerSubEmpresas();
-            var departamentos = authServices.GetDepartamentos();
-            ViewBag.EmpresaId = empleado.IdEmpresa;
-            ViewBag.Departamentos = new SelectList(departamentos, "Id", "NombreDep");
-            ViewBag.Empresas = new SelectList(empresas, "Id", "Nombre");
-            return View(empleado);
-
+            return Json(new { success = false, message = "Verifique los datos ingresados" });
         }
 
-        #endregion
-
-
-        #region metodos de actualizacion 
+        // GET: Formulario de Edición
         [HttpGet]
         public ActionResult EditarEmpleado(int id)
         {
             var empleado = empleadoServices.ObtenerEmpleadoPorId(id);
-            if (empleado == null)
-            {
-             TempData["ErrorEmpleado"] = true;
-                return HttpNotFound();
-            }
+            if (empleado == null) return HttpNotFound();
 
-            var empresas = authServices.ObtenerSubEmpresas();
-            var departamentos = authServices.GetDepartamentos();
-            ViewBag.Departamentos = new SelectList(departamentos, "Id", "NombreDep");
-            ViewBag.Empresas = new SelectList(empresas, "Id", "Nombre");
-            ViewBag.EmpresaId = empleado.IdEmpresa;
-            return View(empleado);
+            ViewBag.Departamentos = new SelectList(authServices.GetDepartamentos(), "Id", "NombreDep", empleado.IdDepartamento);
+
+            return PartialView("_FormularioEmpleado", empleado);
         }
 
-
+        // POST: Guardar Edición
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditarEmpleado(Empleados empleado)
+        public JsonResult EditarEmpleado(Empleados empleado)
         {
             if (ModelState.IsValid)
             {
                 empleadoServices.ActualizarEmpleado(empleado);
-                TempData["EmpleadoEditado"] = true;
-                return RedirectToAction("ListaEmpleadosSubempresa","Auth", new { idSub = empleado.IdEmpresa });
-
-
+                return Json(new { success = true, message = "Empleado actualizado correctamente" });
             }
-
-            var empresas = authServices.ObtenerSubEmpresas();
-            var departamentos = authServices.GetDepartamentos();
-            ViewBag.Departamentos = new SelectList(departamentos, "Id", "NombreDep");
-            ViewBag.Empresas = new SelectList(empresas, "Id", "Nombre");
-            ViewBag.EmpresaId = empleado.IdEmpresa;
-            return View(empleado);
+            return Json(new { success = false, message = "Verifique los datos ingresados" });
         }
+
+        // GET: Vista Parcial con Detalles (Nuevo Método)
+        [HttpGet]
+        public ActionResult DetallesEmpleado(int id)
+        {
+            var empleado = empleadoServices.ObtenerEmpleadoPorId(id);
+            if (empleado == null) return HttpNotFound();
+
+            return PartialView("_DetallesEmpleado", empleado);
+        }
+
+        #endregion
 
         [HttpGet]
         public ActionResult LoginEmpleado()
@@ -165,9 +147,110 @@ namespace Proyecto_Estadias.Controllers
             return View(empleado);
         }
 
+
+
+        #region Listados de Empleados
+
+        #region Listados de Empleados
+
+        [Authorize]
+        public ActionResult ListaEmpleadosSubempresa(int idSub, int? bus, string busqueda, int? page, int pageSize = 5)
+        {
+            if (idSub <= 0) return HttpNotFound("ID de subempresa no válido");
+
+            empleadoServices.ActualizarVacacionesYPermisos();
+
+            // Usamos el nuevo método del servicio para buscar "Activos"
+            var empleadosQuery = empleadoServices.FiltrarEmpleados(idSub, "Activo", busqueda, bus);
+
+            var empleadosVM = empleadosQuery.Select(e => new EmpleadosVM
+            {
+                Id = e.Id,
+                NumEmpleado = e.NumEmpleado,
+                Nombre = e.Nombre,
+                FechaDeIngreso = e.FechaIDeIngreso,
+                AniosTrabajados = e.AniosTrabajados,
+                MesesTrabajados = e.MesesTrabajados,
+                DiasLaboralesPorSemana = e.DiasLaboralesPorSemana,
+                intDiasVacaciones = e.intDiasVacaciones,
+                HorasRestantesDelDia = e.HorasRestantesDelDia,
+                DiasDisponibles = e.DiasDisponibles,
+                IdEmpresa = e.IdEmpresa,
+                IdDepartamento = e.IdDepartamento,
+                NombreEmpresa = e.SubEmpresas.Nombre,
+                NombreDepartamento = e.Departamentos.NombreDep
+            })
+            .OrderBy(e => e.Nombre)
+            .ToPagedList(page ?? 1, pageSize);
+
+            ViewBag.SubempresaNombre = authServices.GetNombreSubempresas(idSub);
+            ViewBag.IdSub = idSub;
+
+            // =========================================================
+            // NUEVO: Buscamos el ID de la Empresa Madre para el botón de Regresar
+            // =========================================================
+            using (var db = new Vacaciones_ProyectoEntities())
+            {
+                var idMadre = db.SubEmpresas
+                                .Where(s => s.Id == idSub)
+                                .Select(s => s.IdEmpresa_madre)
+                                .FirstOrDefault();
+                ViewBag.IdEmpresaMadre = idMadre;
+            }
+            // =========================================================
+
+            // Utilizamos el servicio para llenar el DropDown, sin tocar la BD directamente desde el controlador
+            ViewBag.Departamentos = new SelectList(authServices.GetDepartamentos(), "Id", "NombreDep");
+
+            return View("EmpleadosPorEmpresa", empleadosVM);
+        }
+
+        [Authorize]
+        public ActionResult ListaEmpleadosDadosDeBaja(int idSub, int? bus, string busqueda, int? page, int pageSize = 5)
+        {
+            if (idSub <= 0) return HttpNotFound("ID de subempresa no válido");
+
+            // Usamos el nuevo método del servicio para buscar "Inactivos"
+            var empleadosQuery = empleadoServices.FiltrarEmpleados(idSub, "Inactivo", busqueda, bus);
+
+            var empleadosVM = empleadosQuery.Select(e => new EmpleadosVM
+            {
+                Id = e.Id,
+                NumEmpleado = e.NumEmpleado,
+                Nombre = e.Nombre,
+                FechaDeIngreso = e.FechaIDeIngreso,
+                IdEmpresa = e.IdEmpresa,
+                IdDepartamento = e.IdDepartamento,
+                NombreEmpresa = e.SubEmpresas.Nombre,
+                NombreDepartamento = e.Departamentos.NombreDep
+            })
+            .OrderBy(e => e.Nombre)
+            .ToPagedList(page ?? 1, pageSize);
+
+            ViewBag.SubempresaNombre = authServices.GetNombreSubempresas(idSub);
+            ViewBag.IdSub = idSub;
+
+            // =========================================================
+            // NUEVO: También lo agregamos aquí por si el botón existe en la vista de bajas
+            // =========================================================
+            using (var db = new Vacaciones_ProyectoEntities())
+            {
+                var idMadre = db.SubEmpresas
+                                .Where(s => s.Id == idSub)
+                                .Select(s => s.IdEmpresa_madre)
+                                .FirstOrDefault();
+                ViewBag.IdEmpresaMadre = idMadre;
+            }
+            // =========================================================
+
+            ViewBag.Departamentos = new SelectList(authServices.GetDepartamentos(), "Id", "NombreDep");
+
+            return View(empleadosVM);
+        }
+
         #endregion
 
-
+        #endregion
     }
 }
 

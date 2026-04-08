@@ -17,13 +17,13 @@ namespace Proyecto_Estadias.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Roles()
         {
-            this.UsuarioRol = new HashSet<UsuarioRol>();
+            this.UsuariosEmpresas = new HashSet<UsuariosEmpresas>();
         }
     
         public int Id { get; set; }
         public string Nombre { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UsuarioRol> UsuarioRol { get; set; }
+        public virtual ICollection<UsuariosEmpresas> UsuariosEmpresas { get; set; }
     }
 }

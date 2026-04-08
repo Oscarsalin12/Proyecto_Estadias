@@ -11,6 +11,7 @@ namespace Proyecto_Estadias.Infraestructura
     {
         void ActualizarEmpleado(Empleados empleado);
         void ActualizarVacacionesYPermisos();
+        IQueryable<Empleados> FiltrarEmpleados(int idSub, string estado, string busqueda, int? idDepartamento);
         Empleados GetEmpleadoPorId(int id);
         void InsertarEmpleados(Empleados emp);
         Empleados LoginEmpleados(string usuario, int contrasena);

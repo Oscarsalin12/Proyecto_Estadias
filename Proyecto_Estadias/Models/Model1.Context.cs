@@ -32,7 +32,7 @@ namespace Proyecto_Estadias.Models
         public virtual DbSet<Permisos> Permisos { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<SubEmpresas> SubEmpresas { get; set; }
-        public virtual DbSet<UsuarioRol> UsuarioRol { get; set; }
         public virtual DbSet<Usuarios> Usuarios { get; set; }
+        public virtual DbSet<UsuariosEmpresas> UsuariosEmpresas { get; set; }
     }
 }

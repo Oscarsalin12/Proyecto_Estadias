@@ -81,12 +81,12 @@ namespace Proyecto_Estadias.Security
             Usuarios usuarios = authservices.login(usuariosVM.Usuario, usuariosVM.Contrasenia);
             if (usuarios != null)
             {
-                var userRol = usuarios.UsuarioRol.Select(r => new UsuariosRolVM
+                var userRol = usuarios.UsuariosEmpresas.Select(r => new UsuariosRolVM
                 {
-                    IdRol = r.IdRol,
-                    IdUsuario = r.IdUsuario,
-                    IdEmpresa = r.IdEmpresa,
-                    IdEmpresaMadre = r.IdEmpresa,
+                    IdRol = r.idRol,
+                    IdUsuario = r.idUsuario,
+                    IdEmpresa = r.idEmpresa,
+                    IdEmpresaMadre = r.idEmpresa,
                     RolesVM = new RolVM
                     {
                         Nombre = r.Roles.Nombre,

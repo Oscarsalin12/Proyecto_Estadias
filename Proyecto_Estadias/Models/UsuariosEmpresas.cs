@@ -12,16 +12,17 @@ namespace Proyecto_Estadias.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class UsuarioRol
+    public partial class UsuariosEmpresas
     {
-        public int Id { get; set; }
-        public int IdUsuario { get; set; }
-        public int IdRol { get; set; }
-        public System.DateTime FechaRegistro { get; set; }
-        public int IdEmpresa { get; set; }
+        public int id { get; set; }
+        public int idUsuario { get; set; }
+        public int idEmpresa { get; set; }
+        public int idRol { get; set; }
+        public int idSubEmpresa { get; set; }
     
         public virtual Empresas Empresas { get; set; }
         public virtual Roles Roles { get; set; }
+        public virtual SubEmpresas SubEmpresas { get; set; }
         public virtual Usuarios Usuarios { get; set; }
     }
 }

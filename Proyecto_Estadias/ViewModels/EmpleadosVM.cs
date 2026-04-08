@@ -26,6 +26,8 @@ namespace Proyecto_Estadias.ViewModels
         public string NombreEmpresa { get; set; }
         public string NombreDepartamento { get; set; }
         public string Estado { get; set; } 
+
+        public string UsuarioEmpleado { get; set; }
         public List<DepartamentosVM> DepatamentosVM { get; set; } 
         public List<SubEmpresasVM> SubEmpresaVM { get; set; }
         //public virtual Empresas Empresa { get; set; }
